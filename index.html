@@ -19,7 +19,6 @@
       position: relative;
       overflow: hidden;
     }
-    /* Real TV static – canvas for performance, dim grain, constant motion */
     #static-canvas {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -27,16 +26,13 @@
       pointer-events: none;
       z-index: 0;
     }
-
     .container {
       max-width: 600px;
       text-align: left;
       position: relative;
       z-index: 1;
     }
-    .typing {
-      white-space: pre-line;
-    }
+    .typing { white-space: pre-line; }
     .cursor {
       display: inline-block;
       width: 2px;
@@ -48,23 +44,14 @@
       0%, 50% { opacity: 1; }
       51%, 100% { opacity: 0; }
     }
-    .extras {
-      margin-top: 20px; /* Keeps the nice gap you like */
-    }
-    /* Socials & email in white */
+    .extras { margin-top: 20px; }
     .socials a, .email-line a {
       color: white;
       text-decoration: underline;
-      margin-right: 15px;
+      margin-right: 20px;
     }
-    .socials a:hover, .email-line a:hover {
-      color: #ccc;
-    }
-    /* Email on same line, no wrap-off */
-    .email-line {
-      white-space: nowrap;
-      margin-top: 15px;
-    }
+    .socials a:hover, .email-line a:hover { color: #ccc; }
+    .email-line { white-space: nowrap; margin-top: 15px; }
   </style>
 </head>
 <body>
@@ -75,35 +62,28 @@
   </div>
 
   <script>
-    // ==== TV Static Canvas (visible, performant, dim) ====
+    // TV static – same working version
     const canvas = document.getElementById('static-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
-    function resize() {
+    window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-
+    });
     function staticNoise() {
       const w = canvas.width, h = canvas.height;
       const imgData = ctx.createImageData(w, h);
       const buffer = new Uint32Array(imgData.data.buffer);
-      const len = buffer.length;
-
-      for (let i = 0; i < len; i++) {
-        if (Math.random() < 0.08) { // ~8% grain density
-          buffer[i] = 0x33ffffff; // dim white (alpha 0.2)
-        }
+      for (let i = 0; i < buffer.length; i++) {
+        if (Math.random() < 0.08) buffer[i] = 0x33ffffff;
       }
       ctx.putImageData(imgData, 0, 0);
       requestAnimationFrame(staticNoise);
     }
     staticNoise();
 
-    // ==== Typing Logic ====
+    // Typing
     const introText = `hi, i'm Henry Fransoo,
 
 this is my website fransoo.com
@@ -112,71 +92,49 @@ i made this cuz i was bored
 
 have a blessed day y'all
 
-`; // No divider
+`;
 
     const socials = [
       { name: 'insta', url: 'https://instagram.com/woeller23' },
-      { name: 'x', url: 'https://x.com/hfransoo' }
+      { name: 'x',     url: 'https://x.com/hfransoo' }
     ];
-
     const email = 'henry@fransoo.com';
     const emailUrl = `mailto:${email}`;
 
     let i = 0;
     const speed = 50;
-    const typingElem = document.getElementById('typing');
-    const extrasElem = document.getElementById('extras');
+    const typing = document.getElementById('typing');
+    const extras = document.getElementById('extras');
 
-    function type() {
-      if (i < introText.length) {
-        const char = introText.charAt(i);
-        typingElem.innerHTML += char === '\n' ? '<br>' : char;
-        i++;
-        setTimeout(type, speed);
-      } else {
-        typeExtras("follow my socials: ");
-      }
-    }
-
-    function typeExtras(text, callback) {
+    function typeWriter(text, element, callback) {
       let j = 0;
-      const interval = setInterval(() => {
+      const timer = setInterval(() => {
         if (j < text.length) {
-          extrasElem.innerHTML += text.charAt(j);
+          element.innerHTML += text.charAt(j) === '\n' ? '<br>' : text.charAt(j);
           j++;
         } else {
-          clearInterval(interval);
+          clearInterval(timer);
           if (callback) callback();
         }
       }, speed);
     }
 
-    // Start typing
-    type();
+    // Start
+    typeWriter(introText, typing, () => {
+      typeWriter('follow my socials: ', extras, () => {
+        // Add social links cleanly on the same line
+        const socialHTML = socials.map(s => 
+          `<a href="${s.url}" target="_blank">${s.name}</a>`
+        ).join('  ');
+        extras.innerHTML += socialHTML;
 
-    // After intro → type "follow my socials: "
-    setTimeout(() => {
-      typeExtras("follow my socials: ", () => {
-        // Add social links one by one
-        let linkIndex = 0;
-        const addLink = () => {
-          if (linkIndex < socials.length) {
-            const s = socials[linkIndex];
-            const link = `<a href="${s.url}" target="_blank">${s.name}</a>`;
-            extrasElem.innerHTML += link + (linkIndex < socials.length - 1 ? ' ' : '');
-            linkIndex++;
-            setTimeout(addLink, 200);
-          } else {
-            // Then type "email: henry@fransoo.com"
-            setTimeout(() => {
-              extrasElem.innerHTML += '<div class="email-line">email: <a href="' + emailUrl + '">' + email + '</a></div>';
-              typingElem.innerHTML += '<span class="cursor"></span>';
-            }, 300);
-          }
-        };
-        addLink();
+        // Then email on its own line
+        setTimeout(() => {
+          extras.innerHTML += `<div class="email-line">email: <a href="${emailUrl}">${email}</a></div>`;
+          typing.innerHTML += '<span class="cursor"></span>';
+        }, 400);
       });
-    }, (introText.length * speed) + 200); // Wait for intro to finish
+    });
   </script>
 </body>
 </html>
