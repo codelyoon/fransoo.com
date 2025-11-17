@@ -22,7 +22,7 @@
     #static-canvas {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      opacity: 0.25;
+      opacity: 0.28;          /* ← turned up just a tad */
       pointer-events: none;
       z-index: 0;
     }
@@ -40,17 +40,15 @@
       animation: blink 1s infinite;
       margin-left: 2px;
     }
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0; }
-    }
+    @keyframes blink { 0%,50% {opacity:1} 51%,100% {opacity:0} }
     .extras { margin-top: 20px; }
+    /* Force white links – overrides everything */
     .socials a, .email-line a {
-      color: white;
+      color: white !important;
       text-decoration: underline;
       margin-right: 20px;
     }
-    .socials a:hover, .email-line a:hover { color: #ccc; }
+    .socials a:hover, .email-line a:hover { color: #ccc !important; }
     .email-line { white-space: nowrap; margin-top: 15px; }
   </style>
 </head>
@@ -62,7 +60,7 @@
   </div>
 
   <script>
-    // TV static – same working version
+    // Static – slightly brighter grain
     const canvas = document.getElementById('static-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -76,7 +74,7 @@
       const imgData = ctx.createImageData(w, h);
       const buffer = new Uint32Array(imgData.data.buffer);
       for (let i = 0; i < buffer.length; i++) {
-        if (Math.random() < 0.08) buffer[i] = 0x33ffffff;
+        if (Math.random() < 0.09) buffer[i] = 0x44ffffff;  // ← a little brighter + denser
       }
       ctx.putImageData(imgData, 0, 0);
       requestAnimationFrame(staticNoise);
@@ -101,8 +99,6 @@ have a blessed day y'all
     const email = 'henry@fransoo.com';
     const emailUrl = `mailto:${email}`;
 
-    let i = 0;
-    const speed = 50;
     const typing = document.getElementById('typing');
     const extras = document.getElementById('extras');
 
@@ -116,19 +112,16 @@ have a blessed day y'all
           clearInterval(timer);
           if (callback) callback();
         }
-      }, speed);
+      }, 50);
     }
 
-    // Start
     typeWriter(introText, typing, () => {
       typeWriter('follow my socials: ', extras, () => {
-        // Add social links cleanly on the same line
         const socialHTML = socials.map(s => 
           `<a href="${s.url}" target="_blank">${s.name}</a>`
         ).join('  ');
-        extras.innerHTML += socialHTML;
+        extras.innerHTML += '<span class="socials">' + socialHTML + '</span>';
 
-        // Then email on its own line
         setTimeout(() => {
           extras.innerHTML += `<div class="email-line">email: <a href="${emailUrl}">${email}</a></div>`;
           typing.innerHTML += '<span class="cursor"></span>';
