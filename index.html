@@ -5,51 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Henry Fransoo</title>
   <style>
-    body {
-      background: black;
-      color: #00bfff;
-      font-family: 'Courier New', monospace;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      padding: 20px;
-      box-sizing: border-box;
-      position: relative;
-      overflow: hidden;
-    }
-    #static-canvas {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      opacity: 0.33;          /* ← turned up just a tad */
-      pointer-events: none;
-      z-index: 0;
-    }
-    .container {
-      max-width: 600px;
-      text-align: left;
-      position: relative;
-      z-index: 1;
-    }
-    .typing { white-space: pre-line; }
-    .cursor {
-      display: inline-block;
-      width: 2px;
-      background: #00bfff;
-      animation: blink 1s infinite;
-      margin-left: 2px;
-    }
-    @keyframes blink { 0%,50% {opacity:1} 51%,100% {opacity:0} }
-    .extras { margin-top: 20px; }
-    /* Force white links – overrides everything */
-    .socials a, .email-line a {
-      color: white !important;
-      text-decoration: underline;
-      margin-right: 20px;
-    }
-    .socials a:hover, .email-line a:hover { color: #ccc !important; }
-    .email-line { white-space: nowrap; margin-top: 15px; }
+    body {background:black;color:#00bfff;font-family:'Courier New',monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;padding:20px;box-sizing:border-box;position:relative;overflow:hidden}
+    #static-canvas {position:absolute;top:0;left:0;right:0;bottom:0;opacity:0.28;pointer-events:none;z-index:0}
+    .container {max-width:600px;text-align:left;position:relative;z-index:1}
+    .typing {white-space:pre-line}
+    .cursor {display:inline-block;width:2px;background:#00bfff;animation:blink 1s infinite;margin-left:2px}
+    @keyframes blink {0%,50%{opacity:1}51%,100%{opacity:0}}
+    .extras {margin-top:20px}
+    .email-line {white-space:nowrap;margin-top:15px}
+    .email-line a {color:white !important;text-decoration:underline}
+    .email-line a:hover {color:#ccc !important}
+    /* X stays plain white text */
+    .social-x a {color:white !important;text-decoration:underline;margin-left:20px}
+    .social-x a:hover {color:#ccc !important}
   </style>
 </head>
 <body>
@@ -60,29 +28,20 @@
   </div>
 
   <script>
-    // Static – slightly brighter grain
-    const canvas = document.getElementById('static-canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
-    function staticNoise() {
-      const w = canvas.width, h = canvas.height;
-      const imgData = ctx.createImageData(w, h);
-      const buffer = new Uint32Array(imgData.data.buffer);
-      for (let i = 0; i < buffer.length; i++) {
-        if (Math.random() < 0.09) buffer[i] = 0x44ffffff;  // ← a little brighter + denser
-      }
-      ctx.putImageData(imgData, 0, 0);
+    // static (same as before, slightly brighter)
+    const canvas=document.getElementById('static-canvas'),ctx=canvas.getContext('2d');
+    canvas.width=innerWidth;canvas.height=innerHeight;
+    addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight});
+    function staticNoise(){
+      const imgData=ctx.createImageData(canvas.width,canvas.height);
+      const buffer=new Uint32Array(imgData.data.buffer);
+      for(let i=0;i<buffer.length;i++)if(Math.random()<0.09)buffer[i]=0x44ffffff;
+      ctx.putImageData(imgData,0,0);
       requestAnimationFrame(staticNoise);
     }
     staticNoise();
 
-    // Typing
-    const introText = `hi, i'm Henry Fransoo,
+    const introText=`hi, i'm Henry Fransoo,
 
 this is my website fransoo.com
 
@@ -92,40 +51,33 @@ have a blessed day y'all
 
 `;
 
-    const socials = [
-      { name: 'insta', url: 'https://instagram.com/woeller23' },
-      { name: 'x',     url: 'https://x.com/hfransoo' }
-    ];
-    const email = 'henry@fransoo.com';
-    const emailUrl = `mailto:${email}`;
+    const email='henry@fransoo.com';
 
-    const typing = document.getElementById('typing');
-    const extras = document.getElementById('extras');
+    const typing=document.getElementById('typing');
+    const extras=document.getElementById('extras');
 
-    function typeWriter(text, element, callback) {
-      let j = 0;
-      const timer = setInterval(() => {
-        if (j < text.length) {
-          element.innerHTML += text.charAt(j) === '\n' ? '<br>' : text.charAt(j);
-          j++;
-        } else {
-          clearInterval(timer);
-          if (callback) callback();
-        }
-      }, 50);
-    }
+    function typeWriter(text,el,cb){let i=0;const t=setInterval(()=>{if(i<text.length){el.innerHTML+=text[i]==='\n'?'<br>':text[i];i++}else{clearInterval(t);if(cb)cb()}},50)}
 
-    typeWriter(introText, typing, () => {
-      typeWriter('follow my socials: ', extras, () => {
-        const socialHTML = socials.map(s => 
-          `<a href="${s.url}" target="_blank">${s.name}</a>`
-        ).join('  ');
-        extras.innerHTML += '<span class="socials">' + socialHTML + '</span>';
+    // Instagram colorful logo SVG
+    const igLogo=`<svg xmlns="http://www.w3.org/2000/svg" width="56" height="18" viewBox="0 0 448 512" style="display:inline-block;vertical-align:middle;margin-right:20px">
+      <path fill="url(#ig-gradient)" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/>
+      <defs>
+        <linearGradient id="ig-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f9ce34"/>
+          <stop offset="15%" stop-color="#ee2a7b"/>
+          <stop offset="45%" stop-color="#6228d7"/>
+          <stop offset="100%" stop-color="#e23670"/>
+        </linearGradient>
+      </defs>
+    </svg>`;
 
-        setTimeout(() => {
-          extras.innerHTML += `<div class="email-line">email: <a href="${emailUrl}">${email}</a></div>`;
+    typeWriter(introText,typing,()=>{
+      typeWriter('follow my socials: ',extras,()=>{
+        extras.innerHTML += igLogo + `<span class="social-x"><a href="https://x.com/hfransoo" target="_blank">x</a></span>`;
+        setTimeout(()=>{
+          extras.innerHTML += `<div class="email-line">email: <a href="mailto:${email}">${email}</a></div>`;
           typing.innerHTML += '<span class="cursor"></span>';
-        }, 400);
+        },400);
       });
     });
   </script>
