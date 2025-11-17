@@ -19,23 +19,13 @@
       position: relative;
       overflow: hidden;
     }
-    /* TV static – more visible grain, faster flicker, dim but readable */
-    body::before {
-      content: "";
+    /* Real TV static – canvas for performance, dim grain, constant motion */
+    #static-canvas {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: 
-        repeating-linear-gradient(0deg, transparent 0px, rgba(255,255,255,0.04) 1px, transparent 2px),
-        repeating-linear-gradient(90deg, transparent 0px, rgba(255,255,255,0.04) 1px, transparent 2px);
       opacity: 0.25;
       pointer-events: none;
-      animation: static 0.15s steps(8) infinite;
       z-index: 0;
-      mix-blend-mode: overlay;
-    }
-    @keyframes static {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(8px, 8px); }
     }
 
     .container {
@@ -59,15 +49,7 @@
       51%, 100% { opacity: 0; }
     }
     .extras {
-      margin-top: 20px;
-    }
-    /* White divider */
-    .underline {
-      display: block;
-      width: 100%;
-      height: 1px;
-      background: white;
-      margin: 15px 0 20px;
+      margin-top: 20px; /* Keeps the nice gap you like */
     }
     /* Socials & email in white */
     .socials a, .email-line a {
@@ -78,26 +60,59 @@
     .socials a:hover, .email-line a:hover {
       color: #ccc;
     }
+    /* Email on same line, no wrap-off */
     .email-line {
-      margin-top: 20px;
+      white-space: nowrap;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
+  <canvas id="static-canvas"></canvas>
   <div class="container">
     <div class="typing" id="typing"></div>
     <div class="extras" id="extras"></div>
   </div>
 
   <script>
-    const fullText = `hi, i'm Henry Fransoo,
+    // ==== TV Static Canvas (visible, performant, dim) ====
+    const canvas = document.getElementById('static-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+
+    function staticNoise() {
+      const w = canvas.width, h = canvas.height;
+      const imgData = ctx.createImageData(w, h);
+      const buffer = new Uint32Array(imgData.data.buffer);
+      const len = buffer.length;
+
+      for (let i = 0; i < len; i++) {
+        if (Math.random() < 0.08) { // ~8% grain density
+          buffer[i] = 0x33ffffff; // dim white (alpha 0.2)
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+      requestAnimationFrame(staticNoise);
+    }
+    staticNoise();
+
+    // ==== Typing Logic ====
+    const introText = `hi, i'm Henry Fransoo,
 
 this is my website fransoo.com
 
 i made this cuz i was bored
 
 have a blessed day y'all
-`; // Divider goes right after this
+
+`; // No divider
 
     const socials = [
       { name: 'insta', url: 'https://instagram.com/woeller23' },
@@ -113,21 +128,17 @@ have a blessed day y'all
     const extrasElem = document.getElementById('extras');
 
     function type() {
-      if (i < fullText.length) {
-        const char = fullText.charAt(i);
+      if (i < introText.length) {
+        const char = introText.charAt(i);
         typingElem.innerHTML += char === '\n' ? '<br>' : char;
         i++;
         setTimeout(type, speed);
       } else {
-        // Add white divider immediately after text
-        typingElem.innerHTML += '<div class="underline"></div>';
-
-        // Now type out "follow my socials: "
         typeExtras("follow my socials: ");
       }
     }
 
-    function typeExtras(text) {
+    function typeExtras(text, callback) {
       let j = 0;
       const interval = setInterval(() => {
         if (j < text.length) {
@@ -135,40 +146,37 @@ have a blessed day y'all
           j++;
         } else {
           clearInterval(interval);
-          // Add social links (white)
-          const linksHTML = '<span class="socials">' + socials.map(s => 
-            `<a href="${s.url}" target="_blank">${s.name}</a>`
-          ).join('') + '</span>';
-          extrasElem.innerHTML += linksHTML;
-
-          // Then type "email me: "
-          setTimeout(() => typeExtras("email me: "), 300);
+          if (callback) callback();
         }
       }, speed);
     }
 
-    // Final email after socials
-    const originalTypeExtras = typeExtras;
-    typeExtras = function(text) {
-      if (text === "email me: ") {
-        let j = 0;
-        const interval = setInterval(() => {
-          if (j < text.length) {
-            extrasElem.innerHTML += text.charAt(j);
-            j++;
-          } else {
-            clearInterval(interval);
-            extrasElem.innerHTML += `<span class="email-line"><a href="${emailUrl}">${email}</a></span>`;
-            // Cursor at end
-            typingElem.innerHTML += '<span class="cursor"></span>';
-          }
-        }, speed);
-      } else {
-        originalTypeExtras(text);
-      }
-    };
+    // Start typing
+    type();
 
-    type(); // Start typing intro + divider
+    // After intro → type "follow my socials: "
+    setTimeout(() => {
+      typeExtras("follow my socials: ", () => {
+        // Add social links one by one
+        let linkIndex = 0;
+        const addLink = () => {
+          if (linkIndex < socials.length) {
+            const s = socials[linkIndex];
+            const link = `<a href="${s.url}" target="_blank">${s.name}</a>`;
+            extrasElem.innerHTML += link + (linkIndex < socials.length - 1 ? ' ' : '');
+            linkIndex++;
+            setTimeout(addLink, 200);
+          } else {
+            // Then type "email: henry@fransoo.com"
+            setTimeout(() => {
+              extrasElem.innerHTML += '<div class="email-line">email: <a href="' + emailUrl + '">' + email + '</a></div>';
+              typingElem.innerHTML += '<span class="cursor"></span>';
+            }, 300);
+          }
+        };
+        addLink();
+      });
+    }, (introText.length * speed) + 200); // Wait for intro to finish
   </script>
 </body>
 </html>
