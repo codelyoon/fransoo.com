@@ -16,10 +16,41 @@
       margin: 0;
       padding: 20px;
       box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
     }
+    /* TV static overlay – dim & looping */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0) 0px,
+        rgba(255,255,255,0.03) 1px,
+        rgba(255,255,255,0) 2px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0) 0px,
+        rgba(255,255,255,0.03) 1px,
+        rgba(255,255,255,0) 2px
+      );
+      opacity: 0.15;
+      pointer-events: none;
+      animation: static 0.2s steps(10) infinite;
+      z-index: 0;
+    }
+    @keyframes static {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(10px, 10px); }
+    }
+
     .container {
       max-width: 600px;
       text-align: left;
+      position: relative;
+      z-index: 1;
     }
     .typing {
       white-space: pre-line;
@@ -45,16 +76,24 @@
       background: #00bfff;
       margin: 30px 0 20px;
     }
-    a {
-      color: #00bfff;
+    /* Social links in white */
+    .socials a {
+      color: white;
       text-decoration: underline;
       margin-right: 15px;
     }
-    a:hover {
-      color: white;
+    .socials a:hover {
+      color: #ccc;
     }
+    /* Email in white */
     .email-line a {
-      display: block;
+      color: white;
+      text-decoration: underline;
+    }
+    .email-line a:hover {
+      color: #ccc;
+    }
+    .email-line {
       margin-top: 20px;
     }
   </style>
@@ -95,16 +134,16 @@ follow my socials: `;
         i++;
         setTimeout(type, speed);
       } else {
-        // Social links (underlined, clickable to profiles)
-        const linksHTML = socials.map(s => 
+        // Social links (wrapped in .socials for white styling)
+        const linksHTML = '<div class="socials">' + socials.map(s => 
           `<a href="${s.url}" target="_blank">${s.name}</a>`
-        ).join('');
+        ).join('') + '</div>';
         extrasElem.innerHTML = linksHTML;
 
         // Underline separator
         extrasElem.innerHTML += '<div class="underline"></div>';
 
-        // Email (underlined, clickable)
+        // Email (white)
         extrasElem.innerHTML += `<div class="email-line">email me: <a href="${emailUrl}">${email}</a></div>`;
 
         // Cursor at end
