@@ -19,31 +19,23 @@
       position: relative;
       overflow: hidden;
     }
-    /* TV static overlay – dim & looping */
+    /* TV static – more visible grain, faster flicker, dim but readable */
     body::before {
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(255,255,255,0) 0px,
-        rgba(255,255,255,0.03) 1px,
-        rgba(255,255,255,0) 2px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        rgba(255,255,255,0) 0px,
-        rgba(255,255,255,0.03) 1px,
-        rgba(255,255,255,0) 2px
-      );
-      opacity: 0.15;
+      background: 
+        repeating-linear-gradient(0deg, transparent 0px, rgba(255,255,255,0.04) 1px, transparent 2px),
+        repeating-linear-gradient(90deg, transparent 0px, rgba(255,255,255,0.04) 1px, transparent 2px);
+      opacity: 0.25;
       pointer-events: none;
-      animation: static 0.2s steps(10) infinite;
+      animation: static 0.15s steps(8) infinite;
       z-index: 0;
+      mix-blend-mode: overlay;
     }
     @keyframes static {
       0% { transform: translate(0, 0); }
-      100% { transform: translate(10px, 10px); }
+      100% { transform: translate(8px, 8px); }
     }
 
     .container {
@@ -69,28 +61,21 @@
     .extras {
       margin-top: 20px;
     }
+    /* White divider */
     .underline {
       display: block;
       width: 100%;
       height: 1px;
-      background: #00bfff;
-      margin: 30px 0 20px;
+      background: white;
+      margin: 15px 0 20px;
     }
-    /* Social links in white */
-    .socials a {
+    /* Socials & email in white */
+    .socials a, .email-line a {
       color: white;
       text-decoration: underline;
       margin-right: 15px;
     }
-    .socials a:hover {
-      color: #ccc;
-    }
-    /* Email in white */
-    .email-line a {
-      color: white;
-      text-decoration: underline;
-    }
-    .email-line a:hover {
+    .socials a:hover, .email-line a:hover {
       color: #ccc;
     }
     .email-line {
@@ -105,15 +90,14 @@
   </div>
 
   <script>
-    const introText = `hi, i'm Henry Fransoo,
+    const fullText = `hi, i'm Henry Fransoo,
 
 this is my website fransoo.com
 
 i made this cuz i was bored
 
 have a blessed day y'all
-
-follow my socials: `;
+`; // Divider goes right after this
 
     const socials = [
       { name: 'insta', url: 'https://instagram.com/woeller23' },
@@ -129,29 +113,62 @@ follow my socials: `;
     const extrasElem = document.getElementById('extras');
 
     function type() {
-      if (i < introText.length) {
-        typingElem.innerHTML += introText.charAt(i) === '\n' ? '<br>' : introText.charAt(i);
+      if (i < fullText.length) {
+        const char = fullText.charAt(i);
+        typingElem.innerHTML += char === '\n' ? '<br>' : char;
         i++;
         setTimeout(type, speed);
       } else {
-        // Social links (wrapped in .socials for white styling)
-        const linksHTML = '<div class="socials">' + socials.map(s => 
-          `<a href="${s.url}" target="_blank">${s.name}</a>`
-        ).join('') + '</div>';
-        extrasElem.innerHTML = linksHTML;
+        // Add white divider immediately after text
+        typingElem.innerHTML += '<div class="underline"></div>';
 
-        // Underline separator
-        extrasElem.innerHTML += '<div class="underline"></div>';
-
-        // Email (white)
-        extrasElem.innerHTML += `<div class="email-line">email me: <a href="${emailUrl}">${email}</a></div>`;
-
-        // Cursor at end
-        typingElem.innerHTML += '<span class="cursor"></span>';
+        // Now type out "follow my socials: "
+        typeExtras("follow my socials: ");
       }
     }
 
-    type();
+    function typeExtras(text) {
+      let j = 0;
+      const interval = setInterval(() => {
+        if (j < text.length) {
+          extrasElem.innerHTML += text.charAt(j);
+          j++;
+        } else {
+          clearInterval(interval);
+          // Add social links (white)
+          const linksHTML = '<span class="socials">' + socials.map(s => 
+            `<a href="${s.url}" target="_blank">${s.name}</a>`
+          ).join('') + '</span>';
+          extrasElem.innerHTML += linksHTML;
+
+          // Then type "email me: "
+          setTimeout(() => typeExtras("email me: "), 300);
+        }
+      }, speed);
+    }
+
+    // Final email after socials
+    const originalTypeExtras = typeExtras;
+    typeExtras = function(text) {
+      if (text === "email me: ") {
+        let j = 0;
+        const interval = setInterval(() => {
+          if (j < text.length) {
+            extrasElem.innerHTML += text.charAt(j);
+            j++;
+          } else {
+            clearInterval(interval);
+            extrasElem.innerHTML += `<span class="email-line"><a href="${emailUrl}">${email}</a></span>`;
+            // Cursor at end
+            typingElem.innerHTML += '<span class="cursor"></span>';
+          }
+        }, speed);
+      } else {
+        originalTypeExtras(text);
+      }
+    };
+
+    type(); // Start typing intro + divider
   </script>
 </body>
 </html>
