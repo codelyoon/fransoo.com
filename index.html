@@ -68,14 +68,13 @@
   <script>
     const introText = `hi, i'm Henry Fransoo,
 
-i'm a former e-cmmerce business owner, & game developer
+i'm a former e-commerce business owner, & game developer
 
 stats:
 - $20k+ e-commerce revenue within 3 months of selling
 - 50k+ mobile game downloads
 - 130k+ followers on tiktok from mobile games
 - 15m+ social media views
-- 3 exits (1 company 2 apps)
 
 currently invoved in cryptocurrency, constantly doing market analysis, executing futures & spot trades
 
@@ -110,3 +109,14 @@ follow my socials: `;
         extrasElem.innerHTML += '<div class="underline"></div>';
 
         // Email
+        extrasElem.innerHTML += `<div class="email-line">email me: <a href="${emailUrl}">${email}</a></div>`;
+
+        // Cursor
+        typingElem.innerHTML += '<span class="cursor"></span>';
+      }
+    }
+
+    type();
+  </script>
+</body>
+</html>
