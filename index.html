@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Name</title>
+  <title>Henry Fransoo</title>
   <style>
     body {
       background: black;
-      color: #00bfff; /* Blue text like the screenshot */
+      color: #00bfff;
       font-family: 'Courier New', monospace;
       display: flex;
       justify-content: center;
@@ -22,7 +22,7 @@
       text-align: left;
     }
     .typing {
-      white-space: pre-line; /* Preserves line breaks */
+      white-space: pre-line;
     }
     .cursor {
       display: inline-block;
@@ -35,46 +35,78 @@
       0%, 50% { opacity: 1; }
       51%, 100% { opacity: 0; }
     }
+    .socials, .email-line {
+      margin-top: 20px;
+    }
+    .underline {
+      display: block;
+      width: 100%;
+      height: 1px;
+      background: #00bfff;
+      margin: 30px 0 20px;
+    }
+    a {
+      color: #00bfff;
+      text-decoration: underline;
+      margin-right: 15px;
+    }
+    a:hover {
+      color: white;
+    }
+    .email-line a {
+      display: block;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="typing" id="typing"></div>
+    <div id="extras"></div>
   </div>
 
   <script>
-    const text = `hey, i'm yourname
+    const introText = `hi, i'm Henry Fransoo,
 
-i've been building apps for 5+ years
+i'm a former e-cmmerce business owner, & game developer
 
 stats:
-- 50+ apps
-- 10m+ downloads
-- 100+ influencer collabs
-- 100m+ social mediaviews
+- $20k+ e-commerce revenue within 3 months of selling
+- 50k+ mobile game downloads
+- 130k+ followers on tiktok from mobile games
+- 15m+ social media views
 - 3 exits (1 company 2 apps)
 
-currently scheming something BIG 🌕
+currently invoved in cryptocurrency, constantly doing market analysis, executing futures & spot trades
 
-follow my socials: insta, tiktok, youtube, x
+follow my socials: `;
 
-email me: you@yourdomain.com`;
+    const socials = [
+      { name: 'insta', url: 'https://instagram.com/woeller23' },
+      { name: 'x', url: 'https://x.com/hfransoo' }
+    ];
+
+    const email = 'henry@fransoo.com';
+    const emailUrl = `mailto:${email}`;
 
     let i = 0;
-    const speed = 50; // ms per character
-    const elem = document.getElementById('typing');
+    const speed = 50;
+    const typingElem = document.getElementById('typing');
+    const extrasElem = document.getElementById('extras');
 
     function type() {
-      if (i < text.length) {
-        elem.innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
+      if (i < introText.length) {
+        typingElem.innerHTML += introText.charAt(i) === '\n' ? '<br>' : introText.charAt(i);
         i++;
         setTimeout(type, speed);
       } else {
-        elem.innerHTML += '<span class="cursor"></span>';
-      }
-    }
+        // Social links
+        const linksHTML = socials.map(s => 
+          `<a href="${s.url}" target="_blank">${s.name}</a>`
+        ).join('');
+        extrasElem.innerHTML = linksHTML;
 
-    type();
-  </script>
-</body>
-</html>
+        // Underline
+        extrasElem.innerHTML += '<div class="underline"></div>';
+
+        // Email
