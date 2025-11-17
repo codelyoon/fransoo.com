@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Name</title>
+  <style>
+    body {
+      background: black;
+      color: #00bfff; /* Blue text like the screenshot */
+      font-family: 'Courier New', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .container {
+      max-width: 600px;
+      text-align: left;
+    }
+    .typing {
+      white-space: pre-line; /* Preserves line breaks */
+    }
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      background: #00bfff;
+      animation: blink 1s infinite;
+      margin-left: 2px;
+    }
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="typing" id="typing"></div>
+  </div>
+
+  <script>
+    const text = `hey, i'm yourname
+
+i've been building apps for 5+ years
+
+stats:
+- 50+ apps
+- 10m+ downloads
+- 100+ influencer collabs
+- 100m+ social mediaviews
+- 3 exits (1 company 2 apps)
+
+currently scheming something BIG 🌕
+
+follow my socials: insta, tiktok, youtube, x
+
+email me: you@yourdomain.com`;
+
+    let i = 0;
+    const speed = 50; // ms per character
+    const elem = document.getElementById('typing');
+
+    function type() {
+      if (i < text.length) {
+        elem.innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
+        i++;
+        setTimeout(type, speed);
+      } else {
+        elem.innerHTML += '<span class="cursor"></span>';
+      }
+    }
+
+    type();
+  </script>
+</body>
+</html>
