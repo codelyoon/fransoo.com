@@ -35,7 +35,7 @@
       0%, 50% { opacity: 1; }
       51%, 100% { opacity: 0; }
     }
-    .socials, .email-line {
+    .extras {
       margin-top: 20px;
     }
     .underline {
@@ -62,7 +62,7 @@
 <body>
   <div class="container">
     <div class="typing" id="typing"></div>
-    <div id="extras"></div>
+    <div class="extras" id="extras"></div>
   </div>
 
   <script>
@@ -75,8 +75,9 @@ stats:
 - 50k+ mobile game downloads
 - 130k+ followers on tiktok from mobile games
 - 15m+ social media views
+- 3 exits (1 company 2 apps)
 
-currently invoved in cryptocurrency, constantly doing market analysis, executing futures & spot trades
+currently involved in cryptocurrency, constantly doing market analysis, executing futures & spot trades
 
 follow my socials: `;
 
@@ -99,19 +100,19 @@ follow my socials: `;
         i++;
         setTimeout(type, speed);
       } else {
-        // Social links
+        // Social links (underlined, clickable to profiles)
         const linksHTML = socials.map(s => 
           `<a href="${s.url}" target="_blank">${s.name}</a>`
         ).join('');
         extrasElem.innerHTML = linksHTML;
 
-        // Underline
+        // Underline separator
         extrasElem.innerHTML += '<div class="underline"></div>';
 
-        // Email
+        // Email (underlined, clickable)
         extrasElem.innerHTML += `<div class="email-line">email me: <a href="${emailUrl}">${email}</a></div>`;
 
-        // Cursor
+        // Cursor at end
         typingElem.innerHTML += '<span class="cursor"></span>';
       }
     }
