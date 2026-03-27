@@ -7,19 +7,19 @@
   <style>
     body {background:black;color:#00bfff;font-family:'Courier New',monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;padding:20px;box-sizing:border-box;position:relative;overflow:hidden}
     #static-canvas {position:absolute;top:0;left:0;right:0;bottom:0;opacity:1.15;pointer-events:none;z-index:0}
-   .container {max-width:600px;text-align:left;position:relative;z-index:1}
-   .typing {white-space:pre-line}
-   .cursor {display:inline-block;width:2px;background:#00bfff;animation:blink 1s infinite;margin-left:2px}
+  .container {max-width:600px;text-align:left;position:relative;z-index:1}
+  .typing {white-space:pre-line}
+  .cursor {display:inline-block;width:2px;background:#00bfff;animation:blink 1s infinite;margin-left:2px}
     @keyframes blink {0%,50%{opacity:1}51%,100%{opacity:0}}
-   .extras {margin-top:20px}
-   .email-line {white-space:nowrap;margin-top:15px}
-   .email-line a {color:white;text-decoration:underline}
-   .email-line a:hover {color:#ccc}
+  .extras {margin-top:20px}
+  .email-line {white-space:nowrap;margin-top:15px}
+  .email-line a {color:white;text-decoration:underline}
+  .email-line a:hover {color:#ccc}
     /* X stays white */
-   .social-x a {color:white;text-decoration:underline;margin-left:25px}
-   .social-x a:hover {color:#ccc}
+  .social-x a {color:white;text-decoration:underline;margin-left:25px}
+  .social-x a:hover {color:#ccc}
     /* Instagram gradient text that loops forever */
-   .insta-text {
+  .insta-text {
       background: linear-gradient(90deg, #f9ce34, #ee2a7b, #6228d7, #e23670, #f9ce34);
       background-size: 300% 300%;
       -webkit-background-clip: text;
@@ -75,8 +75,9 @@ i made this cuz i was bored
 
         setTimeout(()=>{
           extras.innerHTML += `<div class="email-line">email: <a href="mailto:${email}">${email}</a></div>`;
-          // Added the new line here
-          extras.innerHTML += `<div class="email-line">Looking for the senior assassin page? <a href="https://chs.fransoo.com" target="_blank"><u>chs.fransoo.com</u></a> 💦🔫</div>`;
+          // Modified these lines for separate paragraphs and spacing
+          extras.innerHTML += `<div class="email-line" style="margin-top: 25px;">Looking for the senior assassin page?</div>`;
+          extras.innerHTML += `<div class="email-line">Go to <a href="https://chs.fransoo.com" target="_blank"><u>chs.fransoo.com</u></a> 💦🔫</div>`;
           typing.innerHTML += '<span class="cursor"></span>';
         },400);
       });
