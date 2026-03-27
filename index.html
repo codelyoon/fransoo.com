@@ -68,20 +68,11 @@ i made this cuz i was bored
 
     function typeWriter(text,el,cb){
       let i=0;
-      // Use a temporary element to hold the text being typed for proper spacing
-      let tempEl = document.createElement('span');
+      let tempEl = document.createElement('span'); // Use a span to build text character by character
       el.appendChild(tempEl);
       const t=setInterval(()=>{
         if(i<text.length){
-          // Check for line breaks and add <br> tags accordingly
-          if (text[i] === '\n') {
-            tempEl.innerHTML += '<br>';
-          } else if (text.substring(i, i + 4) === '<br>') { // Check for explicit <br>
-            tempEl.innerHTML += '<br>';
-            i += 3; // Advance i by 3 to skip the <br> tag characters
-          } else {
-            tempEl.innerHTML += text[i];
-          }
+          tempEl.innerHTML += text[i];
           i++;
         }else{
           clearInterval(t);
@@ -99,17 +90,19 @@ i made this cuz i was bored
           // Add the email line
           extras.innerHTML += `<div class="email-line">email: <a href="mailto:${email}">${email}</a></div>`;
 
-          // Introduce a delay and then start typing the assassin page lines with appropriate spacing
-          setTimeout(() => {
-            // Adding extra margin-top to the first new line for more spacing
-            extras.innerHTML += `<div class="email-line" style="margin-top: 30px;"></div>`; // This creates the vertical space
-            typeWriter('Looking for the senior assassin page?', extras, () => {
-              extras.innerHTML += `<div class="email-line"></div>`; // This creates the line break for the next part
-              typeWriter(`Go to <a href="https://chs.fransoo.com" target="_blank"><u>chs.fransoo.com</u></a> 💦🔫`, extras, () => {
-                typing.innerHTML += '<span class="cursor"></span>'; // Re-add the cursor at the end
-              });
+          // Add more spacing before the new lines
+          extras.innerHTML += `<div class="email-line" style="margin-top: 30px;"></div>`; // Extra vertical space
+
+          // First line: "Looking for the senior assassin page?" with typing animation
+          typeWriter('Looking for the senior assassin page?', extras, () => {
+            // Second line: "Go to " with typing animation, then immediately display the link and emojis
+            extras.innerHTML += `<div class="email-line"></div>`; // New div for the next line
+            typeWriter('Go to ', extras, () => {
+              // Directly add the clickable link and emojis without typing animation for the link itself
+              extras.lastChild.innerHTML += `<a href="https://chs.fransoo.com" target="_blank"><u>chs.fransoo.com</u></a> 💦🔫`;
+              typing.innerHTML += '<span class="cursor"></span>'; // Re-add the cursor at the end
             });
-          }, 400); // Small delay before the assassin page text starts typing
+          });
         },400);
       });
     });
