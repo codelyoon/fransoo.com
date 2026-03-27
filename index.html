@@ -31,6 +31,16 @@
       0% {background-position: 0% 50%}
       100% {background-position: 300% 50%}
     }
+
+    /* New style for the senior assassin link to match email/X */
+   .assassin-link a {
+      color: white!important; /* Ensure it overrides other styles */
+      text-decoration: underline;
+    }
+   .assassin-link a:hover {
+      color: #ccc!important;
+    }
+
   </style>
 </head>
 <body>
@@ -72,13 +82,28 @@ i made this cuz i was bored
       el.appendChild(tempEl);
       const t=setInterval(()=>{
         if(i<text.length){
-          tempEl.innerHTML += text[i];
+          // Check for explicit <br> tags in the text
+          if (text.substring(i, i + 4) === '<br>') {
+            tempEl.innerHTML += '<br>';
+            i += 3; // Advance i by 3 to skip the <br> tag characters
+          } else {
+            tempEl.innerHTML += text[i];
+          }
           i++;
         }else{
           clearInterval(t);
           if(cb)cb();
         }
       },50);
+    }
+
+    // Function to append HTML directly without typing animation
+    function appendHtml(html, el) {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+      while (tempDiv.firstChild) {
+        el.appendChild(tempDiv.firstChild);
+      }
     }
 
     typeWriter(introText,typing,()=>{
@@ -90,16 +115,18 @@ i made this cuz i was bored
           // Add the email line
           extras.innerHTML += `<div class="email-line">email: <a href="mailto:${email}">${email}</a></div>`;
 
-          // Add more spacing before the new lines
-          extras.innerHTML += `<div class="email-line" style="margin-top: 30px;"></div>`; // Extra vertical space
+          // Add more spacing before the new lines, similar to existing spacing
+          // We'll use a blank email-line div for consistent spacing
+          extras.innerHTML += `<div class="email-line"></div>`; // This creates the vertical space
 
           // First line: "Looking for the senior assassin page?" with typing animation
           typeWriter('Looking for the senior assassin page?', extras, () => {
             // Second line: "Go to " with typing animation, then immediately display the link and emojis
-            extras.innerHTML += `<div class="email-line"></div>`; // New div for the next line
+            extras.innerHTML += `<div class="email-line"></div>`; // New div for the next line to maintain line-height and spacing
             typeWriter('Go to ', extras, () => {
               // Directly add the clickable link and emojis without typing animation for the link itself
-              extras.lastChild.innerHTML += `<a href="https://chs.fransoo.com" target="_blank"><u>chs.fransoo.com</u></a> 💦🔫`;
+              // Applying the new 'assassin-link' class
+              extras.lastChild.innerHTML += `<span class="assassin-link"><a href="https://chs.fransoo.com" target="_blank"><u>chs.fransoo.com</u></a> 💦🔫</span>`;
               typing.innerHTML += '<span class="cursor"></span>'; // Re-add the cursor at the end
             });
           });
