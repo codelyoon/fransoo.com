@@ -16,7 +16,7 @@
       position: relative;
       min-height: 100vh;
     }
- .container {
+.container {
       max-width: 600px;
       position: relative;
       z-index: 10;
@@ -24,6 +24,7 @@
     h1 {
       font-size: 28px;
       margin-bottom: 8px;
+      white-space: nowrap;
     }
     p {
       color: #aaa;
@@ -31,19 +32,14 @@
     }
 
     /* Hint text */
- .hint {
+.hint {
       color: #333;
       font-size: 12px;
       margin-top: 40px;
-      transition: opacity 0.5s ease;
-    }
- .hint.hidden {
-      opacity: 0;
-      pointer-events: none;
     }
 
     /* Name spans for flipping */
- .name-part {
+.name-part {
       display: inline-block;
       cursor: pointer;
       transition: transform 0.3s ease;
@@ -52,18 +48,18 @@
     }
 
     /* Flip classes */
- .flip-vertical {
+.flip-vertical {
       transform: rotateX(180deg);
     }
- .flip-horizontal {
+.flip-horizontal {
       transform: rotateY(180deg);
     }
 
     /* Name fight collision */
- .fight-bounce-left {
+.fight-bounce-left {
       animation: bounceLeft 0.6s ease;
     }
- .fight-bounce-right {
+.fight-bounce-right {
       animation: bounceRight 0.6s ease;
     }
     @keyframes bounceLeft {
@@ -76,7 +72,7 @@
     }
 
     /* Ripple effect */
- .ripple {
+.ripple {
       position: absolute;
       border-radius: 50%;
       transform: scale(0);
@@ -92,7 +88,7 @@
     }
 
     /* Antigravity button */
- .antigravity-btn {
+.antigravity-btn {
       position: fixed;
       bottom: 10px;
       left: 10px;
@@ -102,12 +98,12 @@
       z-index: 20;
       user-select: none;
     }
- .antigravity-btn:hover {
+.antigravity-btn:hover {
       color: #555;
     }
 
     /* Click counter */
- .click-counter {
+.click-counter {
       position: fixed;
       bottom: 10px;
       right: 10px;
@@ -117,12 +113,12 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
- .click-counter.show {
+.click-counter.show {
       opacity: 1;
     }
 
     /* Rage click message */
- .rage-msg {
+.rage-msg {
       position: fixed;
       top: 50%;
       left: 50%;
@@ -140,7 +136,7 @@
     }
 
     /* Screenshot trap */
- .screenshot-trap {
+.screenshot-trap {
       position: fixed;
       top: 50%;
       left: 50%;
@@ -151,7 +147,7 @@
       opacity: 0;
       pointer-events: none;
     }
- .screenshot-trap.flash {
+.screenshot-trap.flash {
       animation: screenshotFlash 0.3s ease;
     }
     @keyframes screenshotFlash {
@@ -160,17 +156,17 @@
     }
 
     /* Flyaway letters */
- .letter {
+.letter {
       display: inline-block;
       transition: transform 1s ease, opacity 1s ease;
     }
- .fly-away {
+.fly-away {
       transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
       opacity: 0;
     }
 
     /* Dance mode */
- .dance {
+.dance {
       animation: danceSpin 0.5s infinite linear;
     }
     @keyframes danceSpin {
@@ -182,7 +178,7 @@
     }
 
     /* Gravity fall */
- .gravity-letter {
+.gravity-letter {
       position: fixed;
       transition: none;
       z-index: 50;
@@ -197,7 +193,7 @@
     </h1>
     <p>this is my website. i made it because i was bored.</p>
 
-    <p class="hint" id="hint">[ try clicking around the site... ]</p>
+    <p class="hint">[ try clicking around the site... ]</p>
   </div>
 
   <div class="antigravity-btn" id="antigravityBtn">antigravity</div>
@@ -224,7 +220,6 @@
     let rageIndex = 0;
 
     // Elements
-    const hint = document.getElementById('hint');
     const clickCounter = document.getElementById('clickCounter');
     const screenshotTrap = document.getElementById('screenshotTrap');
 
@@ -241,20 +236,11 @@
     let gravityLetters = [];
     let tiltX = 0, tiltY = 0;
 
-    // Wrap all text in letter spans for flyaway effect - skip.name-part
+    // Wrap all text in letter spans for flyaway effect - skip h1 and name-part
     function wrapLetters() {
-      const elements = document.querySelectorAll('.container h1,.container p');
+      const elements = document.querySelectorAll('.container p');
       elements.forEach(el => {
-        if (el.classList.contains('hint')) return;
-
-        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
-          acceptNode: function(node) {
-            return node.parentElement.classList.contains('name-part')
-         ? NodeFilter.FILTER_REJECT
-              : NodeFilter.FILTER_ACCEPT;
-          }
-        });
-
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
         const textNodes = [];
         while (walker.nextNode()) textNodes.push(walker.currentNode);
 
@@ -359,8 +345,6 @@
     document.body.addEventListener('click', function(e) {
       totalClicks++;
       lastClickTime = Date.now();
-
-      if (totalClicks >= 2) hint.classList.add('hidden');
       updateClickCounter();
       updateDanceMode();
 
@@ -407,7 +391,6 @@
         e.stopPropagation();
         totalClicks++;
         lastClickTime = Date.now();
-        if (totalClicks >= 2) hint.classList.add('hidden');
         updateClickCounter();
         updateDanceMode();
 
@@ -444,35 +427,34 @@
     // Device tilt detection for gravity
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', (e) => {
-        tiltX = e.gamma || 0; // left-right
-        tiltY = e.beta || 0; // front-back
+        tiltX = e.gamma || 0;
+        tiltY = e.beta || 0;
       });
     }
 
-    // Antigravity button - now drops everything
+    // Antigravity button - drops EVERYTHING including name
     document.getElementById('antigravityBtn').addEventListener('click', function(e) {
       e.stopPropagation();
       totalClicks++;
       lastClickTime = Date.now();
-      if (totalClicks >= 2) hint.classList.add('hidden');
       updateClickCounter();
       updateDanceMode();
 
       if (gravityActive) return;
       gravityActive = true;
 
-      // Get all letters and convert to absolute positioned falling elements
-      const letters = document.querySelectorAll('.letter');
+      // Get ALL text including name parts and hint
+      const allElements = document.querySelectorAll('.name-part,.letter');
       const container = document.body;
 
-      letters.forEach(letter => {
-        const rect = letter.getBoundingClientRect();
-        const clone = letter.cloneNode(true);
+      allElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const clone = el.cloneNode(true);
         clone.classList.add('gravity-letter');
         clone.style.left = rect.left + 'px';
         clone.style.top = rect.top + 'px';
-        clone.style.fontSize = window.getComputedStyle(letter).fontSize;
-        clone.style.color = window.getComputedStyle(letter).color;
+        clone.style.fontSize = window.getComputedStyle(el).fontSize;
+        clone.style.color = window.getComputedStyle(el).color;
         container.appendChild(clone);
         gravityLetters.push({
           el: clone,
@@ -481,7 +463,7 @@
           vx: (Math.random() - 0.5) * 2,
           vy: 0
         });
-        letter.style.opacity = '0';
+        el.style.opacity = '0';
       });
 
       // Physics animation
@@ -489,20 +471,18 @@
         if (!gravityActive) return;
 
         gravityLetters.forEach(letter => {
-          letter.vy += 0.5; // gravity
-          letter.vx += tiltX * 0.01; // tilt influence
+          letter.vy += 0.5;
+          letter.vx += tiltX * 0.01;
 
           letter.x += letter.vx;
           letter.y += letter.vy;
 
-          // Bounce off bottom
           if (letter.y > window.innerHeight - 20) {
             letter.y = window.innerHeight - 20;
             letter.vy *= -0.6;
             letter.vx *= 0.9;
           }
 
-          // Bounce off sides
           if (letter.x < 0) {
             letter.x = 0;
             letter.vx *= -0.6;
@@ -520,12 +500,11 @@
       }
       animateGravity();
 
-      // Reset after 8 seconds
       setTimeout(() => {
         gravityActive = false;
         gravityLetters.forEach(letter => letter.el.remove());
         gravityLetters = [];
-        letters.forEach(letter => letter.style.opacity = '1');
+        allElements.forEach(el => el.style.opacity = '1');
       }, 8000);
     });
   </script>
