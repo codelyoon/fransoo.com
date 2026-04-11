@@ -16,7 +16,7 @@
       position: relative;
       min-height: 100vh;
     }
-   .container {
+  .container {
       max-width: 600px;
       position: relative;
       z-index: 10;
@@ -38,7 +38,7 @@
     }
 
     /* Name spans for flipping */
-   .name-part {
+  .name-part {
       display: inline-block;
       cursor: pointer;
       transition: transform 0.3s ease;
@@ -47,18 +47,18 @@
     }
 
     /* Flip classes */
-   .flip-vertical {
+  .flip-vertical {
       transform: rotateX(180deg);
     }
-   .flip-horizontal {
+  .flip-horizontal {
       transform: rotateY(180deg);
     }
 
     /* Name fight collision */
-   .fight-bounce-left {
+  .fight-bounce-left {
       animation: bounceLeft 0.6s ease;
     }
-   .fight-bounce-right {
+  .fight-bounce-right {
       animation: bounceRight 0.6s ease;
     }
     @keyframes bounceLeft {
@@ -71,7 +71,7 @@
     }
 
     /* Ripple effect */
-   .ripple {
+  .ripple {
       position: absolute;
       border-radius: 50%;
       transform: scale(0);
@@ -87,7 +87,7 @@
     }
 
     /* Antigravity button */
-   .antigravity-btn {
+  .antigravity-btn {
       position: fixed;
       bottom: 10px;
       left: 10px;
@@ -97,12 +97,12 @@
       z-index: 20;
       user-select: none;
     }
-   .antigravity-btn:hover {
+  .antigravity-btn:hover {
       color: #555;
     }
 
     /* Antigravity animation */
-   .float-up {
+  .float-up {
       animation: floatUp 2s ease-out forwards;
     }
     @keyframes floatUp {
@@ -112,7 +112,7 @@
     }
 
     /* Rage click message */
-   .rage-msg {
+  .rage-msg {
       position: fixed;
       top: 50%;
       left: 50%;
@@ -130,11 +130,11 @@
     }
 
     /* Flyaway letters */
-   .letter {
+  .letter {
       display: inline-block;
       transition: transform 1s ease, opacity 1s ease;
     }
-   .fly-away {
+  .fly-away {
       transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
       opacity: 0;
     }
@@ -187,12 +187,12 @@
           while (walker.nextNode()) textNodes.push(walker.currentNode);
 
           textNodes.forEach(node => {
-            if (node.textContent.trim()) {
+            if (node.textContent.trim() || node.textContent.includes(' ')) {
               const frag = document.createDocumentFragment();
               node.textContent.split('').forEach(char => {
                 const span = document.createElement('span');
                 span.className = 'letter';
-                span.textContent = char;
+                span.innerHTML = char === ' '? '&nbsp;' : char;
                 frag.appendChild(span);
               });
               node.replaceWith(frag);
@@ -200,7 +200,7 @@
           });
         } else {
           el.innerHTML = el.textContent.split('').map(char =>
-            `<span class="letter">${char}</span>`
+            `<span class="letter">${char === ' '? '&nbsp;' : char}</span>`
           ).join('');
         }
       });
