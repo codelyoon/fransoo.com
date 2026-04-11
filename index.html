@@ -16,7 +16,7 @@
       position: relative;
       min-height: 100vh;
     }
-    .container {
+   .container {
       max-width: 600px;
       position: relative;
       z-index: 10;
@@ -36,95 +36,293 @@
     a:hover {
       color: white;
     }
-    
+
     /* Name spans for flipping */
-    .name-part {
+   .name-part {
       display: inline-block;
       cursor: pointer;
       transition: transform 0.3s ease;
       user-select: none;
+      position: relative;
     }
-    
+
     /* Flip classes */
-    .flip-vertical {
+   .flip-vertical {
       transform: rotateX(180deg);
     }
-    .flip-horizontal {
+   .flip-horizontal {
       transform: rotateY(180deg);
     }
-    
+
+    /* Name fight collision */
+   .fight-bounce-left {
+      animation: bounceLeft 0.6s ease;
+    }
+   .fight-bounce-right {
+      animation: bounceRight 0.6s ease;
+    }
+    @keyframes bounceLeft {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(-15px) rotateY(180deg); }
+    }
+    @keyframes bounceRight {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(15px) rotateY(180deg); }
+    }
+
     /* Ripple effect */
-    .ripple {
+   .ripple {
       position: absolute;
       border-radius: 50%;
-      background: rgba(0, 120, 255, 0.4);
       transform: scale(0);
       animation: ripple-animation 2s ease-out;
       pointer-events: none;
       z-index: 1;
     }
-    
     @keyframes ripple-animation {
       to {
         transform: scale(4);
         opacity: 0;
       }
     }
+
+    /* Antigravity button */
+   .antigravity-btn {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      font-size: 12px;
+      color: #333;
+      cursor: pointer;
+      z-index: 20;
+      user-select: none;
+    }
+   .antigravity-btn:hover {
+      color: #555;
+    }
+
+    /* Antigravity animation */
+   .float-up {
+      animation: floatUp 2s ease-out forwards;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-100px) rotate(10deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    /* Rage click message */
+   .rage-msg {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      color: #fff;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      animation: fadeInOut 2s ease;
+    }
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0; }
+      20%, 80% { opacity: 1; }
+    }
+
+    /* Flyaway letters */
+   .letter {
+      display: inline-block;
+      transition: transform 1s ease, opacity 1s ease;
+    }
+   .fly-away {
+      transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+      opacity: 0;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>
-      <span class="name-part">henry</span> 
-      <span class="name-part">fransoo</span>
+      <span class="name-part" data-name="henry">henry</span>
+      <span class="name-part" data-name="fransoo">fransoo</span>
     </h1>
     <p>this is my website. i made it because i was bored.</p>
-    
+
     <p><a href="https://chs.fransoo.com" target="_blank">senior assassin page →</a></p>
   </div>
 
+  <div class="antigravity-btn" id="antigravityBtn">^</div>
+
   <script>
+    // Ripple colors
+    const rippleColors = [
+      'rgba(0, 120, 255, 0.4)', // blue
+      'rgba(255, 220, 0, 0.4)', // yellow
+      'rgba(255, 50, 50, 0.4)', // red
+      'rgba(50, 220, 50, 0.4)', // green
+      'rgba(255, 140, 0, 0.4)' // orange
+    ];
+
+    // Rage click tracking
+    let clickCount = 0;
+    const rageMessages = ["wow you must be bored", "still here?", "why?"];
+    let rageIndex = 0;
+
+    // Name fight tracking
+    let lastNameClick = null;
+    let lastNameTime = 0;
+
+    // Idle tracking for flyaway
+    let idleTimer;
+    let isFlying = false;
+
+    // Wrap all text in letter spans for flyaway effect
+    function wrapLetters() {
+      const elements = document.querySelectorAll('.container h1,.container p');
+      elements.forEach(el => {
+        if (el.querySelector('a') || el.querySelector('.name-part')) {
+          // Handle mixed content
+          const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+          const textNodes = [];
+          while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+          textNodes.forEach(node => {
+            if (node.textContent.trim()) {
+              const frag = document.createDocumentFragment();
+              node.textContent.split('').forEach(char => {
+                const span = document.createElement('span');
+                span.className = 'letter';
+                span.textContent = char;
+                frag.appendChild(span);
+              });
+              node.replaceWith(frag);
+            }
+          });
+        } else {
+          el.innerHTML = el.textContent.split('').map(char =>
+            `<span class="letter">${char}</span>`
+          ).join('');
+        }
+      });
+    }
+    wrapLetters();
+
+    // Reset idle timer
+    function resetIdle() {
+      clearTimeout(idleTimer);
+      if (isFlying) return;
+      idleTimer = setTimeout(startFlyaway, 10000);
+    }
+    ['mousemove', 'keydown', 'click', 'scroll'].forEach(evt => {
+      document.addEventListener(evt, resetIdle);
+    });
+    resetIdle();
+
+    // Flyaway effect
+    function startFlyaway() {
+      if (isFlying) return;
+      isFlying = true;
+      const letters = document.querySelectorAll('.letter');
+      const lettersArray = Array.from(letters);
+
+      lettersArray.forEach((letter, i) => {
+        setTimeout(() => {
+          const tx = (Math.random() - 0.5) * 800;
+          const ty = -Math.random() * 600 - 200;
+          const rot = (Math.random() - 0.5) * 720;
+          letter.style.setProperty('--tx', tx + 'px');
+          letter.style.setProperty('--ty', ty + 'px');
+          letter.style.setProperty('--rot', rot + 'deg');
+          letter.classList.add('fly-away');
+        }, i * 80);
+      });
+
+      // Snap back after all have flown
+      setTimeout(() => {
+        letters.forEach(letter => letter.classList.remove('fly-away'));
+        setTimeout(() => {
+          isFlying = false;
+          resetIdle();
+        }, 1000);
+      }, lettersArray.length * 80 + 2000);
+    }
+
     // Water ripple on background click
     document.body.addEventListener('click', function(e) {
-      // Only ripple if clicking the background, not text/links
       if (e.target === document.body || e.target.classList.contains('container')) {
+        clickCount++;
+
+        // Rage messages every 10 clicks
+        if (clickCount % 10 === 0) {
+          const msg = document.createElement('div');
+          msg.className = 'rage-msg';
+          msg.textContent = rageMessages[rageIndex];
+          document.body.appendChild(msg);
+          rageIndex = (rageIndex + 1) % rageMessages.length;
+          setTimeout(() => msg.remove(), 2000);
+        }
+
         const ripple = document.createElement('span');
         ripple.classList.add('ripple');
-        
+        const randomColor = rippleColors[Math.floor(Math.random() * rippleColors.length)];
+        ripple.style.background = randomColor;
+
         const size = Math.max(window.innerWidth, window.innerHeight);
         ripple.style.width = ripple.style.height = size + 'px';
         ripple.style.left = e.clientX - size / 2 + 'px';
         ripple.style.top = e.clientY - size / 2 + 'px';
-        
+
         document.body.appendChild(ripple);
-        
-        // Remove ripple after animation
-        setTimeout(() => {
-          ripple.remove();
-        }, 2000);
+        setTimeout(() => ripple.remove(), 2000);
       }
     });
-    
-    // Flip name parts on click
+
+    // Name flip + fight logic
     const nameParts = document.querySelectorAll('.name-part');
     let isFlipping = false;
-    
+
     nameParts.forEach(part => {
       part.addEventListener('click', function(e) {
-        e.stopPropagation(); // Don't trigger ripple
-        
-        if (isFlipping) return; // Prevent spam clicks
+        e.stopPropagation();
+
+        const now = Date.now();
+        const name = this.dataset.name;
+
+        // Name fight: clicked henry then fransoo within 1s
+        if (lastNameClick && lastNameClick!== name && now - lastNameTime < 1000) {
+          document.querySelector('[data-name="henry"]').classList.add('fight-bounce-left');
+          document.querySelector('[data-name="fransoo"]').classList.add('fight-bounce-right');
+          setTimeout(() => {
+            document.querySelector('[data-name="henry"]').classList.remove('fight-bounce-left');
+            document.querySelector('[data-name="fransoo"]').classList.remove('fight-bounce-right');
+          }, 600);
+          lastNameClick = null;
+          return;
+        }
+
+        lastNameClick = name;
+        lastNameTime = now;
+
+        if (isFlipping) return;
         isFlipping = true;
-        
-        // Randomly choose vertical or horizontal flip
-        const flipClass = Math.random() > 0.5 ? 'flip-vertical' : 'flip-horizontal';
+
+        const flipClass = Math.random() > 0.5? 'flip-vertical' : 'flip-horizontal';
         this.classList.add(flipClass);
-        
-        // Flip back after 5 seconds
+
         setTimeout(() => {
           this.classList.remove(flipClass);
           isFlipping = false;
         }, 5000);
+      });
+    });
+
+    // Antigravity button
+    document.getElementById('antigravityBtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      const elements = document.querySelectorAll('.container h1,.container p,.container a');
+      elements.forEach(el => {
+        el.classList.add('float-up');
+        setTimeout(() => el.classList.remove('float-up'), 2000);
       });
     });
   </script>
