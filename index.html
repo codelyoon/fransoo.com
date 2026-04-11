@@ -5,91 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>fransoo.com</title>
   <style>
-    body {background:black;color:#00bfff;font-family:'Courier New',monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;padding:20px;box-sizing:border-box;position:relative;overflow:hidden}
-    #static-canvas {position:absolute;top:0;left:0;right:0;bottom:0;opacity:1.15;pointer-events:none;z-index:0}
-.container {max-width:600px;text-align:left;position:relative;z-index:1}
-.typing {white-space:pre-line}
-.cursor {display:inline-block;width:2px;background:#00bfff;animation:blink 1s infinite;margin-left:2px}
-    @keyframes blink {0%,50%{opacity:1}51%,100%{opacity:0}}
-.extras {margin-top:20px} /* This margin is key for the gap */
-.email-line {white-space:nowrap;margin-top:15px}
-.email-line a {color:white;text-decoration:underline}
-.email-line a:hover {color:#ccc}
-    /* New style for the senior assassin link to match email/X */
- .assassin-link a {
-      color: white!important; /* Ensure it overrides other styles */
+    body {
+      background: black;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 40px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 600px;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    p {
+      color: #aaa;
+      margin-bottom: 30px;
+    }
+    a {
+      color: #00bfff;
       text-decoration: underline;
     }
- .assassin-link a:hover {
-      color: #ccc!important;
+    a:hover {
+      color: white;
     }
   </style>
 </head>
 <body>
-  <canvas id="static-canvas"></canvas>
   <div class="container">
-    <div class="typing" id="typing"></div>
-    <div class="extras" id="extras"></div>
+    <h1>henry fransoo</h1>
+    <p>this is my website. i made it because i was bored.</p>
+    
+    <p><a href="https://chs.fransoo.com" target="_blank">senior assassin page →</a></p>
   </div>
-
-  <script>
-    // static (unchanged)
-    const canvas=document.getElementById('static-canvas'),ctx=canvas.getContext('2d');
-    canvas.width=innerWidth;canvas.height=innerHeight;
-    addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight});
-    (function staticNoise(){
-      const imgData=ctx.createImageData(canvas.width,canvas.height);
-      const buffer=new Uint32Array(imgData.data.buffer);
-      for(let i=0;i<buffer.length;i++)if(Math.random()<0.09)buffer[i]=0x44ffffff;
-      ctx.putImageData(imgData,0,0);
-      requestAnimationFrame(staticNoise);
-    })();
-
-    const introText=`hi, i'm Henry Fransoo,
-
-this is my website fransoo.com
-
-i made this cuz i was bored
-
-`;
-
-    const typing=document.getElementById('typing');
-    const extras=document.getElementById('extras'); // This element has the margin-top:20px
-
-    function typeWriter(text,el,cb){
-      let i=0;
-      let tempEl = document.createElement('span'); // Use a span to build text character by character
-      el.appendChild(tempEl);
-      const t=setInterval(()=>{
-        if(i<text.length){
-          // Check for explicit <br> tags in the text
-          if (text.substring(i, i + 4) === '<br>') {
-            tempEl.innerHTML += '<br>';
-            i += 3; // Advance i by 3 to skip the <br> tag characters
-          } else {
-            tempEl.innerHTML += text[i];
-          }
-          i++;
-        }else{
-          clearInterval(t);
-          if(cb)cb();
-        }
-      },50);
-    }
-
-    typeWriter(introText,typing,()=>{
-      // First line: "Looking for the senior assassin page?" with typing animation
-      typeWriter('Looking for the senior assassin page?', extras, () => {
-        // Second line: "Go to " with typing animation, then immediately display the link and emojis
-        extras.innerHTML += `<div class="email-line"></div>`; // New div for the next line to maintain line-height and spacing
-        typeWriter('Go to ', extras, () => {
-          // Directly add the clickable link and emojis without typing animation for the link itself
-          // Applying the new 'assassin-link' class
-          extras.lastChild.innerHTML += `<span class="assassin-link"><a href="https://chs.fransoo.com" target="_blank"><u>chs.fransoo.com</u></a> 💦🔫</span>`;
-          typing.innerHTML += '<span class="cursor"></span>'; // Re-add the cursor at the end
-        });
-      });
-    });
-  </script>
 </body>
 </html>
