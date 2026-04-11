@@ -117,6 +117,24 @@
       opacity: 1;
     }
 
+    /* Big counter intro */
+.counter-intro {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      font-size: 24px;
+      color: #fff;
+      z-index: 150;
+      pointer-events: none;
+      animation: counterShrink 1.5s ease forwards;
+    }
+    @keyframes counterShrink {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(calc(50vw - 60px), calc(50vh - 20px)) scale(0.5); }
+    }
+
     /* Rage click message */
 .rage-msg {
       position: fixed;
@@ -165,6 +183,12 @@
       opacity: 0;
     }
 
+    /* Clickable words */
+.word {
+      display: inline-block;
+      cursor: pointer;
+    }
+
     /* Dance mode */
 .dance {
       animation: danceSpin 0.5s infinite linear;
@@ -183,6 +207,13 @@
       transition: none;
       z-index: 50;
     }
+
+    /* Exploding letters */
+.exploding-letter {
+      position: fixed;
+      z-index: 60;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -191,7 +222,7 @@
       <span class="name-part" data-name="henry">henry</span>
       <span class="name-part" data-name="fransoo">fransoo</span>
     </h1>
-    <p>this is my website. i made it because i was bored.</p>
+    <p id="boredText">this is my website. i made it because i was bored.</p>
 
     <p class="hint">[ try clicking around the site... ]</p>
   </div>
@@ -216,6 +247,7 @@
     let lastClickTime = 0;
     let danceModeActive = false;
     let clickStopTimer;
+    let hasShownCounterIntro = false;
     const rageMessages = ["wow you must be bored", "still here?", "why?"];
     let rageIndex = 0;
 
@@ -236,9 +268,27 @@
     let gravityLetters = [];
     let tiltX = 0, tiltY = 0;
 
-    // Wrap all text in letter spans for flyaway effect - skip h1 and name-part
+    // Wrap bored text in clickable words
+    function wrapBoredText() {
+      const boredText = document.getElementById('boredText');
+      const words = boredText.textContent.split(' ');
+      boredText.innerHTML = words.map(word =>
+        `<span class="word">${word}</span>`
+      ).join(' ');
+
+      // Add click handlers to words
+      document.querySelectorAll('.word').forEach(wordEl => {
+        wordEl.addEventListener('click', function(e) {
+          e.stopPropagation();
+          explodeWord(this, e.clientX, e.clientY);
+        });
+      });
+    }
+    wrapBoredText();
+
+    // Wrap other text in letter spans for flyaway - skip h1 and bored text words
     function wrapLetters() {
-      const elements = document.querySelectorAll('.container p');
+      const elements = document.querySelectorAll('.container p:not(#boredText)');
       elements.forEach(el => {
         const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
         const textNodes = [];
@@ -259,6 +309,66 @@
       });
     }
     wrapLetters();
+
+    // Explode word into bouncing letters
+    function explodeWord(wordEl, clickX, clickY) {
+      const word = wordEl.textContent;
+      const rect = wordEl.getBoundingClientRect();
+
+      wordEl.style.opacity = '0';
+
+      word.split('').forEach((char, i) => {
+        if (char === ' ') return;
+
+        const letter = document.createElement('span');
+        letter.className = 'exploding-letter';
+        letter.textContent = char;
+        letter.style.left = (rect.left + i * 10) + 'px';
+        letter.style.top = rect.top + 'px';
+        letter.style.color = '#aaa';
+        document.body.appendChild(letter);
+
+        // Random velocity toward walls
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 8 + Math.random() * 12;
+        let vx = Math.cos(angle) * speed;
+        let vy = Math.sin(angle) * speed;
+        let x = rect.left + i * 10;
+        let y = rect.top;
+
+        function animateLetter() {
+          x += vx;
+          y += vy;
+          vy += 0.3; // gravity
+
+          // Bounce off walls
+          if (x < 0 || x > window.innerWidth - 20) {
+            vx *= -0.8;
+            x = x < 0? 0 : window.innerWidth - 20;
+          }
+          if (y < 0 || y > window.innerHeight - 20) {
+            vy *= -0.8;
+            y = y < 0? 0 : window.innerHeight - 20;
+            vx *= 0.9; // friction
+          }
+
+          letter.style.left = x + 'px';
+          letter.style.top = y + 'px';
+
+          if (Math.abs(vx) > 0.5 || Math.abs(vy) > 0.5) {
+            requestAnimationFrame(animateLetter);
+          } else {
+            setTimeout(() => letter.remove(), 1000);
+          }
+        }
+        requestAnimationFrame(animateLetter);
+      });
+
+      // Restore word after 3s
+      setTimeout(() => {
+        wordEl.style.opacity = '1';
+      }, 3000);
+    }
 
     // Screenshot trap
     let wasHidden = false;
@@ -329,9 +439,19 @@
       }
     }
 
-    // Click counter visibility
+    // Click counter visibility + intro
     function updateClickCounter() {
       if (totalClicks >= 25) {
+        // Show intro explosion once
+        if (!hasShownCounterIntro) {
+          hasShownCounterIntro = true;
+          const intro = document.createElement('div');
+          intro.className = 'counter-intro';
+          intro.textContent = `clicks: ${totalClicks}`;
+          document.body.appendChild(intro);
+          setTimeout(() => intro.remove(), 1500);
+        }
+
         clickCounter.textContent = `clicks: ${totalClicks}`;
         clickCounter.classList.add('show');
         clearTimeout(clickStopTimer);
@@ -444,7 +564,7 @@
       gravityActive = true;
 
       // Get ALL text including name parts and hint
-      const allElements = document.querySelectorAll('.name-part,.letter');
+      const allElements = document.querySelectorAll('.name-part,.letter,.word,.hint');
       const container = document.body;
 
       allElements.forEach(el => {
