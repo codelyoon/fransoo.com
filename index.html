@@ -12,9 +12,14 @@
       margin: 0;
       padding: 40px;
       line-height: 1.6;
+      overflow: hidden;
+      position: relative;
+      min-height: 100vh;
     }
     .container {
       max-width: 600px;
+      position: relative;
+      z-index: 10;
     }
     h1 {
       font-size: 28px;
@@ -31,14 +36,97 @@
     a:hover {
       color: white;
     }
+    
+    /* Name spans for flipping */
+    .name-part {
+      display: inline-block;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      user-select: none;
+    }
+    
+    /* Flip classes */
+    .flip-vertical {
+      transform: rotateX(180deg);
+    }
+    .flip-horizontal {
+      transform: rotateY(180deg);
+    }
+    
+    /* Ripple effect */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(0, 120, 255, 0.4);
+      transform: scale(0);
+      animation: ripple-animation 2s ease-out;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    @keyframes ripple-animation {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>henry fransoo</h1>
+    <h1>
+      <span class="name-part">henry</span> 
+      <span class="name-part">fransoo</span>
+    </h1>
     <p>this is my website. i made it because i was bored.</p>
     
     <p><a href="https://chs.fransoo.com" target="_blank">senior assassin page →</a></p>
   </div>
+
+  <script>
+    // Water ripple on background click
+    document.body.addEventListener('click', function(e) {
+      // Only ripple if clicking the background, not text/links
+      if (e.target === document.body || e.target.classList.contains('container')) {
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple');
+        
+        const size = Math.max(window.innerWidth, window.innerHeight);
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = e.clientX - size / 2 + 'px';
+        ripple.style.top = e.clientY - size / 2 + 'px';
+        
+        document.body.appendChild(ripple);
+        
+        // Remove ripple after animation
+        setTimeout(() => {
+          ripple.remove();
+        }, 2000);
+      }
+    });
+    
+    // Flip name parts on click
+    const nameParts = document.querySelectorAll('.name-part');
+    let isFlipping = false;
+    
+    nameParts.forEach(part => {
+      part.addEventListener('click', function(e) {
+        e.stopPropagation(); // Don't trigger ripple
+        
+        if (isFlipping) return; // Prevent spam clicks
+        isFlipping = true;
+        
+        // Randomly choose vertical or horizontal flip
+        const flipClass = Math.random() > 0.5 ? 'flip-vertical' : 'flip-horizontal';
+        this.classList.add(flipClass);
+        
+        // Flip back after 5 seconds
+        setTimeout(() => {
+          this.classList.remove(flipClass);
+          isFlipping = false;
+        }, 5000);
+      });
+    });
+  </script>
 </body>
 </html>
