@@ -121,6 +121,17 @@
       opacity: 1;
       transform: translateY(0);
     }
+    .cursor-dot {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+      pointer-events: none;
+      z-index: 80;
+      transform: translate(-50%, -50%);
+      opacity: 0.7;
+    }
     .nav-links {
       display: flex;
       gap: 22px;
@@ -464,7 +475,7 @@
         <span class="name-part" data-name="fransoo">Fransoo</span>
       </h1>
       <p class="lede" id="boredText">I make stuff, design & ship products, and trade international markets.</p>
-      <p class="lede" id="boredText">Usually always building something.</p>
+      <p class="lede">Usually always building something.</p>
     </section>
 
     <section id="about">
@@ -561,23 +572,19 @@
           <button type="submit" id="formBtn">Send message</button>
           <p class="form-status" id="formStatus"></p>
         </form>
-      </div>
+        </div>
           <div class="contact-links">
             <a href="https://instagram.com/woeller23" target="_blank" rel="noopener">@woeller23 <small>instagram</small></a>
             <a href="https://x.com/hfransoo" target="_blank" rel="noopener">@hfransoo <small>x</small></a>
             <a href="https://ca.linkedin.com/in/hfransoo" target="_blank" rel="noopener">@hfransoo <small>linkedin</small></a>
           </div>
-        </div>
+      </div>
     </section>
 
     <footer>
       <span>© Henry Fransoo • fransoo.com • Woeller23 Ventures</span>
-      <span>(oh if you didnt notice, click the top left for an easter egg)</span>
     </footer>
   </main>
-
-  <div class="click-counter" id="clickCounter">clicks: 0</div>
-  <div class="screenshot-trap" id="screenshotTrap">i saw that screenshot</div>
 
   <script>
     const themes = [
@@ -680,6 +687,13 @@
     ];
     let currentTheme = "midnight blue";
     let bubbleTimer;
+    function showBubble(text, ms) {
+      const bubble = document.getElementById("themeBubble");
+      bubble.textContent = text;
+      bubble.classList.add("show");
+      clearTimeout(bubbleTimer);
+      bubbleTimer = setTimeout(() => bubble.classList.remove("show"), ms);
+    }
 
     function applyTheme(theme) {
       const root = document.documentElement;
@@ -699,12 +713,7 @@
       root.style.setProperty("--btn-ink", theme.btnInk);
       document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.bg);
       currentTheme = theme.name;
-
-      const bubble = document.getElementById("themeBubble");
-      bubble.textContent = "theme changed to " + theme.name;
-      bubble.classList.add("show");
-      clearTimeout(bubbleTimer);
-      bubbleTimer = setTimeout(() => bubble.classList.remove("show"), 1000);
+      showBubble("theme changed to " + theme.name, 1000);
     }
 
     document.getElementById("brand").addEventListener("click", function(e) {
@@ -713,6 +722,32 @@
       const pool = themes.filter(t => t.name !== currentTheme);
       applyTheme(pool[Math.floor(Math.random() * pool.length)]);
     });
+
+    if (!sessionStorage.getItem("fransooHintShown")) {
+      setTimeout(() => {
+        sessionStorage.setItem("fransooHintShown", "1");
+        showBubble("click me", 7000);
+      }, 30000);
+    }
+
+    if (window.matchMedia("(pointer: fine)").matches) {
+      document.addEventListener("mousemove", function(e) {
+        const dot = document.createElement("span");
+        dot.className = "cursor-dot";
+        dot.style.left = e.clientX + "px";
+        dot.style.top = e.clientY + "px";
+        document.body.appendChild(dot);
+        let opacity = 0.7;
+        function fade() {
+          opacity -= 0.045;
+          dot.style.opacity = opacity;
+          dot.style.transform = "translate(-50%, -50%) scale(" + Math.max(opacity, 0.2) + ")";
+          if (opacity > 0) requestAnimationFrame(fade);
+          else dot.remove();
+        }
+        requestAnimationFrame(fade);
+      });
+    }
 
     const rippleColors = [
       'rgba(47, 127, 255, 0.35)',
