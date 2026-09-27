@@ -20,6 +20,11 @@
       --blue-2: #5b9bff;
       --blue-soft: rgba(47,127,255,0.14);
       --card: #14181f;
+      --card-2: #12161c;
+      --header: rgba(11,13,16,0.72);
+      --input: #0f1318;
+      --glow: rgba(47,127,255,0.16);
+      --btn-ink: #ffffff;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,6 +37,7 @@
       min-height: 100vh;
       overflow-x: hidden;
       position: relative;
+      transition: background 0.45s ease, color 0.45s ease;
     }
 
     a { color: inherit; text-decoration: none; }
@@ -52,7 +58,8 @@
       width: 720px;
       height: 720px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(47,127,255,0.16), transparent 62%);
+      background: radial-gradient(circle, var(--glow), transparent 62%);
+      transition: background 0.45s ease;
       top: -240px;
       right: -180px;
       z-index: 0;
@@ -71,8 +78,9 @@
       top: 0;
       z-index: 30;
       backdrop-filter: blur(16px);
-      background: rgba(11,13,16,0.72);
+      background: var(--header);
       border-bottom: 1px solid var(--line);
+      transition: background 0.45s ease, border-color 0.45s ease;
     }
     .nav {
       display: flex;
@@ -80,10 +88,38 @@
       justify-content: space-between;
       height: 68px;
     }
+    .brand-wrap {
+      position: relative;
+    }
     .brand {
       font-weight: 600;
       letter-spacing: -0.04em;
       font-size: 20px;
+      cursor: pointer;
+    }
+    .theme-bubble {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      white-space: nowrap;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 40;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .theme-bubble.show {
+      opacity: 1;
+      transform: translateY(0);
     }
     .nav-links {
       display: flex;
@@ -95,12 +131,12 @@
     .nav-cta {
       font-size: 13px;
       padding: 8px 14px;
-      border: 1px solid rgba(47,127,255,0.45);
+      border: 1px solid var(--blue);
       background: var(--blue-soft);
       color: var(--blue-2);
       border-radius: 999px;
     }
-    .nav-cta:hover { background: rgba(47,127,255,0.24); }
+    .nav-cta:hover { filter: brightness(1.12); }
 
     .hero { padding: 88px 0 72px; }
     .kicker {
@@ -163,6 +199,7 @@
       font-size: 17px;
     }
     .prose p + p { margin-top: 14px; }
+    .prose strong { color: var(--ink); font-weight: 500; }
 
     .grid {
       display: grid;
@@ -171,16 +208,16 @@
       margin-top: 28px;
     }
     .card {
-      background: linear-gradient(180deg, #161b23, #12161c);
+      background: linear-gradient(180deg, var(--card), var(--card-2));
       border: 1px solid var(--line);
       border-radius: 18px;
       padding: 24px;
       min-height: 210px;
-      transition: transform 0.25s ease, border-color 0.25s ease;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.45s ease;
     }
     .card:hover {
       transform: translateY(-3px);
-      border-color: rgba(47,127,255,0.35);
+      border-color: var(--blue);
     }
     .card h3 {
       font-size: 22px;
@@ -243,7 +280,7 @@
       padding: 16px 18px;
       background: var(--card);
     }
-    .contact-links a:hover { border-color: rgba(47,127,255,0.4); }
+    .contact-links a:hover { border-color: var(--blue); }
     .contact-links small {
       color: var(--dim);
       font-family: "IBM Plex Mono", monospace;
@@ -268,7 +305,7 @@
     }
     .form input, .form textarea {
       width: 100%;
-      background: #0f1318;
+      background: var(--input);
       border: 1px solid var(--line);
       border-radius: 10px;
       color: var(--ink);
@@ -277,20 +314,20 @@
       outline: none;
     }
     .form input:focus, .form textarea:focus {
-      border-color: rgba(47,127,255,0.55);
+      border-color: var(--blue);
     }
     .form textarea { min-height: 120px; resize: vertical; }
     .form button {
       border: 0;
       background: var(--blue);
-      color: white;
+      color: var(--btn-ink);
       border-radius: 10px;
       padding: 12px 16px;
       font-size: 15px;
       font-weight: 500;
       cursor: pointer;
     }
-    .form button:hover { background: #4b8dff; }
+    .form button:hover { filter: brightness(1.08); }
     .form button:disabled { opacity: 0.6; cursor: default; }
     .form-note {
       font-size: 12px;
@@ -406,7 +443,10 @@
 
   <header>
     <div class="wrap nav">
-      <a class="brand" href="#top" aria-label="fransoo.com">fransoo.com</a>
+      <div class="brand-wrap">
+        <a class="brand" href="#top" id="brand" aria-label="fransoo.com">fransoo.com</a>
+        <div class="theme-bubble" id="themeBubble">theme changed</div>
+      </div>
       <nav class="nav-links">
         <a href="#about">About</a>
         <a href="#work">Work</a>
@@ -431,7 +471,7 @@
       <h2>Not a résumé. A running log.</h2>
       <div class="prose">
         <p>I’m Henry, an entrepreneur from the Calgary area. I started shipping products and games before I could legally sign most contracts, then spent the years after that on the unglamorous parts: inventory, ads, logistics, and what happens after something actually launches.</p>
-        <p>Now I split time between operating businesses under <strong style="color:#e8edf3">Woeller23 Ventures</strong>, running e-commerce through <strong style="color:#e8edf3">SHIP23 Industries</strong>, and trading crypto markets.</p>
+        <p>Now I split time between operating businesses under <strong>Woeller23 Ventures</strong>, running e-commerce through <strong>SHIP23 Industries</strong>, and trading crypto markets.</p>
       </div>
       <div class="stats">
         <div class="stat-box">
@@ -532,6 +572,140 @@
   <div class="screenshot-trap" id="screenshotTrap">i saw that screenshot</div>
 
   <script>
+    const themes = [
+      {
+        name: "midnight blue",
+        bg: "#0b0d10", ink: "#f4f6f8", muted: "#9aa3b2", dim: "#6b7380",
+        line: "rgba(255,255,255,0.08)", blue: "#2f7fff", blue2: "#5b9bff",
+        soft: "rgba(47,127,255,0.14)", card: "#14181f", card2: "#12161c",
+        header: "rgba(11,13,16,0.72)", input: "#0f1318",
+        glow: "rgba(47,127,255,0.16)", btnInk: "#ffffff"
+      },
+      {
+        name: "ember",
+        bg: "#140b09", ink: "#fff3ec", muted: "#c9a89a", dim: "#8d6f64",
+        line: "rgba(255,180,140,0.12)", blue: "#ff6b35", blue2: "#ff9a6b",
+        soft: "rgba(255,107,53,0.16)", card: "#1d1210", card2: "#18100e",
+        header: "rgba(20,11,9,0.78)", input: "#120c0a",
+        glow: "rgba(255,107,53,0.18)", btnInk: "#1a0b07"
+      },
+      {
+        name: "moss",
+        bg: "#0b120e", ink: "#eef8f0", muted: "#9fb3a4", dim: "#6d7f73",
+        line: "rgba(140,200,150,0.12)", blue: "#3dba6e", blue2: "#7fe0a3",
+        soft: "rgba(61,186,110,0.16)", card: "#121a15", card2: "#0f1612",
+        header: "rgba(11,18,14,0.78)", input: "#0c130f",
+        glow: "rgba(61,186,110,0.16)", btnInk: "#06140b"
+      },
+      {
+        name: "violet",
+        bg: "#100b16", ink: "#f6f0ff", muted: "#b5a8c9", dim: "#7d738c",
+        line: "rgba(180,150,255,0.14)", blue: "#8b5cf6", blue2: "#c4b5fd",
+        soft: "rgba(139,92,246,0.16)", card: "#181222", card2: "#14101c",
+        header: "rgba(16,11,22,0.78)", input: "#120d18",
+        glow: "rgba(139,92,246,0.18)", btnInk: "#ffffff"
+      },
+      {
+        name: "gold",
+        bg: "#12100a", ink: "#fff8e8", muted: "#c4b48a", dim: "#8a7d58",
+        line: "rgba(230,190,80,0.14)", blue: "#e0b12a", blue2: "#f0d078",
+        soft: "rgba(224,177,42,0.16)", card: "#1b1810", card2: "#16140d",
+        header: "rgba(18,16,10,0.78)", input: "#13110b",
+        glow: "rgba(224,177,42,0.16)", btnInk: "#1a1506"
+      },
+      {
+        name: "rose",
+        bg: "#160b10", ink: "#fff0f4", muted: "#c9a3af", dim: "#8d6d78",
+        line: "rgba(255,140,170,0.14)", blue: "#f43f7a", blue2: "#fb8eac",
+        soft: "rgba(244,63,122,0.16)", card: "#1e1217", card2: "#180e13",
+        header: "rgba(22,11,16,0.78)", input: "#140c10",
+        glow: "rgba(244,63,122,0.18)", btnInk: "#ffffff"
+      },
+      {
+        name: "teal",
+        bg: "#071214", ink: "#eaf8f8", muted: "#93b6b6", dim: "#678080",
+        line: "rgba(80,200,200,0.12)", blue: "#14b8a6", blue2: "#5eead4",
+        soft: "rgba(20,184,166,0.16)", card: "#0e1a1c", card2: "#0b1618",
+        header: "rgba(7,18,20,0.78)", input: "#081314",
+        glow: "rgba(20,184,166,0.16)", btnInk: "#04211e"
+      },
+      {
+        name: "ice",
+        bg: "#eef2f6", ink: "#141820", muted: "#5b6573", dim: "#7a8492",
+        line: "rgba(20,24,32,0.10)", blue: "#2563eb", blue2: "#1d4ed8",
+        soft: "rgba(37,99,235,0.12)", card: "#ffffff", card2: "#f6f8fb",
+        header: "rgba(238,242,246,0.82)", input: "#ffffff",
+        glow: "rgba(37,99,235,0.12)", btnInk: "#ffffff"
+      },
+      {
+        name: "cherry",
+        bg: "#160808", ink: "#ffecec", muted: "#c99a9a", dim: "#8d6a6a",
+        line: "rgba(255,90,90,0.14)", blue: "#ef4444", blue2: "#fb7185",
+        soft: "rgba(239,68,68,0.16)", card: "#1e1010", card2: "#180c0c",
+        header: "rgba(22,8,8,0.78)", input: "#140909",
+        glow: "rgba(239,68,68,0.16)", btnInk: "#ffffff"
+      },
+      {
+        name: "lime",
+        bg: "#0c1208", ink: "#f3ffe8", muted: "#a8b894", dim: "#748066",
+        line: "rgba(170,220,70,0.12)", blue: "#84cc16", blue2: "#bef264",
+        soft: "rgba(132,204,22,0.16)", card: "#141a10", card2: "#10160c",
+        header: "rgba(12,18,8,0.78)", input: "#0d1309",
+        glow: "rgba(132,204,22,0.16)", btnInk: "#142004"
+      },
+      {
+        name: "paper",
+        bg: "#f6f1e8", ink: "#1c1812", muted: "#6b6358", dim: "#8a8276",
+        line: "rgba(28,24,18,0.10)", blue: "#c2410c", blue2: "#9a3412",
+        soft: "rgba(194,65,12,0.12)", card: "#fffaf3", card2: "#efe8dc",
+        header: "rgba(246,241,232,0.84)", input: "#fffaf3",
+        glow: "rgba(194,65,12,0.10)", btnInk: "#ffffff"
+      },
+      {
+        name: "cobalt",
+        bg: "#070b18", ink: "#eef3ff", muted: "#9aa8c8", dim: "#6b7694",
+        line: "rgba(120,160,255,0.14)", blue: "#3b82f6", blue2: "#93c5fd",
+        soft: "rgba(59,130,246,0.16)", card: "#101628", card2: "#0c1220",
+        header: "rgba(7,11,24,0.78)", input: "#0a1020",
+        glow: "rgba(59,130,246,0.20)", btnInk: "#ffffff"
+      }
+    ];
+    let currentTheme = "midnight blue";
+    let bubbleTimer;
+
+    function applyTheme(theme) {
+      const root = document.documentElement;
+      root.style.setProperty("--bg", theme.bg);
+      root.style.setProperty("--ink", theme.ink);
+      root.style.setProperty("--muted", theme.muted);
+      root.style.setProperty("--dim", theme.dim);
+      root.style.setProperty("--line", theme.line);
+      root.style.setProperty("--blue", theme.blue);
+      root.style.setProperty("--blue-2", theme.blue2);
+      root.style.setProperty("--blue-soft", theme.soft);
+      root.style.setProperty("--card", theme.card);
+      root.style.setProperty("--card-2", theme.card2);
+      root.style.setProperty("--header", theme.header);
+      root.style.setProperty("--input", theme.input);
+      root.style.setProperty("--glow", theme.glow);
+      root.style.setProperty("--btn-ink", theme.btnInk);
+      document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.bg);
+      currentTheme = theme.name;
+
+      const bubble = document.getElementById("themeBubble");
+      bubble.textContent = "theme changed to " + theme.name;
+      bubble.classList.add("show");
+      clearTimeout(bubbleTimer);
+      bubbleTimer = setTimeout(() => bubble.classList.remove("show"), 1000);
+    }
+
+    document.getElementById("brand").addEventListener("click", function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const pool = themes.filter(t => t.name !== currentTheme);
+      applyTheme(pool[Math.floor(Math.random() * pool.length)]);
+    });
+
     const rippleColors = [
       'rgba(47, 127, 255, 0.35)',
       'rgba(255, 220, 0, 0.28)',
