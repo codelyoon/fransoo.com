@@ -1,82 +1,339 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>fransoo.com</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Henry Fransoo — fransoo.com</title>
+  <meta name="description" content="Henry Fransoo is a Calgary-based entrepreneur working across e-commerce, product, and markets." />
+  <meta name="theme-color" content="#0B0D10" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    body {
-      background: black;
-      color: #fff;
-      font-family: 'Courier New', monospace;
-      margin: 0;
-      padding: 40px;
-      line-height: 1.6;
-      overflow: hidden;
-      position: relative;
-      min-height: 100vh;
+    :root {
+      --bg: #0b0d10;
+      --ink: #f4f6f8;
+      --muted: #9aa3b2;
+      --dim: #6b7380;
+      --line: rgba(255,255,255,0.08);
+      --blue: #2f7fff;
+      --blue-2: #5b9bff;
+      --blue-soft: rgba(47,127,255,0.14);
+      --card: #14181f;
     }
-    .container {
-      max-width: 600px;
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Outfit, system-ui, sans-serif;
+      line-height: 1.55;
+      min-height: 100vh;
+      overflow-x: hidden;
       position: relative;
-      z-index: 10;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea { font-family: inherit; }
+
+    .noise {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .glow {
+      pointer-events: none;
+      position: fixed;
+      width: 720px;
+      height: 720px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(47,127,255,0.16), transparent 62%);
+      top: -240px;
+      right: -180px;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 2;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(16px);
+      background: rgba(11,13,16,0.72);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+    .brand {
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      font-size: 20px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      font-size: 13px;
+      padding: 8px 14px;
+      border: 1px solid rgba(47,127,255,0.45);
+      background: var(--blue-soft);
+      color: var(--blue-2);
+      border-radius: 999px;
+    }
+    .nav-cta:hover { background: rgba(47,127,255,0.24); }
+
+    .hero { padding: 88px 0 72px; }
+    .kicker {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--blue-2);
+      margin-bottom: 18px;
     }
     h1 {
-      font-size: 28px;
-      margin-bottom: 8px;
-      white-space: nowrap;
+      font-size: clamp(48px, 9vw, 92px);
+      line-height: 0.92;
+      letter-spacing: -0.055em;
+      font-weight: 600;
     }
-    p {
-      color: #aaa;
-      margin-bottom: 30px;
-    }
-
-    /* Hint text */
-    .hint {
-      color: #888;
-      font-size: 12px;
-      margin-top: 40px;
-      cursor: pointer;
-      user-select: none;
-    }
-    .hint:hover {
-      color: #555;
-    }
-
-    /* Name spans for flipping */
     .name-part {
       display: inline-block;
       cursor: pointer;
-      transition: transform 0.3s ease;
       user-select: none;
-      position: relative;
+      transition: transform 0.35s ease;
     }
-
-    /* Flip classes */
-    .flip-vertical {
-      transform: rotateX(180deg);
-    }
-    .flip-horizontal {
-      transform: rotateY(180deg);
-    }
-
-    /* Name fight collision */
-    .fight-bounce-left {
-      animation: bounceLeft 0.6s ease;
-    }
-    .fight-bounce-right {
-      animation: bounceRight 0.6s ease;
-    }
+    .flip-vertical { transform: rotateX(180deg); }
+    .flip-horizontal { transform: rotateY(180deg); }
+    .fight-bounce-left { animation: bounceLeft 0.6s ease; }
+    .fight-bounce-right { animation: bounceRight 0.6s ease; }
     @keyframes bounceLeft {
       0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(-15px) rotateY(180deg); }
+      50% { transform: translateX(-14px) rotateY(180deg); }
     }
     @keyframes bounceRight {
       0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(15px) rotateY(180deg); }
+      50% { transform: translateX(14px) rotateY(180deg); }
+    }
+    .lede {
+      max-width: 580px;
+      margin-top: 28px;
+      font-size: 19px;
+      color: var(--muted);
+      font-weight: 300;
     }
 
-    /* Ripple effect */
+    section { padding: 28px 0 72px; }
+    .section-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 18px;
+    }
+    h2 {
+      font-size: clamp(28px, 4vw, 40px);
+      letter-spacing: -0.04em;
+      margin-bottom: 16px;
+    }
+    .prose {
+      max-width: 640px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+    .prose p + p { margin-top: 14px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 28px;
+    }
+    .card {
+      background: linear-gradient(180deg, #161b23, #12161c);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 24px;
+      min-height: 210px;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(47,127,255,0.35);
+    }
+    .card h3 {
+      font-size: 22px;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+    .card .role {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      color: var(--blue-2);
+      margin-bottom: 12px;
+    }
+    .card p { color: var(--muted); font-size: 15px; }
+    .card .stat {
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--dim);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 36px;
+    }
+    .stat-box {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 16px;
+      background: rgba(255,255,255,0.02);
+    }
+    .stat-box b {
+      display: block;
+      font-size: clamp(18px, 2vw, 24px);
+      letter-spacing: -0.04em;
+      margin-bottom: 6px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .stat-box span { color: var(--dim); font-size: 13px; }
+
+    .contact-row {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .contact-links a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 18px;
+      background: var(--card);
+    }
+    .contact-links a:hover { border-color: rgba(47,127,255,0.4); }
+    .contact-links small {
+      color: var(--dim);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+    }
+
+    .form {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      background: var(--card);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .form label {
+      font-size: 13px;
+      color: var(--dim);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form input, .form textarea {
+      width: 100%;
+      background: #0f1318;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      padding: 12px 12px;
+      font-size: 15px;
+      outline: none;
+    }
+    .form input:focus, .form textarea:focus {
+      border-color: rgba(47,127,255,0.55);
+    }
+    .form textarea { min-height: 120px; resize: vertical; }
+    .form button {
+      border: 0;
+      background: var(--blue);
+      color: white;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .form button:hover { background: #4b8dff; }
+    .form button:disabled { opacity: 0.6; cursor: default; }
+    .form-note {
+      font-size: 12px;
+      color: var(--dim);
+    }
+    .form-status {
+      font-size: 13px;
+      color: var(--blue-2);
+      min-height: 1.2em;
+    }
+    .hp { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 28px 0 48px;
+      color: var(--dim);
+      font-size: 13px;
+    }
+
+    .hint {
+      color: #6d7582;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      margin-top: 34px;
+      cursor: pointer;
+      user-select: none;
+      width: fit-content;
+    }
+    .hint:hover { color: #8b93a0; }
+
+    .click-counter {
+      position: fixed;
+      bottom: 14px;
+      right: 14px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      color: #6d7582;
+      z-index: 40;
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+    .click-counter.show { opacity: 1; }
+
     .ripple {
       position: absolute;
       border-radius: 50%;
@@ -86,52 +343,31 @@
       z-index: 1;
     }
     @keyframes ripple-animation {
-      to {
-        transform: scale(4);
-        opacity: 0;
-      }
+      to { transform: scale(4); opacity: 0; }
     }
-
-    /* Antigravity button */
-    .antigravity-btn {
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      font-size: 12px;
-      color: #888;
-      cursor: pointer;
-      z-index: 20;
-      user-select: none;
-    }
-    .antigravity-btn:hover {
-      color: #999;
-    }
-
-    /* Click counter */
-    .click-counter {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      font-size: 12px;
-      color: #888;
-      z-index: 20;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .click-counter.show {
-      opacity: 1;
-    }
-
-    /* Big counter intro */
-    .counter-intro {
+    .rage-msg, .screenshot-trap, .counter-intro {
       position: fixed;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(1);
-      font-size: 24px;
-      color: #fff;
-      z-index: 150;
+      transform: translate(-50%, -50%);
+      z-index: 200;
       pointer-events: none;
+      font-family: Outfit, sans-serif;
+      letter-spacing: -0.03em;
+    }
+    .rage-msg { font-size: 28px; animation: fadeInOut 2s ease; }
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0; }
+      20%, 80% { opacity: 1; }
+    }
+    .screenshot-trap { font-size: 18px; opacity: 0; }
+    .screenshot-trap.flash { animation: screenshotFlash 0.3s ease; }
+    @keyframes screenshotFlash {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+    .counter-intro {
+      font-size: 24px;
       animation: counterShrink 1.5s ease forwards;
     }
     @keyframes counterShrink {
@@ -139,65 +375,14 @@
       70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
       100% { opacity: 0; transform: translate(calc(50vw - 60px), calc(50vh - 20px)) scale(0.5); }
     }
-
-    /* Rage click message */
-    .rage-msg {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 24px;
-      color: #fff;
-      z-index: 100;
-      opacity: 0;
-      pointer-events: none;
-      animation: fadeInOut 2s ease;
-    }
-    @keyframes fadeInOut {
-      0%, 100% { opacity: 0; }
-      20%, 80% { opacity: 1; }
-    }
-
-    /* Screenshot trap */
-    .screenshot-trap {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 18px;
-      color: #fff;
-      z-index: 200;
-      opacity: 0;
-      pointer-events: none;
-    }
-    .screenshot-trap.flash {
-      animation: screenshotFlash 0.3s ease;
-    }
-    @keyframes screenshotFlash {
-      0%, 100% { opacity: 0; }
-      50% { opacity: 1; }
-    }
-
-    /* Flyaway letters */
-    .letter {
-      display: inline-block;
-      transition: transform 1s ease, opacity 1s ease;
-    }
+    .letter { display: inline-block; transition: transform 1s ease, opacity 1s ease; }
     .fly-away {
       transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
       opacity: 0;
     }
-
-    /* Clickable words */
-    .word {
-      display: inline-block;
-      cursor: pointer;
-    }
-
-    /* Dance mode */
-    .dance {
-      animation: danceSpin 0.5s infinite linear;
-    }
+    .word { display: inline-block; cursor: pointer; }
+    .word:hover { color: var(--blue-2); }
+    .dance { animation: danceSpin 0.5s infinite linear; }
     @keyframes danceSpin {
       0% { transform: rotate(0deg) scale(1); }
       25% { transform: rotate(90deg) scale(1.2); }
@@ -205,65 +390,161 @@
       75% { transform: rotate(270deg) scale(1.2); }
       100% { transform: rotate(360deg) scale(1); }
     }
+    .exploding-letter { position: fixed; z-index: 50; }
 
-    /* Gravity fall */
-    .gravity-letter {
-      position: fixed;
-      transition: none;
-      z-index: 50;
-    }
-
-    /* Exploding letters */
-    .exploding-letter {
-      position: fixed;
-      z-index: 60;
-      pointer-events: none;
-    }
-
-    /* Gun mode - damage holes */
-    .damage-hole {
-      position: fixed;
-      background: white;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 5;
-      box-shadow: 0 0 20px rgba(255,255,255,0.6);
-      mix-blend-mode: difference;
+    @media (max-width: 800px) {
+      .nav-links { display: none; }
+      .grid, .stats, .contact-row { grid-template-columns: 1fr; }
+      .hero { padding-top: 56px; }
+      .stat-box b { font-size: 22px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>
-      <span class="name-part" data-name="henry">henry</span>
-      <span class="name-part" data-name="fransoo">fransoo</span>
-    </h1>
-    <p id="boredText">this is my website. i made it because i was bored.</p>
+  <div class="noise"></div>
+  <div class="glow"></div>
 
-    <p class="hint" id="hint">[ try clicking around the site... ]</p>
-  </div>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="fransoo.com">fransoo.com</a>
+      <nav class="nav-links">
+        <a href="#about">About</a>
+        <a href="#work">Work</a>
+        <a href="#now">Now</a>
+      </nav>
+      <a class="nav-cta" href="#contact">Get in touch</a>
+    </div>
+  </header>
 
-  <div class="antigravity-btn" id="antigravityBtn">antigravity</div>
+  <main class="wrap" id="top">
+    <section class="hero">
+      <h1>
+        <span class="name-part" data-name="henry">Henry</span>
+        <br />
+        <span class="name-part" data-name="fransoo">Fransoo</span>
+      </h1>
+      <p class="lede" id="boredText">I run operations, ship products, and spend too much time in markets. Calgary-based. Usually building something.</p>
+    </section>
+
+    <section id="about">
+      <p class="section-label">01 — About</p>
+      <h2>Not a résumé. A running log.</h2>
+      <div class="prose">
+        <p>I’m Henry, an entrepreneur from the Calgary area. I started shipping products and games before I could legally sign most contracts, then spent the years after that on the unglamorous parts: inventory, ads, logistics, and what happens after something actually launches.</p>
+        <p>Now I split time between operating businesses under <strong style="color:#e8edf3">Woeller23 Ventures</strong>, running e-commerce through <strong style="color:#e8edf3">SHIP23 Industries</strong>, and trading crypto markets.</p>
+      </div>
+      <div class="stats">
+        <div class="stat-box">
+          <b data-count="50000" data-prefix="" data-suffix="+" data-decimals="0">0+</b>
+          <span>game downloads</span>
+        </div>
+        <div class="stat-box">
+          <b data-count="25000000" data-prefix="" data-suffix="+" data-decimals="0">0+</b>
+          <span>lifetime marketing views</span>
+        </div>
+        <div class="stat-box">
+          <b data-count="30000" data-prefix="$" data-suffix="+" data-decimals="0">$0+</b>
+          <span>ecommerce revenue</span>
+        </div>
+        <div class="stat-box">
+          <b data-count="320000" data-prefix="$" data-suffix="+" data-decimals="0">$0+</b>
+          <span>volume traded</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="work">
+      <p class="section-label">02 — Work</p>
+      <h2>Things I’ve actually run.</h2>
+      <div class="grid">
+        <article class="card">
+          <p class="role">current</p>
+          <h3>Woeller23 Ventures</h3>
+          <p>The company I run everything else through. New projects, operating businesses, and anything that needs a home before it becomes its own brand.</p>
+          <p class="stat">holding company · new work</p>
+        </article>
+        <article class="card">
+          <p class="role">2021 — present</p>
+          <h3>SHIP23 Industries</h3>
+          <p>Operations across inbound logistics, pricing, accounting, product research, and Amazon FBA. Helped scale Canadian inventory through hubs in Calgary, Vancouver, Edmonton, Toronto, Ottawa, and Hamilton — plus listing and PPC help for brands entering Amazon.</p>
+          <p class="stat">Amazon FBA · multi-city inventory</p>
+        </article>
+        <article class="card">
+          <p class="role">2019 — 2023</p>
+          <h3>Codelyon Apps</h3>
+          <p>Designed and shipped mobile games from comments, DMs, and user feedback. Used social as both distribution and a product research lab — then turned that into 50,000+ downloads worldwide.</p>
+          <p class="stat">games · distribution · feedback loops</p>
+        </article>
+        <article class="card">
+          <p class="role">side project</p>
+          <h3>bitcoin.fransoo.com</h3>
+          <p>A live crypto price board I made because I wanted something faster than opening twelve tabs. Updates every few seconds. Still useful. Still a little unnecessary.</p>
+          <p class="stat"><a href="https://bitcoin.fransoo.com" target="_blank" rel="noopener">open the board →</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section id="now">
+      <p class="section-label">03 — Now</p>
+      <h2>What I’m paying attention to.</h2>
+      <div class="prose">
+        <p>Markets — Bitcoin, DeFi, perps, and the faster corners of Solana. Operations — how small teams move physical product without drowning in the process. Building the next useful thing under Woeller23.</p>
+        <p>Outside of screens: golf, skiing, hiking. The usual Alberta starter pack.</p>
+      </div>
+    </section>
+
+    <section id="contact">
+      <p class="section-label">04 — Contact</p>
+      <div class="contact-row">
+        <div>
+          <h2>If you have something real, say hi.</h2>
+          <p class="prose">Projects, questions, or a reason I should write back. I actually read these.</p>
+          <div class="contact-links">
+            <a href="mailto:henry@fransoo.com">henry@fransoo.com <small>email</small></a>
+            <a href="https://x.com/hfransoo" target="_blank" rel="noopener">@hfransoo <small>x</small></a>
+            <a href="https://ca.linkedin.com/in/hfransoo" target="_blank" rel="noopener">/in/hfransoo <small>linkedin</small></a>
+          </div>
+        </div>
+        <form class="form" id="contactForm" action="https://formsubmit.co/ajax/henry@fransoo.com" method="POST">
+          <input type="hidden" name="_subject" value="New message from fransoo.com" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" />
+          <label>
+            Email
+            <input type="email" name="email" required placeholder="you@email.com" />
+          </label>
+          <label>
+            Message
+            <textarea name="message" required placeholder="What’s this about?"></textarea>
+          </label>
+          <button type="submit" id="formBtn">Send message</button>
+          <p class="form-status" id="formStatus"></p>
+        </form>
+      </div>
+    </section>
+
+    <footer>
+      <span>© Henry Fransoo • fransoo.com • Woeller23 Ventures</span>
+    </footer>
+  </main>
+
   <div class="click-counter" id="clickCounter">clicks: 0</div>
   <div class="screenshot-trap" id="screenshotTrap">i saw that screenshot</div>
 
   <script>
-    // Ripple colors
     const rippleColors = [
-      'rgba(0, 120, 255, 0.4)',
-      'rgba(255, 220, 0, 0.4)',
-      'rgba(255, 50, 50, 0.4)',
-      'rgba(50, 220, 50, 0.4)',
-      'rgba(255, 140, 0, 0.4)'
+      'rgba(47, 127, 255, 0.35)',
+      'rgba(255, 220, 0, 0.28)',
+      'rgba(255, 50, 50, 0.28)',
+      'rgba(50, 220, 50, 0.28)',
+      'rgba(255, 140, 0, 0.28)'
     ];
 
-    // Click tracking
     let clickCount = 0;
     let totalClicks = 0;
     let lastClickTime = 0;
     let danceModeActive = false;
     let hasShownCounterIntro = false;
-    let counterUnlocked = false;
     const rageMessages = [
       "wow you must be bored",
       "still here?",
@@ -274,48 +555,82 @@
     ];
     let rageIndex = 0;
 
-    // Hint messages
-    const hintMessages = [
-      "[ try clicking around the site... ]",
-      "[ you found the first secret ]",
-      "[ okay now actually click around ]",
-      "[ stop clicking me ]",
-      "[ fine. ]",
-      "[... ]"
-    ];
-    let hintIndex = 0;
-
-    // Gun mode
-    let gunModeAvailable = true;
-    let inGunMode = false;
-    let bulletsLeft = 0;
-
-    // Elements
     const clickCounter = document.getElementById('clickCounter');
     const screenshotTrap = document.getElementById('screenshotTrap');
-    const hint = document.getElementById('hint');
 
-    // Name fight tracking
     let lastNameClick = null;
     let lastNameTime = 0;
-
-    // Idle tracking for flyaway
     let idleTimer;
     let isFlying = false;
 
-    // Gravity tracking
-    let gravityActive = false;
-    let gravityLetters = [];
-    let tiltX = 0, tiltY = 0;
+    function formatNumber(n) {
+      return Math.round(n).toLocaleString('en-US');
+    }
 
-    // Wrap bored text in clickable words
+    function animateCounters() {
+      const els = document.querySelectorAll('[data-count]');
+      const start = performance.now();
+      const duration = 1600;
+      function tick(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        els.forEach(el => {
+          const target = Number(el.dataset.count);
+          const prefix = el.dataset.prefix || '';
+          const suffix = el.dataset.suffix || '';
+          const value = target * eased;
+          el.textContent = prefix + formatNumber(value) + suffix;
+        });
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    const stats = document.querySelector('.stats');
+    if (stats) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateCounters();
+            io.disconnect();
+          }
+        });
+      }, { threshold: 0.35 });
+      io.observe(stats);
+    }
+
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('formBtn');
+      const status = document.getElementById('formStatus');
+      const form = e.currentTarget;
+      btn.disabled = true;
+      status.textContent = 'Sending…';
+      try {
+        const data = new FormData(form);
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        });
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json.success !== false) {
+          status.textContent = 'Sent. I might reply.';
+          form.reset();
+        } else {
+          status.textContent = 'Didn’t go through. Email me directly at henry@fransoo.com.';
+        }
+      } catch (err) {
+        status.textContent = 'Didn’t go through. Email me directly at henry@fransoo.com.';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
     function wrapBoredText() {
       const boredText = document.getElementById('boredText');
       const words = boredText.textContent.split(' ');
-      boredText.innerHTML = words.map(word =>
-        `<span class="word">${word}</span>`
-      ).join(' ');
-
+      boredText.innerHTML = words.map(word => `<span class="word">${word}</span>`).join(' ');
       document.querySelectorAll('.word').forEach(wordEl => {
         wordEl.addEventListener('click', function(e) {
           e.stopPropagation();
@@ -325,21 +640,18 @@
     }
     wrapBoredText();
 
-    // Wrap other text in letter spans for flyaway
     function wrapLetters() {
-      const elements = document.querySelectorAll('.container p:not(#boredText)');
-      elements.forEach(el => {
+      document.querySelectorAll('.section-label, footer span').forEach(el => {
         const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
         const textNodes = [];
         while (walker.nextNode()) textNodes.push(walker.currentNode);
-
         textNodes.forEach(node => {
           if (node.textContent.trim() || node.textContent.includes(' ')) {
             const frag = document.createDocumentFragment();
             node.textContent.split('').forEach(char => {
               const span = document.createElement('span');
               span.className = 'letter';
-              span.innerHTML = char === ' '? '&nbsp;' : char;
+              span.innerHTML = char === ' ' ? '&nbsp;' : char;
               frag.appendChild(span);
             });
             node.replaceWith(frag);
@@ -349,59 +661,14 @@
     }
     wrapLetters();
 
-    // Hint click handler with gun mode
-    hint.addEventListener('click', function(e) {
-      e.stopPropagation();
-      totalClicks++;
-      lastClickTime = Date.now();
-      updateClickCounter();
-      updateDanceMode();
-
-      if (inGunMode) return;
-
-      if (hintIndex === hintMessages.length - 1 && gunModeAvailable) {
-        hint.textContent = "gun mode activated, 5 bullets remaining";
-        inGunMode = true;
-        bulletsLeft = 5;
-        gunModeAvailable = false;
-        pauseOtherFeatures();
-        return;
-      }
-
-      hintIndex = (hintIndex + 1) % hintMessages.length;
-      hint.textContent = hintMessages[hintIndex];
-    });
-
-    // Main click handler with gun mode integration
     document.body.addEventListener('click', function(e) {
       totalClicks++;
       lastClickTime = Date.now();
       updateClickCounter();
       updateDanceMode();
 
-      if (inGunMode && bulletsLeft > 0 && 
-          (e.target === document.body || e.target.classList.contains('container') || e.target.classList.contains('ripple'))) {
-
-        bulletsLeft--;
-        fireBullet(e.clientX, e.clientY);
-
-        if (bulletsLeft > 0) {
-          hint.textContent = `gun mode active — ${bulletsLeft} bullets remaining`;
-        } else {
-          setTimeout(() => {
-            inGunMode = false;
-            resumeOtherFeatures();
-            hintIndex = 0;
-            hint.textContent = hintMessages[0];
-          }, 800);
-        }
-        return;
-      }
-
-      // Original body click logic
-      if (e.target === document.body || e.target.classList.contains('container')) {
+      if (e.target === document.body || e.target.classList.contains('noise') || e.target.classList.contains('glow')) {
         clickCount++;
-
         if (clickCount % 10 === 0) {
           const msg = document.createElement('div');
           msg.className = 'rage-msg';
@@ -410,274 +677,123 @@
           rageIndex = (rageIndex + 1) % rageMessages.length;
           setTimeout(() => msg.remove(), 2000);
         }
-
         const ripple = document.createElement('span');
         ripple.classList.add('ripple');
-        const randomColor = rippleColors[Math.floor(Math.random() * rippleColors.length)];
-        ripple.style.background = randomColor;
-
+        ripple.style.background = rippleColors[Math.floor(Math.random() * rippleColors.length)];
         const size = Math.max(window.innerWidth, window.innerHeight);
         ripple.style.width = ripple.style.height = size + 'px';
         ripple.style.left = e.clientX - size / 2 + 'px';
         ripple.style.top = e.clientY - size / 2 + 'px';
-
         document.body.appendChild(ripple);
         setTimeout(() => ripple.remove(), 2000);
       }
     });
 
-    // Improved gun mode - wall breaking effect
-    function fireBullet(x, y) {
-      // BANG text
-      const bang = document.createElement('div');
-      bang.textContent = 'BANG!';
-      bang.style.position = 'fixed';
-      bang.style.left = (x - 45) + 'px';
-      bang.style.top = (y - 35) + 'px';
-      bang.style.fontSize = '48px';
-      bang.style.color = '#ff2222';
-      bang.style.fontWeight = 'bold';
-      bang.style.pointerEvents = 'none';
-      bang.style.zIndex = '300';
-      bang.style.textShadow = '3px 3px 0 #000, -3px -3px 0 #000';
-      document.body.appendChild(bang);
-      setTimeout(() => bang.remove(), 500);
-
-      // Create permanent white damage hole
-      const hole = document.createElement('div');
-      hole.className = 'damage-hole';
-      const holeSize = 90 + Math.random() * 70;
-      hole.style.width = holeSize + 'px';
-      hole.style.height = holeSize + 'px';
-      hole.style.left = (x - holeSize/2) + 'px';
-      hole.style.top = (y - holeSize/2) + 'px';
-      hole.style.opacity = '0.85';
-      document.body.appendChild(hole);
-
-      // Extra jagged chunks flying off
-      for (let i = 0; i < 22; i++) {
-        const chunk = document.createElement('div');
-        chunk.style.position = 'fixed';
-        chunk.style.left = x + 'px';
-        chunk.style.top = y + 'px';
-        chunk.style.width = (6 + Math.random() * 22) + 'px';
-        chunk.style.height = (6 + Math.random() * 22) + 'px';
-        chunk.style.background = '#111';
-        chunk.style.borderRadius = Math.random() > 0.6 ? '50%' : '3px';
-        chunk.style.zIndex = '250';
-        chunk.style.pointerEvents = 'none';
-        document.body.appendChild(chunk);
-
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 15 + Math.random() * 22;
-        let vx = Math.cos(angle) * speed;
-        let vy = Math.sin(angle) * speed - 8; // upward kick
-        let cx = x;
-        let cy = y;
-        let opacity = 1;
-
-        function fly() {
-          vx *= 0.95;
-          vy *= 0.95;
-          vy += 0.45;
-          cx += vx;
-          cy += vy;
-          opacity -= 0.028;
-
-          chunk.style.left = cx + 'px';
-          chunk.style.top = cy + 'px';
-          chunk.style.opacity = opacity;
-          chunk.style.transform = `rotate(${Math.random()*800}deg)`;
-
-          if (opacity > 0.05) {
-            requestAnimationFrame(fly);
-          } else {
-            chunk.remove();
-          }
-        }
-        requestAnimationFrame(fly);
-      }
-
-      // Quick screen flash for impact
-      const flash = document.createElement('div');
-      flash.style.position = 'fixed';
-      flash.style.left = '0';
-      flash.style.top = '0';
-      flash.style.width = '100%';
-      flash.style.height = '100%';
-      flash.style.background = 'white';
-      flash.style.opacity = '0.15';
-      flash.style.pointerEvents = 'none';
-      flash.style.zIndex = '280';
-      document.body.appendChild(flash);
-      setTimeout(() => flash.style.transition = 'opacity 0.25s', 30);
-      setTimeout(() => flash.style.opacity = '0', 50);
-      setTimeout(() => flash.remove(), 400);
-    }
-
-    function pauseOtherFeatures() {
-      danceModeActive = false;
-    }
-
-    function resumeOtherFeatures() {
-      // features resume naturally
-    }
-
-    // Explode word
     function explodeWord(wordEl) {
       const word = wordEl.textContent;
       const rect = wordEl.getBoundingClientRect();
-
       wordEl.style.opacity = '0';
-
       word.split('').forEach((char, i) => {
         if (char === ' ') return;
-
         const letter = document.createElement('span');
         letter.className = 'exploding-letter';
         letter.textContent = char;
         letter.style.left = (rect.left + i * 10) + 'px';
         letter.style.top = rect.top + 'px';
-        letter.style.color = '#aaa';
+        letter.style.color = '#9aa3b2';
         document.body.appendChild(letter);
-
         const angle = Math.random() * Math.PI * 2;
         const speed = 8 + Math.random() * 12;
         let vx = Math.cos(angle) * speed;
         let vy = Math.sin(angle) * speed;
         let x = rect.left + i * 10;
         let y = rect.top;
-
         function animateLetter() {
-          x += vx;
-          y += vy;
-          vy += 0.3;
-
-          if (x < 0 || x > window.innerWidth - 20) {
-            vx *= -0.8;
-            x = x < 0 ? 0 : window.innerWidth - 20;
-          }
-          if (y < 0 || y > window.innerHeight - 20) {
-            vy *= -0.8;
-            y = y < 0 ? 0 : window.innerHeight - 20;
-            vx *= 0.9;
-          }
-
+          x += vx; y += vy; vy += 0.3;
+          if (x < 0 || x > window.innerWidth - 20) { vx *= -0.8; x = x < 0 ? 0 : window.innerWidth - 20; }
+          if (y < 0 || y > window.innerHeight - 20) { vy *= -0.8; y = y < 0 ? 0 : window.innerHeight - 20; vx *= 0.9; }
           letter.style.left = x + 'px';
           letter.style.top = y + 'px';
-
-          if (Math.abs(vx) > 0.5 || Math.abs(vy) > 0.5) {
-            requestAnimationFrame(animateLetter);
-          } else {
-            setTimeout(() => letter.remove(), 1000);
-          }
+          if (Math.abs(vx) > 0.5 || Math.abs(vy) > 0.5) requestAnimationFrame(animateLetter);
+          else setTimeout(() => letter.remove(), 1000);
         }
         requestAnimationFrame(animateLetter);
       });
-
-      setTimeout(() => {
-        wordEl.style.opacity = '1';
-      }, 3000);
+      setTimeout(() => { wordEl.style.opacity = '1'; }, 3000);
     }
 
-    // Screenshot trap
     let wasHidden = false;
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        wasHidden = true;
-      } else if (wasHidden) {
+      if (document.hidden) wasHidden = true;
+      else if (wasHidden) {
         wasHidden = false;
         screenshotTrap.classList.add('flash');
         setTimeout(() => screenshotTrap.classList.remove('flash'), 300);
       }
     });
 
-    // Reset idle timer
     function resetIdle() {
       clearTimeout(idleTimer);
-      if (isFlying || gravityActive) return;
-      idleTimer = setTimeout(startFlyaway, 10000);
+      if (isFlying) return;
+      idleTimer = setTimeout(startFlyaway, 14000);
     }
-    ['mousemove', 'keydown', 'click', 'scroll'].forEach(evt => {
-      document.addEventListener(evt, resetIdle);
-    });
+    ['mousemove', 'keydown', 'click', 'scroll'].forEach(evt => document.addEventListener(evt, resetIdle));
     resetIdle();
 
-    // Flyaway effect
     function startFlyaway() {
-      if (isFlying || gravityActive) return;
+      if (isFlying) return;
       isFlying = true;
-      const letters = document.querySelectorAll('.letter:not(.gravity-letter)');
+      const letters = document.querySelectorAll('.letter');
       const lettersArray = Array.from(letters);
-
       lettersArray.forEach((letter, i) => {
         setTimeout(() => {
-          const tx = (Math.random() - 0.5) * 800;
-          const ty = -Math.random() * 600 - 200;
-          const rot = (Math.random() - 0.5) * 720;
-          letter.style.setProperty('--tx', tx + 'px');
-          letter.style.setProperty('--ty', ty + 'px');
-          letter.style.setProperty('--rot', rot + 'deg');
+          letter.style.setProperty('--tx', ((Math.random() - 0.5) * 800) + 'px');
+          letter.style.setProperty('--ty', (-Math.random() * 600 - 200) + 'px');
+          letter.style.setProperty('--rot', ((Math.random() - 0.5) * 720) + 'deg');
           letter.classList.add('fly-away');
-        }, i * 80);
+        }, i * 40);
       });
-
       setTimeout(() => {
         letters.forEach(letter => letter.classList.remove('fly-away'));
-        setTimeout(() => {
-          isFlying = false;
-          resetIdle();
-        }, 1000);
-      }, lettersArray.length * 80 + 2000);
+        setTimeout(() => { isFlying = false; resetIdle(); }, 1000);
+      }, lettersArray.length * 40 + 2000);
     }
 
-    // Dance mode
     function updateDanceMode() {
-      const letters = document.querySelectorAll('.letter:not(.gravity-letter)');
+      const letters = document.querySelectorAll('.letter');
       const now = Date.now();
-
       if (totalClicks >= 25 && now - lastClickTime < 1500) {
         if (!danceModeActive) {
           danceModeActive = true;
           letters.forEach(letter => letter.classList.add('dance'));
         }
-      } else {
-        if (danceModeActive) {
-          danceModeActive = false;
-          letters.forEach(letter => letter.classList.remove('dance'));
-        }
+      } else if (danceModeActive) {
+        danceModeActive = false;
+        letters.forEach(letter => letter.classList.remove('dance'));
       }
     }
 
-    // Click counter
     function updateClickCounter() {
       if (totalClicks >= 25) {
         if (!hasShownCounterIntro) {
           hasShownCounterIntro = true;
-          counterUnlocked = true;
           const intro = document.createElement('div');
           intro.className = 'counter-intro';
           intro.textContent = `clicks: ${totalClicks}`;
           document.body.appendChild(intro);
           setTimeout(() => intro.remove(), 1500);
         }
-
         clickCounter.textContent = `clicks: ${totalClicks}`;
         clickCounter.classList.add('show');
       }
     }
 
-    // Check dance mode stop
     setInterval(() => {
-      if (danceModeActive && Date.now() - lastClickTime > 1500) {
-        updateDanceMode();
-      }
+      if (danceModeActive && Date.now() - lastClickTime > 1500) updateDanceMode();
     }, 200);
 
-    // Name flip + fight
     const nameParts = document.querySelectorAll('.name-part');
     let isFlipping = false;
-
     nameParts.forEach(part => {
       part.addEventListener('click', function(e) {
         e.stopPropagation();
@@ -685,10 +801,8 @@
         lastClickTime = Date.now();
         updateClickCounter();
         updateDanceMode();
-
         const now = Date.now();
         const name = this.dataset.name;
-
         if (lastNameClick && lastNameClick !== name && now - lastNameTime < 1000) {
           document.querySelector('[data-name="henry"]').classList.add('fight-bounce-left');
           document.querySelector('[data-name="fransoo"]').classList.add('fight-bounce-right');
@@ -699,103 +813,14 @@
           lastNameClick = null;
           return;
         }
-
         lastNameClick = name;
         lastNameTime = now;
-
         if (isFlipping) return;
         isFlipping = true;
-
         const flipClass = Math.random() > 0.5 ? 'flip-vertical' : 'flip-horizontal';
         this.classList.add(flipClass);
-
-        setTimeout(() => {
-          this.classList.remove(flipClass);
-          isFlipping = false;
-        }, 5000);
+        setTimeout(() => { this.classList.remove(flipClass); isFlipping = false; }, 5000);
       });
-    });
-
-    // Device tilt
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener('deviceorientation', (e) => {
-        tiltX = e.gamma || 0;
-        tiltY = e.beta || 0;
-      });
-    }
-
-    // Antigravity
-    document.getElementById('antigravityBtn').addEventListener('click', function(e) {
-      e.stopPropagation();
-      totalClicks++;
-      lastClickTime = Date.now();
-      updateClickCounter();
-      updateDanceMode();
-
-      if (gravityActive || inGunMode) return;
-      gravityActive = true;
-
-      const allElements = document.querySelectorAll('.name-part,.letter,.word,.hint');
-      const container = document.body;
-
-      allElements.forEach(el => {
-        const rect = el.getBoundingClientRect();
-        const clone = el.cloneNode(true);
-        clone.classList.add('gravity-letter');
-        clone.style.left = rect.left + 'px';
-        clone.style.top = rect.top + 'px';
-        clone.style.fontSize = window.getComputedStyle(el).fontSize;
-        clone.style.color = window.getComputedStyle(el).color;
-        container.appendChild(clone);
-        gravityLetters.push({
-          el: clone,
-          x: rect.left,
-          y: rect.top,
-          vx: (Math.random() - 0.5) * 2,
-          vy: 0
-        });
-        el.style.opacity = '0';
-      });
-
-      function animateGravity() {
-        if (!gravityActive) return;
-
-        gravityLetters.forEach(letter => {
-          letter.vy += 0.5;
-          letter.vx += tiltX * 0.01;
-
-          letter.x += letter.vx;
-          letter.y += letter.vy;
-
-          if (letter.y > window.innerHeight - 20) {
-            letter.y = window.innerHeight - 20;
-            letter.vy *= -0.6;
-            letter.vx *= 0.9;
-          }
-
-          if (letter.x < 0) {
-            letter.x = 0;
-            letter.vx *= -0.6;
-          }
-          if (letter.x > window.innerWidth - 20) {
-            letter.x = window.innerWidth - 20;
-            letter.vx *= -0.6;
-          }
-
-          letter.el.style.left = letter.x + 'px';
-          letter.el.style.top = letter.y + 'px';
-        });
-
-        requestAnimationFrame(animateGravity);
-      }
-      animateGravity();
-
-      setTimeout(() => {
-        gravityActive = false;
-        gravityLetters.forEach(letter => letter.el.remove());
-        gravityLetters = [];
-        allElements.forEach(el => el.style.opacity = '1');
-      }, 8000);
     });
   </script>
 </body>
