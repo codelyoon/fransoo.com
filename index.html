@@ -3,1135 +3,139 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Henry Fransoo</title>
-  <meta name="description" content="Henry Fransoo is a Canadian entrepreneur working across e-commerce, product, and markets." />
-  <meta name="theme-color" content="#0B0D10" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <title>fransoo.com</title>
+  <meta name="theme-color" content="#000000" />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0b0d10;
-      --ink: #f4f6f8;
-      --muted: #9aa3b2;
-      --dim: #6b7380;
-      --line: rgba(255,255,255,0.08);
-      --blue: #2f7fff;
-      --blue-2: #5b9bff;
-      --blue-soft: rgba(47,127,255,0.14);
-      --card: #14181f;
-      --card-2: #12161c;
-      --header: rgba(11,13,16,0.72);
-      --input: #0f1318;
-      --glow: rgba(47,127,255,0.16);
-      --btn-ink: #ffffff;
+      --bg: #000;
+      --ink: #c9c2b5;
+      --glow: rgba(180, 200, 160, 0.15);
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
+    html, body {
+      height: 100%;
       background: var(--bg);
       color: var(--ink);
-      font-family: Outfit, system-ui, sans-serif;
-      line-height: 1.55;
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-      transition: background 0.45s ease, color 0.45s ease;
+      font-family: "EB Garamond", Georgia, serif;
+      overflow: hidden;
     }
-
-    a { color: inherit; text-decoration: none; }
-    button, input, textarea { font-family: inherit; }
-
-    .noise {
+    body {
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+    .screen {
+      position: relative;
+      z-index: 10;
+      max-width: 820px;
+      padding: 80px 48px;
+      text-align: center;
+    }
+    .quote {
+      font-size: clamp(20px, 3.6vw, 32px);
+      line-height: 1.65;
+      letter-spacing: -0.01em;
+      font-weight: 400;
+      color: #d4cdc0;
+      text-shadow:
+        0 0 8px rgba(180, 200, 160, 0.4),
+        0 0 2px rgba(255,255,255,0.3);
+      position: relative;
+    }
+    .attribution {
+      margin-top: 52px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #6a645c;
+      opacity: 0.7;
+    }
+    .scanlines {
       pointer-events: none;
       position: fixed;
       inset: 0;
-      z-index: 0;
-      opacity: 0.035;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15) 0px,
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      z-index: 20;
+      opacity: 0.6;
     }
-
-    .glow {
+    .static {
       pointer-events: none;
       position: fixed;
-      width: 720px;
-      height: 720px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--glow), transparent 62%);
-      transition: background 0.45s ease;
-      top: -240px;
-      right: -180px;
-      z-index: 0;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.12;
+      mix-blend-mode: overlay;
+      z-index: 15;
+      animation: staticShift 0.2s steps(2) infinite;
     }
-
-    .wrap {
-      position: relative;
-      z-index: 2;
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 0 24px;
+    @keyframes staticShift {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-2px, 1px); }
     }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      backdrop-filter: blur(16px);
-      background: var(--header);
-      border-bottom: 1px solid var(--line);
-      transition: background 0.45s ease, border-color 0.45s ease;
+    .flicker {
+      animation: flicker 8s infinite;
     }
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 68px;
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      4% { opacity: 0.85; }
+      5% { opacity: 1; }
+      12% { opacity: 0.7; }
+      13% { opacity: 0.95; }
+      14% { opacity: 1; }
+      42% { opacity: 0.9; }
+      43% { opacity: 0.6; }
+      44% { opacity: 1; }
+      71% { opacity: 0.8; }
+      72% { opacity: 1; }
+      88% { opacity: 0.75; }
+      89% { opacity: 0.4; }
+      90% { opacity: 1; }
     }
-    .brand-wrap {
-      position: relative;
-    }
-    .brand {
-      font-weight: 600;
-      letter-spacing: -0.04em;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    .theme-bubble {
-      position: absolute;
-      top: calc(100% + 8px);
-      left: 0;
-      white-space: nowrap;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 11px;
-      letter-spacing: 0.02em;
-      color: var(--ink);
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 6px 10px;
-      opacity: 0;
+    .vignette {
       pointer-events: none;
-      transform: translateY(-4px);
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      z-index: 40;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-    }
-    .theme-bubble.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .cursor-dot {
       position: fixed;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--blue);
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.75) 100%);
+      z-index: 25;
+    }
+    .curve {
       pointer-events: none;
-      z-index: 80;
-      transform: translate(-50%, -50%);
-      opacity: 0.7;
-    }
-    .nav-links {
-      display: flex;
-      gap: 22px;
-      font-size: 14px;
-      color: var(--muted);
-    }
-    .nav-links a:hover { color: var(--ink); }
-    .nav-cta {
-      font-size: 13px;
-      padding: 8px 14px;
-      border: 1px solid var(--blue);
-      background: var(--blue-soft);
-      color: var(--blue-2);
-      border-radius: 999px;
-    }
-    .nav-cta:hover { filter: brightness(1.12); }
-
-    .hero { padding: 88px 0 72px; }
-    .kicker {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--blue-2);
-      margin-bottom: 18px;
-    }
-    h1 {
-      font-size: clamp(48px, 9vw, 92px);
-      line-height: 0.92;
-      letter-spacing: -0.055em;
-      font-weight: 600;
-    }
-    .name-part {
-      display: inline-block;
-      cursor: pointer;
-      user-select: none;
-      transition: transform 0.35s ease;
-    }
-    .flip-vertical { transform: rotateX(180deg); }
-    .flip-horizontal { transform: rotateY(180deg); }
-    .fight-bounce-left { animation: bounceLeft 0.6s ease; }
-    .fight-bounce-right { animation: bounceRight 0.6s ease; }
-    @keyframes bounceLeft {
-      0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(-14px) rotateY(180deg); }
-    }
-    @keyframes bounceRight {
-      0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(14px) rotateY(180deg); }
-    }
-    .lede {
-      max-width: 580px;
-      margin-top: 28px;
-      font-size: 19px;
-      color: var(--muted);
-      font-weight: 300;
-    }
-
-    section { padding: 28px 0 72px; }
-    .section-label {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--dim);
-      margin-bottom: 18px;
-    }
-    h2 {
-      font-size: clamp(28px, 4vw, 40px);
-      letter-spacing: -0.04em;
-      margin-bottom: 16px;
-    }
-    .prose {
-      max-width: 640px;
-      color: var(--muted);
-      font-size: 17px;
-    }
-    .prose p + p { margin-top: 14px; }
-    .prose strong { color: var(--ink); font-weight: 500; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin-top: 28px;
-    }
-    .card {
-      background: linear-gradient(180deg, var(--card), var(--card-2));
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 24px;
-      min-height: 210px;
-      transition: transform 0.25s ease, border-color 0.25s ease, background 0.45s ease;
-    }
-    .card:hover {
-      transform: translateY(-3px);
-      border-color: var(--blue);
-    }
-    .card h3 {
-      font-size: 22px;
-      letter-spacing: -0.03em;
-      margin-bottom: 8px;
-    }
-    .card .role {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      color: var(--blue-2);
-      margin-bottom: 12px;
-    }
-    .card p { color: var(--muted); font-size: 15px; }
-    .card .stat {
-      margin-top: 18px;
-      font-size: 13px;
-      color: var(--dim);
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 36px;
-    }
-    .stat-box {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px 16px;
-      background: rgba(255,255,255,0.02);
-    }
-    .stat-box b {
-      display: block;
-      font-size: clamp(18px, 2vw, 24px);
-      letter-spacing: -0.04em;
-      margin-bottom: 6px;
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-    }
-    .stat-box span { color: var(--dim); font-size: 13px; }
-
-    .contact-row {
-      display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 28px;
-      align-items: start;
-    }
-    .contact-links {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .contact-links a {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 16px 18px;
-      background: var(--card);
-    }
-    .contact-links a:hover { border-color: var(--blue); }
-    .contact-links small {
-      color: var(--dim);
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-    }
-
-    .form {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 20px;
-      background: var(--card);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .form label {
-      font-size: 13px;
-      color: var(--dim);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .form input, .form textarea {
-      width: 100%;
-      background: var(--input);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      color: var(--ink);
-      padding: 12px 12px;
-      font-size: 15px;
-      outline: none;
-    }
-    .form input:focus, .form textarea:focus {
-      border-color: var(--blue);
-    }
-    .form textarea { min-height: 120px; resize: vertical; }
-    .form button {
-      border: 0;
-      background: var(--blue);
-      color: var(--btn-ink);
-      border-radius: 10px;
-      padding: 12px 16px;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-    }
-    .form button:hover { filter: brightness(1.08); }
-    .form button:disabled { opacity: 0.6; cursor: default; }
-    .form-note {
-      font-size: 12px;
-      color: var(--dim);
-    }
-    .form-status {
-      font-size: 13px;
-      color: var(--blue-2);
-      min-height: 1.2em;
-    }
-    .hp { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; }
-
-    footer {
-      border-top: 1px solid var(--line);
-      padding: 28px 0 48px;
-      color: var(--dim);
-      font-size: 13px;
-      text-align: center;
-    }
-    .footer-sites {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      margin-bottom: 14px;
-    }
-    .footer-brand {
-      border: 1px solid var(--line);
-      background: var(--card);
-      color: var(--ink);
-      font-weight: 600;
-      letter-spacing: -0.04em;
-      font-size: 20px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px 8px 16px;
-      border-radius: 999px;
-    }
-    .footer-brand:hover { border-color: var(--blue); }
-    .footer-brand .caret-pill {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 4px 8px;
-    }
-    .site-menu {
-      position: absolute;
-      bottom: calc(100% + 8px);
-      left: 50%;
-      transform: translateX(-50%);
-      min-width: 240px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 6px;
-      display: none;
-      z-index: 50;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.35);
-      text-align: left;
-    }
-    .site-menu.open { display: block; }
-    .site-menu a {
-      display: block;
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-weight: 600;
-      letter-spacing: -0.04em;
-      font-size: 15px;
-      color: var(--ink);
-    }
-    .site-menu a:hover { background: rgba(255,255,255,0.04); }
-    .site-menu .btc { color: #f7931a; }
-
-    .hint {
-      color: #6d7582;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      margin-top: 34px;
-      cursor: pointer;
-      user-select: none;
-      width: fit-content;
-    }
-    .hint:hover { color: #8b93a0; }
-
-    .click-counter {
       position: fixed;
-      bottom: 14px;
-      right: 14px;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 11px;
-      color: #6d7582;
-      z-index: 40;
-      opacity: 0;
-      transition: opacity .3s ease;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.3) 100%);
+      z-index: 5;
     }
-    .click-counter.show { opacity: 1; }
-
-    .ripple {
-      position: absolute;
-      border-radius: 50%;
-      transform: scale(0);
-      animation: ripple-animation 2s ease-out;
-      pointer-events: none;
-      z-index: 1;
-    }
-    @keyframes ripple-animation {
-      to { transform: scale(4); opacity: 0; }
-    }
-    .rage-msg, .screenshot-trap, .counter-intro {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 200;
-      pointer-events: none;
-      font-family: Outfit, sans-serif;
-      letter-spacing: -0.03em;
-    }
-    .rage-msg { font-size: 28px; animation: fadeInOut 2s ease; }
-    @keyframes fadeInOut {
-      0%, 100% { opacity: 0; }
-      20%, 80% { opacity: 1; }
-    }
-    .screenshot-trap { font-size: 18px; opacity: 0; }
-    .screenshot-trap.flash { animation: screenshotFlash 0.3s ease; }
-    @keyframes screenshotFlash {
-      0%, 100% { opacity: 0; }
-      50% { opacity: 1; }
-    }
-    .counter-intro {
-      font-size: 24px;
-      animation: counterShrink 1.5s ease forwards;
-    }
-    @keyframes counterShrink {
-      0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      100% { opacity: 0; transform: translate(calc(50vw - 60px), calc(50vh - 20px)) scale(0.5); }
-    }
-    .letter { display: inline-block; transition: transform 1s ease, opacity 1s ease; }
-    .fly-away {
-      transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+    .fade {
+      animation: fadeIn 5s ease-out forwards;
       opacity: 0;
     }
-    .word { display: inline-block; cursor: pointer; }
-    .word:hover { color: var(--blue-2); }
-    .dance { animation: danceSpin 0.5s infinite linear; }
-    @keyframes danceSpin {
-      0% { transform: rotate(0deg) scale(1); }
-      25% { transform: rotate(90deg) scale(1.2); }
-      50% { transform: rotate(180deg) scale(1); }
-      75% { transform: rotate(270deg) scale(1.2); }
-      100% { transform: rotate(360deg) scale(1); }
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
-    .exploding-letter { position: fixed; z-index: 50; }
-
-    @media (max-width: 800px) {
-      .nav-links { display: none; }
-      .grid, .stats, .contact-row { grid-template-columns: 1fr; }
-      .hero { padding-top: 56px; }
-      .stat-box b { font-size: 22px; }
+    @media (max-width: 600px) {
+      .screen { padding: 48px 28px; }
     }
   </style>
 </head>
 <body>
-  <div class="noise"></div>
-  <div class="glow"></div>
+  <div class="curve"></div>
+  <div class="static"></div>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
 
-  <header>
-    <div class="wrap nav">
-      <div class="brand-wrap">
-        <a class="brand" href="#top" id="brand" aria-label="fransoo.com">fransoo.com</a>
-        <div class="theme-bubble" id="themeBubble">theme changed</div>
-      </div>
-      <nav class="nav-links">
-        <a href="#about">About</a>
-        <a href="#work">Work</a>
-        <a href="#now">Now</a>
-      </nav>
-      <a class="nav-cta" href="#contact">Get in touch</a>
-    </div>
-  </header>
-
-  <main class="wrap" id="top">
-    <section class="hero">
-      <h1>
-        <span class="name-part" data-name="henry">Henry</span>
-        <br />
-        <span class="name-part" data-name="fransoo">Fransoo</span>
-      </h1>
-      <p class="lede" id="boredText">I make stuff, design & ship products, and trade international markets.</p>
-      <p class="lede">Usually always building something.</p>
-    </section>
-
-    <section id="about">
-      <p class="section-label">01 — About</p>
-      <h2>Not a résumé. A running log.</h2>
-      <div class="prose">
-        <p>I’m Henry, an entrepreneur from the Calgary area. I started shipping products and games back in high school, before I could even legally sign most contracts, then spent the years after that mastering the unglamorous parts: inventory, ads, logistics, and what happens after something actually launches.</p>
-        <p>Now I split time between building & operating businesses under <strong>Woeller23 Ventures</strong>, and studying for my business degree at <strong>Mount Royal University</strong></p>
-      </div>
-      <div class="stats">
-        <div class="stat-box">
-          <b data-count="50000" data-prefix="" data-suffix="+" data-decimals="0">0+</b>
-          <span>game downloads</span>
-        </div>
-        <div class="stat-box">
-          <b data-count="25000000" data-prefix="" data-suffix="+" data-decimals="0">0+</b>
-          <span>marketing views</span>
-        </div>
-        <div class="stat-box">
-          <b data-count="30000" data-prefix="$" data-suffix="+" data-decimals="0">$0+</b>
-          <span>ecommerce revenue</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="work">
-      <p class="section-label">02 — Work</p>
-      <h2>Things I’ve actually run.</h2>
-      <div class="grid">
-        <article class="card">
-          <p class="role">current</p>
-          <h3>Woeller23 Ventures</h3>
-          <p>The company I run everything else through. New projects, operating businesses, and anything that needs a home before it becomes its own brand.</p>
-          <p class="stat">holding company · new work</p>
-        </article>
-        <article class="card">
-          <p class="role">Just Launched (2026)</p>
-          <h3>Wave23 Inc.</h3>
-          <p>Wave23 Inc. is a B2B NFC (Near Field Communications) technology company helping local businesses grow their Google reviews and online visibility. We provide programmable NFC cards and tap-to-review tools that make leaving a review quick and easy. Wave23 helps businesses collect more reviews, improve local search rankings, and convert more traffic.</p>
-          <p class="stat">technology · client marketing strategies</p>
-        </article>
-        <article class="card">
-          <p class="role">2023 — 2025</p>
-          <h3>SHIP23 Industries</h3>
-          <p>Started an ecommerce operation participating in the practice of retail arbitrage; buying everyday products for cheap, and reselling higher on the worlds largest online marketplace. Took advantage of Amazons shipment network, expanding inventory across Canada to: Calgary, Vancouver, Edmonton, Toronto, Ottawa, and Hamilton.</p>
-          <p class="stat">amazon marketplace · e-commerce</p>
-        </article>
-        <article class="card">
-          <p class="role">2019 — 2024</p>
-          <h3>Woeller Media</h3>
-          <p>Designed and developed marketing videos and digital advertisements for different businesses across various social media platforms. Tailoring my strategies to their specific niches.</p>
-          <p class="stat">marketing · social media · advertising</p>
-        </article>
-        <article class="card">
-          <p class="role">2019 — 2023</p>
-          <h3>Codelyon Apps</h3>
-          <p>Designed and shipped mobile games from comments, DMs, and user feedback. Used social media as both distribution and a product research lab — then converted that attention into ad revenue & 50,000+ downloads worldwide.</p>
-          <p class="stat">games · distribution · feedback loops</p>
-        </article>
-        <article class="card">
-          <p class="role">side project</p>
-          <h3>bitcoin.fransoo.com</h3>
-          <p>A live crypto price board I made because I wanted something faster than opening twelve tabs. Updates every few seconds. Still useful. Still a little unnecessary.</p>
-          <p class="stat"><a href="https://bitcoin.fransoo.com" target="_blank" rel="noopener">open the board →</a></p>
-        </article>
-      </div>
-    </section>
-
-    <section id="now">
-      <p class="section-label">03 — Now</p>
-      <h2>What I’m paying attention to.</h2>
-      <div class="prose">
-        <p>Analyzing markets and staying in the loop on whats happening with decentralized finance. Learning more about ecommerce operations; how small teams move physical product without drowning in the process. And of course, focusing on building the next useful thing under Woeller23.</p>
-        <p>Outside of screens: golf, skiing, hiking. Pretty much the usual Alberta starter pack.</p>
-      </div>
-    </section>
-
-    <section id="contact">
-      <p class="section-label">04 — Contact</p>
-      <div class="contact-row">
-        <div>
-          <h2>If you have something real, drop a note & say hi.</h2>
-          <p class="prose">Projects, questions, or a reason I should write back. I actually read these.</p>
-          <form class="form" id="contactForm" action="https://formsubmit.co/ajax/henry@fransoo.com" method="POST">
-          <input type="hidden" name="_subject" value="New message from fransoo.com" />
-          <input type="hidden" name="_template" value="table" />
-          <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" />
-          <label>
-            Email
-            <input type="email" name="email" required placeholder="you@email.com" />
-          </label>
-          <label>
-            Message
-            <textarea name="message" required placeholder="What’s this about?"></textarea>
-          </label>
-          <button type="submit" id="formBtn">Send message</button>
-          <p class="form-status" id="formStatus"></p>
-        </form>
-        </div>
-          <div class="contact-links">
-            <a href="https://instagram.com/woeller23" target="_blank" rel="noopener">@woeller23 <small>instagram</small></a>
-            <a href="https://tiktok.com/@woeller23" target="_blank" rel="noopener">@woeller23 <small>tiktok</small></a>
-            <a href="https://x.com/hfransoo" target="_blank" rel="noopener">@hfransoo <small>x</small></a>
-            <a href="https://ca.linkedin.com/in/hfransoo" target="_blank" rel="noopener">@hfransoo <small>linkedin</small></a>
-          </div>
-      </div>
-    </section>
-
-    <footer>
-      <div class="footer-sites">
-        <button class="footer-brand" id="siteCaret" type="button" aria-expanded="false" aria-label="Open sites">
-          fransoo.com <span class="caret-pill">▾ sites</span>
-        </button>
-        <div class="site-menu" id="siteMenu">
-          <a href="https://fransoo.com">fransoo.com</a>
-          <a href="https://bitcoin.fransoo.com"><span class="btc">bitcoin.</span>fransoo.com</a>
-        </div>
-      </div>
-      <span>© Henry Fransoo • fransoo.com • Woeller23 Ventures</span>
-    </footer>
-  </main>
-
-  <div class="click-counter" id="clickCounter">clicks: 0</div>
-  <div class="screenshot-trap" id="screenshotTrap">i saw that screenshot</div>
-
-  <script>
-    const themes = [
-      {
-        name: "midnight blue",
-        bg: "#0b0d10", ink: "#f4f6f8", muted: "#9aa3b2", dim: "#6b7380",
-        line: "rgba(255,255,255,0.08)", blue: "#2f7fff", blue2: "#5b9bff",
-        soft: "rgba(47,127,255,0.14)", card: "#14181f", card2: "#12161c",
-        header: "rgba(11,13,16,0.72)", input: "#0f1318",
-        glow: "rgba(47,127,255,0.16)", btnInk: "#ffffff"
-      },
-      {
-        name: "ember",
-        bg: "#140b09", ink: "#fff3ec", muted: "#c9a89a", dim: "#8d6f64",
-        line: "rgba(255,180,140,0.12)", blue: "#ff6b35", blue2: "#ff9a6b",
-        soft: "rgba(255,107,53,0.16)", card: "#1d1210", card2: "#18100e",
-        header: "rgba(20,11,9,0.78)", input: "#120c0a",
-        glow: "rgba(255,107,53,0.18)", btnInk: "#1a0b07"
-      },
-      {
-        name: "moss",
-        bg: "#0b120e", ink: "#eef8f0", muted: "#9fb3a4", dim: "#6d7f73",
-        line: "rgba(140,200,150,0.12)", blue: "#3dba6e", blue2: "#7fe0a3",
-        soft: "rgba(61,186,110,0.16)", card: "#121a15", card2: "#0f1612",
-        header: "rgba(11,18,14,0.78)", input: "#0c130f",
-        glow: "rgba(61,186,110,0.16)", btnInk: "#06140b"
-      },
-      {
-        name: "violet",
-        bg: "#100b16", ink: "#f6f0ff", muted: "#b5a8c9", dim: "#7d738c",
-        line: "rgba(180,150,255,0.14)", blue: "#8b5cf6", blue2: "#c4b5fd",
-        soft: "rgba(139,92,246,0.16)", card: "#181222", card2: "#14101c",
-        header: "rgba(16,11,22,0.78)", input: "#120d18",
-        glow: "rgba(139,92,246,0.18)", btnInk: "#ffffff"
-      },
-      {
-        name: "gold",
-        bg: "#12100a", ink: "#fff8e8", muted: "#c4b48a", dim: "#8a7d58",
-        line: "rgba(230,190,80,0.14)", blue: "#e0b12a", blue2: "#f0d078",
-        soft: "rgba(224,177,42,0.16)", card: "#1b1810", card2: "#16140d",
-        header: "rgba(18,16,10,0.78)", input: "#13110b",
-        glow: "rgba(224,177,42,0.16)", btnInk: "#1a1506"
-      },
-      {
-        name: "rose",
-        bg: "#160b10", ink: "#fff0f4", muted: "#c9a3af", dim: "#8d6d78",
-        line: "rgba(255,140,170,0.14)", blue: "#f43f7a", blue2: "#fb8eac",
-        soft: "rgba(244,63,122,0.16)", card: "#1e1217", card2: "#180e13",
-        header: "rgba(22,11,16,0.78)", input: "#140c10",
-        glow: "rgba(244,63,122,0.18)", btnInk: "#ffffff"
-      },
-      {
-        name: "teal",
-        bg: "#071214", ink: "#eaf8f8", muted: "#93b6b6", dim: "#678080",
-        line: "rgba(80,200,200,0.12)", blue: "#14b8a6", blue2: "#5eead4",
-        soft: "rgba(20,184,166,0.16)", card: "#0e1a1c", card2: "#0b1618",
-        header: "rgba(7,18,20,0.78)", input: "#081314",
-        glow: "rgba(20,184,166,0.16)", btnInk: "#04211e"
-      },
-      {
-        name: "ice",
-        bg: "#eef2f6", ink: "#141820", muted: "#5b6573", dim: "#7a8492",
-        line: "rgba(20,24,32,0.10)", blue: "#2563eb", blue2: "#1d4ed8",
-        soft: "rgba(37,99,235,0.12)", card: "#ffffff", card2: "#f6f8fb",
-        header: "rgba(238,242,246,0.82)", input: "#ffffff",
-        glow: "rgba(37,99,235,0.12)", btnInk: "#ffffff"
-      },
-      {
-        name: "cherry",
-        bg: "#160808", ink: "#ffecec", muted: "#c99a9a", dim: "#8d6a6a",
-        line: "rgba(255,90,90,0.14)", blue: "#ef4444", blue2: "#fb7185",
-        soft: "rgba(239,68,68,0.16)", card: "#1e1010", card2: "#180c0c",
-        header: "rgba(22,8,8,0.78)", input: "#140909",
-        glow: "rgba(239,68,68,0.16)", btnInk: "#ffffff"
-      },
-      {
-        name: "lime",
-        bg: "#0c1208", ink: "#f3ffe8", muted: "#a8b894", dim: "#748066",
-        line: "rgba(170,220,70,0.12)", blue: "#84cc16", blue2: "#bef264",
-        soft: "rgba(132,204,22,0.16)", card: "#141a10", card2: "#10160c",
-        header: "rgba(12,18,8,0.78)", input: "#0d1309",
-        glow: "rgba(132,204,22,0.16)", btnInk: "#142004"
-      },
-      {
-        name: "paper",
-        bg: "#f6f1e8", ink: "#1c1812", muted: "#6b6358", dim: "#8a8276",
-        line: "rgba(28,24,18,0.10)", blue: "#c2410c", blue2: "#9a3412",
-        soft: "rgba(194,65,12,0.12)", card: "#fffaf3", card2: "#efe8dc",
-        header: "rgba(246,241,232,0.84)", input: "#fffaf3",
-        glow: "rgba(194,65,12,0.10)", btnInk: "#ffffff"
-      },
-      {
-        name: "cobalt",
-        bg: "#070b18", ink: "#eef3ff", muted: "#9aa8c8", dim: "#6b7694",
-        line: "rgba(120,160,255,0.14)", blue: "#3b82f6", blue2: "#93c5fd",
-        soft: "rgba(59,130,246,0.16)", card: "#101628", card2: "#0c1220",
-        header: "rgba(7,11,24,0.78)", input: "#0a1020",
-        glow: "rgba(59,130,246,0.20)", btnInk: "#ffffff"
-      }
-    ];
-    let currentTheme = "midnight blue";
-    let remainingThemes = themes.filter(t => t.name !== currentTheme).map(t => t.name);
-    let bubbleTimer;
-    function showBubble(text, ms) {
-      const bubble = document.getElementById("themeBubble");
-      bubble.textContent = text;
-      bubble.classList.add("show");
-      clearTimeout(bubbleTimer);
-      bubbleTimer = setTimeout(() => bubble.classList.remove("show"), ms);
-    }
-
-    function applyTheme(theme) {
-      const root = document.documentElement;
-      root.style.setProperty("--bg", theme.bg);
-      root.style.setProperty("--ink", theme.ink);
-      root.style.setProperty("--muted", theme.muted);
-      root.style.setProperty("--dim", theme.dim);
-      root.style.setProperty("--line", theme.line);
-      root.style.setProperty("--blue", theme.blue);
-      root.style.setProperty("--blue-2", theme.blue2);
-      root.style.setProperty("--blue-soft", theme.soft);
-      root.style.setProperty("--card", theme.card);
-      root.style.setProperty("--card-2", theme.card2);
-      root.style.setProperty("--header", theme.header);
-      root.style.setProperty("--input", theme.input);
-      root.style.setProperty("--glow", theme.glow);
-      root.style.setProperty("--btn-ink", theme.btnInk);
-      document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.bg);
-      currentTheme = theme.name;
-      showBubble("theme changed to " + theme.name, 1000);
-    }
-
-    const siteCaret = document.getElementById("siteCaret");
-    const siteMenu = document.getElementById("siteMenu");
-    siteCaret.addEventListener("click", function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      const open = siteMenu.classList.toggle("open");
-      siteCaret.setAttribute("aria-expanded", open ? "true" : "false");
-    });
-    document.addEventListener("click", function() {
-      siteMenu.classList.remove("open");
-      siteCaret.setAttribute("aria-expanded", "false");
-    });
-    siteMenu.addEventListener("click", function(e) { e.stopPropagation(); });
-
-    document.getElementById("brand").addEventListener("click", function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!remainingThemes.length) {
-        remainingThemes = themes.filter(t => t.name !== currentTheme).map(t => t.name);
-      }
-      const nextName = remainingThemes.splice(Math.floor(Math.random() * remainingThemes.length), 1)[0];
-      applyTheme(themes.find(t => t.name === nextName));
-    });
-
-    if (!sessionStorage.getItem("fransooHintShown")) {
-      setTimeout(() => {
-        sessionStorage.setItem("fransooHintShown", "1");
-        showBubble("click me ↑", 7000);
-      }, 30000);
-    }
-
-    if (window.matchMedia("(pointer: fine)").matches) {
-      document.addEventListener("mousemove", function(e) {
-        const dot = document.createElement("span");
-        dot.className = "cursor-dot";
-        dot.style.left = e.clientX + "px";
-        dot.style.top = e.clientY + "px";
-        document.body.appendChild(dot);
-        let opacity = 0.7;
-        function fade() {
-          opacity -= 0.045;
-          dot.style.opacity = opacity;
-          dot.style.transform = "translate(-50%, -50%) scale(" + Math.max(opacity, 0.2) + ")";
-          if (opacity > 0) requestAnimationFrame(fade);
-          else dot.remove();
-        }
-        requestAnimationFrame(fade);
-      });
-    }
-
-    const rippleColors = [
-      'rgba(47, 127, 255, 0.35)',
-      'rgba(255, 220, 0, 0.28)',
-      'rgba(255, 50, 50, 0.28)',
-      'rgba(50, 220, 50, 0.28)',
-      'rgba(255, 140, 0, 0.28)'
-    ];
-
-    let clickCount = 0;
-    let totalClicks = 0;
-    let lastClickTime = 0;
-    let danceModeActive = false;
-    let hasShownCounterIntro = false;
-    const rageMessages = [
-      "wow you must be bored",
-      "still here?",
-      "why?",
-      "still clicking huh",
-      "ok now you're committed",
-      "touch grass maybe"
-    ];
-    let rageIndex = 0;
-
-    const clickCounter = document.getElementById('clickCounter');
-    const screenshotTrap = document.getElementById('screenshotTrap');
-
-    let lastNameClick = null;
-    let lastNameTime = 0;
-    let idleTimer;
-    let isFlying = false;
-
-    function formatNumber(n) {
-      return Math.round(n).toLocaleString('en-US');
-    }
-
-    function animateCounters() {
-      const els = document.querySelectorAll('[data-count]');
-      const start = performance.now();
-      const duration = 1600;
-      function tick(now) {
-        const t = Math.min(1, (now - start) / duration);
-        const eased = 1 - Math.pow(1 - t, 3);
-        els.forEach(el => {
-          const target = Number(el.dataset.count);
-          const prefix = el.dataset.prefix || '';
-          const suffix = el.dataset.suffix || '';
-          const value = target * eased;
-          el.textContent = prefix + formatNumber(value) + suffix;
-        });
-        if (t < 1) requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    }
-
-    const stats = document.querySelector('.stats');
-    if (stats) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            animateCounters();
-            io.disconnect();
-          }
-        });
-      }, { threshold: 0.35 });
-      io.observe(stats);
-    }
-
-    document.getElementById('contactForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const btn = document.getElementById('formBtn');
-      const status = document.getElementById('formStatus');
-      const form = e.currentTarget;
-      btn.disabled = true;
-      status.textContent = 'Sending…';
-      try {
-        const data = new FormData(form);
-        const res = await fetch(form.action, {
-          method: 'POST',
-          body: data,
-          headers: { 'Accept': 'application/json' }
-        });
-        const json = await res.json().catch(() => ({}));
-        if (res.ok && json.success !== false) {
-          status.textContent = 'Sent. I might reply.';
-          form.reset();
-        } else {
-          status.textContent = 'Didn’t go through. Email me directly at henry@fransoo.com.';
-        }
-      } catch (err) {
-        status.textContent = 'Didn’t go through. Email me directly at henry@fransoo.com.';
-      } finally {
-        btn.disabled = false;
-      }
-    });
-
-    function wrapBoredText() {
-      const boredText = document.getElementById('boredText');
-      const words = boredText.textContent.split(' ');
-      boredText.innerHTML = words.map(word => `<span class="word">${word}</span>`).join(' ');
-      document.querySelectorAll('.word').forEach(wordEl => {
-        wordEl.addEventListener('click', function(e) {
-          e.stopPropagation();
-          explodeWord(this);
-        });
-      });
-    }
-    wrapBoredText();
-
-    function wrapLetters() {
-      document.querySelectorAll('.section-label, footer span').forEach(el => {
-        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
-        const textNodes = [];
-        while (walker.nextNode()) textNodes.push(walker.currentNode);
-        textNodes.forEach(node => {
-          if (node.textContent.trim() || node.textContent.includes(' ')) {
-            const frag = document.createDocumentFragment();
-            node.textContent.split('').forEach(char => {
-              const span = document.createElement('span');
-              span.className = 'letter';
-              span.innerHTML = char === ' ' ? '&nbsp;' : char;
-              frag.appendChild(span);
-            });
-            node.replaceWith(frag);
-          }
-        });
-      });
-    }
-    wrapLetters();
-
-    document.body.addEventListener('click', function(e) {
-      totalClicks++;
-      lastClickTime = Date.now();
-      updateClickCounter();
-      updateDanceMode();
-
-      if (e.target === document.body || e.target.classList.contains('noise') || e.target.classList.contains('glow')) {
-        clickCount++;
-        if (clickCount % 10 === 0) {
-          const msg = document.createElement('div');
-          msg.className = 'rage-msg';
-          msg.textContent = rageMessages[rageIndex];
-          document.body.appendChild(msg);
-          rageIndex = (rageIndex + 1) % rageMessages.length;
-          setTimeout(() => msg.remove(), 2000);
-        }
-        const ripple = document.createElement('span');
-        ripple.classList.add('ripple');
-        ripple.style.background = rippleColors[Math.floor(Math.random() * rippleColors.length)];
-        const size = Math.max(window.innerWidth, window.innerHeight);
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = e.clientX - size / 2 + 'px';
-        ripple.style.top = e.clientY - size / 2 + 'px';
-        document.body.appendChild(ripple);
-        setTimeout(() => ripple.remove(), 2000);
-      }
-    });
-
-    function explodeWord(wordEl) {
-      const word = wordEl.textContent;
-      const rect = wordEl.getBoundingClientRect();
-      wordEl.style.opacity = '0';
-      word.split('').forEach((char, i) => {
-        if (char === ' ') return;
-        const letter = document.createElement('span');
-        letter.className = 'exploding-letter';
-        letter.textContent = char;
-        letter.style.left = (rect.left + i * 10) + 'px';
-        letter.style.top = rect.top + 'px';
-        letter.style.color = '#9aa3b2';
-        document.body.appendChild(letter);
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 8 + Math.random() * 12;
-        let vx = Math.cos(angle) * speed;
-        let vy = Math.sin(angle) * speed;
-        let x = rect.left + i * 10;
-        let y = rect.top;
-        function animateLetter() {
-          x += vx; y += vy; vy += 0.3;
-          if (x < 0 || x > window.innerWidth - 20) { vx *= -0.8; x = x < 0 ? 0 : window.innerWidth - 20; }
-          if (y < 0 || y > window.innerHeight - 20) { vy *= -0.8; y = y < 0 ? 0 : window.innerHeight - 20; vx *= 0.9; }
-          letter.style.left = x + 'px';
-          letter.style.top = y + 'px';
-          if (Math.abs(vx) > 0.5 || Math.abs(vy) > 0.5) requestAnimationFrame(animateLetter);
-          else setTimeout(() => letter.remove(), 1000);
-        }
-        requestAnimationFrame(animateLetter);
-      });
-      setTimeout(() => { wordEl.style.opacity = '1'; }, 3000);
-    }
-
-    let wasHidden = false;
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) wasHidden = true;
-      else if (wasHidden) {
-        wasHidden = false;
-        screenshotTrap.classList.add('flash');
-        setTimeout(() => screenshotTrap.classList.remove('flash'), 300);
-      }
-    });
-
-    function resetIdle() {
-      clearTimeout(idleTimer);
-      if (isFlying) return;
-      idleTimer = setTimeout(startFlyaway, 14000);
-    }
-    ['mousemove', 'keydown', 'click', 'scroll'].forEach(evt => document.addEventListener(evt, resetIdle));
-    resetIdle();
-
-    function startFlyaway() {
-      if (isFlying) return;
-      isFlying = true;
-      const letters = document.querySelectorAll('.letter');
-      const lettersArray = Array.from(letters);
-      lettersArray.forEach((letter, i) => {
-        setTimeout(() => {
-          letter.style.setProperty('--tx', ((Math.random() - 0.5) * 800) + 'px');
-          letter.style.setProperty('--ty', (-Math.random() * 600 - 200) + 'px');
-          letter.style.setProperty('--rot', ((Math.random() - 0.5) * 720) + 'deg');
-          letter.classList.add('fly-away');
-        }, i * 40);
-      });
-      setTimeout(() => {
-        letters.forEach(letter => letter.classList.remove('fly-away'));
-        setTimeout(() => { isFlying = false; resetIdle(); }, 1000);
-      }, lettersArray.length * 40 + 2000);
-    }
-
-    function updateDanceMode() {
-      const letters = document.querySelectorAll('.letter');
-      const now = Date.now();
-      if (totalClicks >= 25 && now - lastClickTime < 1500) {
-        if (!danceModeActive) {
-          danceModeActive = true;
-          letters.forEach(letter => letter.classList.add('dance'));
-        }
-      } else if (danceModeActive) {
-        danceModeActive = false;
-        letters.forEach(letter => letter.classList.remove('dance'));
-      }
-    }
-
-    function updateClickCounter() {
-      if (totalClicks >= 25) {
-        if (!hasShownCounterIntro) {
-          hasShownCounterIntro = true;
-          const intro = document.createElement('div');
-          intro.className = 'counter-intro';
-          intro.textContent = `clicks: ${totalClicks}`;
-          document.body.appendChild(intro);
-          setTimeout(() => intro.remove(), 1500);
-        }
-        clickCounter.textContent = `clicks: ${totalClicks}`;
-        clickCounter.classList.add('show');
-      }
-    }
-
-    setInterval(() => {
-      if (danceModeActive && Date.now() - lastClickTime > 1500) updateDanceMode();
-    }, 200);
-
-    const nameParts = document.querySelectorAll('.name-part');
-    let isFlipping = false;
-    nameParts.forEach(part => {
-      part.addEventListener('click', function(e) {
-        e.stopPropagation();
-        totalClicks++;
-        lastClickTime = Date.now();
-        updateClickCounter();
-        updateDanceMode();
-        const now = Date.now();
-        const name = this.dataset.name;
-        if (lastNameClick && lastNameClick !== name && now - lastNameTime < 1000) {
-          document.querySelector('[data-name="henry"]').classList.add('fight-bounce-left');
-          document.querySelector('[data-name="fransoo"]').classList.add('fight-bounce-right');
-          setTimeout(() => {
-            document.querySelector('[data-name="henry"]').classList.remove('fight-bounce-left');
-            document.querySelector('[data-name="fransoo"]').classList.remove('fight-bounce-right');
-          }, 600);
-          lastNameClick = null;
-          return;
-        }
-        lastNameClick = name;
-        lastNameTime = now;
-        if (isFlipping) return;
-        isFlipping = true;
-        const flipClass = Math.random() > 0.5 ? 'flip-vertical' : 'flip-horizontal';
-        this.classList.add(flipClass);
-        setTimeout(() => { this.classList.remove(flipClass); isFlipping = false; }, 5000);
-      });
-    });
-  </script>
+  <div class="screen fade">
+    <p class="quote flicker">
+      Twenty years from now you will be more disappointed by the things that you didn't do than by the ones you did do. So throw off the bowlines. Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.
+    </p>
+    <p class="attribution">— Unknown</p>
+  </div>
 </body>
 </html>
