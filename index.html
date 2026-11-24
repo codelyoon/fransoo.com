@@ -3,456 +3,630 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Henry Fransoo</title>
-  <meta name="description" content="Henry Fransoo is a Canadian entrepreneur working across e-commerce, product, and markets." />
-  <meta name="theme-color" content="#0B0D10" />
+  <title>DWG // $W23 — Henry Fransoo</title>
+  <meta name="description" content="Henry Fransoo — Canadian entrepreneur working across e-commerce, product, and markets." />
+  <meta name="theme-color" content="#0A3685" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0b0d10;
-      --ink: #f4f6f8;
-      --muted: #9aa3b2;
-      --dim: #6b7380;
-      --line: rgba(255,255,255,0.08);
-      --blue: #2f7fff;
-      --blue-2: #5b9bff;
-      --blue-soft: rgba(47,127,255,0.14);
-      --card: #14181f;
-      --card-2: #12161c;
-      --header: rgba(11,13,16,0.72);
-      --input: #0f1318;
-      --glow: rgba(47,127,255,0.16);
-      --btn-ink: #ffffff;
+      --bg: #0a3685;
+      --bg-deep: #072866;
+      --panel: rgba(7, 40, 102, 0.58);
+      --panel-solid: #082d72;
+      --ink: #f4f8ff;
+      --ink-soft: rgba(244, 248, 255, 0.78);
+      --ink-dim: rgba(244, 248, 255, 0.52);
+      --line: rgba(244, 248, 255, 0.28);
+      --line-heavy: #f4f8ff;
+      --grid-minor: rgba(244, 248, 255, 0.06);
+      --grid-major: rgba(244, 248, 255, 0.15);
+      --accent: #fde047;
+      --accent-ink: #072866;
+      --cyan: #7dd3fc;
+      --pos: #4ade80;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+
     body {
-      background: var(--bg);
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(var(--grid-major) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+        linear-gradient(var(--grid-minor) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
+      background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
       color: var(--ink);
-      font-family: Outfit, system-ui, sans-serif;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 13px;
       line-height: 1.55;
       min-height: 100vh;
       overflow-x: hidden;
-      position: relative;
-      transition: background 0.45s ease, color 0.45s ease;
+      transition: background-color 0.35s ease, color 0.35s ease;
+      -webkit-font-smoothing: antialiased;
     }
 
+    ::selection { background: var(--accent); color: var(--accent-ink); }
     a { color: inherit; text-decoration: none; }
     button, input, textarea { font-family: inherit; }
 
-    .noise {
+    /* Live CAD Crosshair Guides */
+    .cad-cross-x, .cad-cross-y {
       pointer-events: none;
       position: fixed;
-      inset: 0;
-      z-index: 0;
-      opacity: 0.035;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background: rgba(244, 248, 255, 0.14);
+      z-index: 90;
     }
+    .cad-cross-x { height: 1px; left: 0; right: 0; top: -10px; }
+    .cad-cross-y { width: 1px; top: 0; bottom: 0; left: -10px; }
 
-    .glow {
-      pointer-events: none;
-      position: fixed;
-      width: 720px;
-      height: 720px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--glow), transparent 62%);
-      transition: background 0.45s ease;
-      top: -240px;
-      right: -180px;
-      z-index: 0;
-    }
-
-    .wrap {
-      position: relative;
-      z-index: 2;
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      backdrop-filter: blur(16px);
-      background: var(--header);
-      border-bottom: 1px solid var(--line);
-      transition: background 0.45s ease, border-color 0.45s ease;
-    }
-    .nav {
+    /* Live Market & Telemetry Ticker Tape */
+    .tape-wrap {
+      border-bottom: 1.5px solid var(--line-heavy);
+      background: var(--bg-deep);
+      height: 32px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      height: 68px;
+      overflow: hidden;
+      position: sticky;
+      top: 0;
+      z-index: 60;
     }
-    .brand-wrap {
+
+    .tape-badge {
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-weight: 700;
+      font-size: 11px;
+      padding: 0 14px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      letter-spacing: 0.08em;
+      flex-shrink: 0;
+      border-right: 1.5px solid var(--line-heavy);
+    }
+
+    .tape-track {
+      display: flex;
+      white-space: nowrap;
+      animation: marquee 34s linear infinite;
+      gap: 36px;
+      padding-left: 24px;
+      font-size: 11.5px;
+    }
+    .tape-track:hover { animation-play-state: paused; }
+    .tape-item span.up { color: var(--pos); font-weight: 600; }
+    .tape-item span.hi { color: var(--accent); font-weight: 600; }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Outer Architectural Sheet Frame */
+    .sheet-wrap {
+      max-width: 1320px;
+      margin: 18px auto 28px;
+      padding: 0 16px;
+    }
+
+    .blueprint-sheet {
+      border: 2px solid var(--line-heavy);
+      padding: 5px;
+      background: rgba(7, 40, 102, 0.25);
+    }
+
+    .inner-frame {
+      border: 1px solid var(--line-heavy);
+    }
+
+    /* Zone Coordinates */
+    .zone-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--line-heavy);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-align: center;
+      color: var(--ink-dim);
+      background: var(--bg-deep);
+    }
+    .zone-bar span { padding: 3px 0; border-right: 1px solid var(--line); }
+    .zone-bar span:last-child { border-right: none; }
+
+    /* Command & Drafting Header */
+    .draft-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 18px;
+      border-bottom: 1.5px solid var(--line-heavy);
+      background: var(--panel);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       position: relative;
     }
+
     .brand {
-      font-weight: 600;
-      letter-spacing: -0.04em;
-      font-size: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.06em;
       cursor: pointer;
+      border: 1.5px solid var(--line-heavy);
+      padding: 4px 10px;
+      background: var(--bg-deep);
     }
+    .brand:hover { background: var(--ink); color: var(--bg); }
+
     .theme-bubble {
       position: absolute;
-      top: calc(100% + 8px);
+      top: 34px;
       left: 0;
-      white-space: nowrap;
-      font-family: "IBM Plex Mono", monospace;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-weight: 700;
       font-size: 11px;
-      letter-spacing: 0.02em;
-      color: var(--ink);
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 6px 10px;
+      padding: 2px 8px;
+      white-space: nowrap;
       opacity: 0;
       pointer-events: none;
-      transform: translateY(-4px);
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      z-index: 40;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      transition: opacity 0.2s;
+      z-index: 70;
     }
-    .theme-bubble.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .cursor-dot {
-      position: fixed;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--blue);
-      pointer-events: none;
-      z-index: 80;
-      transform: translate(-50%, -50%);
-      opacity: 0.7;
-    }
-    .nav-links {
-      display: flex;
-      gap: 22px;
-      font-size: 14px;
-      color: var(--muted);
-    }
-    .nav-links a:hover { color: var(--ink); }
-    .nav-cta {
-      font-size: 13px;
-      padding: 8px 14px;
-      border: 1px solid var(--blue);
-      background: var(--blue-soft);
-      color: var(--blue-2);
-      border-radius: 999px;
-    }
-    .nav-cta:hover { filter: brightness(1.12); }
+    .theme-bubble.show { opacity: 1; }
 
-    .hero { padding: 88px 0 72px; }
-    .kicker {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--blue-2);
-      margin-bottom: 18px;
+    .telemetry-strip {
+      display: flex;
+      gap: 18px;
+      font-size: 11px;
+      color: var(--cyan);
     }
+
+    .hotkey-hint {
+      font-size: 11px;
+      color: var(--ink-soft);
+    }
+    .hotkey-hint b { color: var(--accent); }
+
+    /* Hero Elevation + Live Output Ledger */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      border-bottom: 1.5px solid var(--line-heavy);
+    }
+
+    .hero-elevation {
+      padding: 32px 26px;
+      border-right: 1px solid var(--line-heavy);
+      position: relative;
+    }
+
+    .dim-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10.5px;
+      color: var(--cyan);
+      margin-bottom: 14px;
+      letter-spacing: 0.08em;
+    }
+    .dim-line::before, .dim-line::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      border-top: 1px dashed var(--line-heavy);
+    }
+
     h1 {
-      font-size: clamp(48px, 9vw, 92px);
+      font-size: clamp(44px, 6.8vw, 82px);
       line-height: 0.92;
-      letter-spacing: -0.055em;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      text-shadow: 2px 2px 0px var(--bg-deep);
     }
+
     .name-part {
       display: inline-block;
       cursor: pointer;
       user-select: none;
-      transition: transform 0.35s ease;
+      transition: transform 0.35s ease, color 0.2s;
     }
+    .name-part:hover { color: var(--accent); }
     .flip-vertical { transform: rotateX(180deg); }
     .flip-horizontal { transform: rotateY(180deg); }
     .fight-bounce-left { animation: bounceLeft 0.6s ease; }
     .fight-bounce-right { animation: bounceRight 0.6s ease; }
-    @keyframes bounceLeft {
-      0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(-14px) rotateY(180deg); }
-    }
-    @keyframes bounceRight {
-      0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(14px) rotateY(180deg); }
-    }
-    .lede {
+    @keyframes bounceLeft { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-14px) rotateY(180deg); } }
+    @keyframes bounceRight { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(14px) rotateY(180deg); } }
+
+    .hero-lede {
+      font-size: 15.5px;
+      color: var(--ink);
       max-width: 580px;
-      margin-top: 28px;
-      font-size: 19px;
-      color: var(--muted);
-      font-weight: 300;
-    }
-
-    section { padding: 28px 0 72px; }
-    .section-label {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--dim);
-      margin-bottom: 18px;
-    }
-    h2 {
-      font-size: clamp(28px, 4vw, 40px);
-      letter-spacing: -0.04em;
-      margin-bottom: 16px;
-    }
-    .prose {
-      max-width: 640px;
-      color: var(--muted);
-      font-size: 17px;
-    }
-    .prose p + p { margin-top: 14px; }
-    .prose strong { color: var(--ink); font-weight: 500; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin-top: 28px;
-    }
-    .card {
-      background: linear-gradient(180deg, var(--card), var(--card-2));
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 24px;
-      min-height: 210px;
-      transition: transform 0.25s ease, border-color 0.25s ease, background 0.45s ease;
-    }
-    .card:hover {
-      transform: translateY(-3px);
-      border-color: var(--blue);
-    }
-    .card h3 {
-      font-size: 22px;
-      letter-spacing: -0.03em;
-      margin-bottom: 8px;
-    }
-    .card .role {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      color: var(--blue-2);
       margin-bottom: 12px;
     }
-    .card p { color: var(--muted); font-size: 15px; }
-    .card .stat {
-      margin-top: 18px;
-      font-size: 13px;
-      color: var(--dim);
+
+    .hand-note {
+      font-family: "Architects Daughter", cursive;
+      color: var(--accent);
+      font-size: 15px;
+      display: inline-block;
+      transform: rotate(-1deg);
     }
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 36px;
-    }
-    .stat-box {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px 16px;
-      background: rgba(255,255,255,0.02);
-    }
-    .stat-box b {
-      display: block;
-      font-size: clamp(18px, 2vw, 24px);
-      letter-spacing: -0.04em;
-      margin-bottom: 6px;
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-    }
-    .stat-box span { color: var(--dim); font-size: 13px; }
-
-    .contact-row {
-      display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 28px;
-      align-items: start;
-    }
-    .contact-links {
+    /* Right Hero: Performance Ledger Table */
+    .hero-ledger {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-top: 8px;
+      justify-content: space-between;
+      background: var(--panel);
     }
-    .contact-links a {
+
+    .ledger-head {
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--line-heavy);
+      font-size: 10.5px;
+      color: var(--accent);
+      display: flex;
+      justify-content: space-between;
+      letter-spacing: 0.08em;
+    }
+
+    .ledger-row {
+      padding: 16px 18px;
+      border-bottom: 1px dashed var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .ledger-row:last-of-type { border-bottom: none; }
+
+    .ledger-meta span {
+      display: block;
+      font-size: 10px;
+      color: var(--cyan);
+    }
+    .ledger-meta strong {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-soft);
+    }
+
+    .ledger-val {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.03em;
+    }
+
+    /* Main 3-Column Terminal + Blueprint Matrix */
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: 330px 1fr 330px;
+      border-bottom: 1.5px solid var(--line-heavy);
+    }
+
+    .col {
+      border-right: 1px solid var(--line-heavy);
+      display: flex;
+      flex-direction: column;
+    }
+    .col:last-child { border-right: none; }
+
+    .col-head {
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--line-heavy);
+      background: var(--bg-deep);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      display: flex;
+      justify-content: space-between;
+    }
+    .col-head span.dim { color: var(--ink-dim); font-weight: 400; }
+
+    /* Column 1: Field Log & Radar */
+    .log-body {
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      flex: 1;
+    }
+
+    .log-block h2 {
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+      color: var(--ink);
+    }
+
+    .log-block p {
+      font-size: 12.5px;
+      color: var(--ink-soft);
+      line-height: 1.65;
+    }
+    .log-block p + p { margin-top: 10px; }
+    .log-block strong { color: var(--accent); font-weight: 600; }
+
+    .radar-divider {
+      border-top: 1px dashed var(--line);
+      padding-top: 16px;
+    }
+
+    .ab-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .ab-tags span {
+      border: 1px solid var(--line-heavy);
+      padding: 2px 8px;
+      font-size: 11px;
+      background: var(--bg-deep);
+    }
+
+    /* Column 2: Venture Order Book + Blueprint Schematic Inspector */
+    .order-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .order-table th {
+      text-align: left;
+      font-size: 10px;
+      color: var(--ink-dim);
+      padding: 7px 12px;
+      border-bottom: 1px solid var(--line);
+      font-weight: 500;
+    }
+    .order-row {
+      cursor: pointer;
+      border-bottom: 1px solid var(--line);
+      transition: background 0.15s;
+    }
+    .order-row:hover { background: rgba(244, 248, 255, 0.07); }
+    .order-row.active {
+      background: rgba(253, 224, 71, 0.14);
+    }
+    .order-row.active td.sym {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .order-row td {
+      padding: 10px 12px;
+      font-size: 12px;
+    }
+
+    .badge-state {
+      font-size: 10px;
+      padding: 1px 6px;
+      border: 1px solid var(--line-heavy);
+    }
+    .badge-state.live {
+      border-color: var(--pos);
+      color: var(--pos);
+    }
+
+    /* Schematic Inspector Box */
+    .schematic-inspector {
+      margin: 16px;
+      border: 1.5px solid var(--line-heavy);
+      background: var(--panel);
+      padding: 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .insp-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px dashed var(--line);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .insp-top h3 { font-size: 19px; font-weight: 700; }
+    .insp-top span { font-size: 11px; color: var(--cyan); }
+
+    .svg-stage {
+      border: 1px dashed var(--line);
+      background: rgba(7, 40, 102, 0.45);
+      padding: 12px;
+      margin-bottom: 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 16px 18px;
-      background: var(--card);
-    }
-    .contact-links a:hover { border-color: var(--blue); }
-    .contact-links small {
-      color: var(--dim);
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
-    .form {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 20px;
-      background: var(--card);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .form label {
+    .insp-desc {
       font-size: 13px;
-      color: var(--dim);
+      color: var(--ink-soft);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+
+    .insp-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px dashed var(--line);
+      padding-top: 10px;
+      font-size: 11px;
+      color: var(--ink-dim);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .dwg-btn {
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-weight: 700;
+      padding: 5px 11px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .dwg-btn:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+
+    /* Column 3: Direct Dispatch + Engineering Title Block */
+    .comms-col {
+      justify-content: space-between;
+    }
+
+    .social-matrix {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--line-heavy);
+    }
+    .social-matrix a {
+      padding: 11px 12px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      font-size: 11.5px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .social-matrix a:nth-child(2n) { border-right: none; }
+    .social-matrix a:nth-child(n+3) { border-bottom: none; }
+    .social-matrix a:hover { background: var(--ink); color: var(--bg); }
+
+    .dispatch-form {
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 10px;
     }
-    .form input, .form textarea {
-      width: 100%;
-      background: var(--input);
-      border: 1px solid var(--line);
-      border-radius: 10px;
+    .dispatch-form p.intro {
+      font-size: 12px;
+      color: var(--ink-soft);
+    }
+    .dispatch-form label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 10.5px;
+      color: var(--cyan);
+    }
+    .dispatch-form input, .dispatch-form textarea {
+      background: var(--bg-deep);
+      border: 1px solid var(--line-heavy);
       color: var(--ink);
-      padding: 12px 12px;
-      font-size: 15px;
+      padding: 8px 10px;
+      font-size: 12.5px;
       outline: none;
     }
-    .form input:focus, .form textarea:focus {
-      border-color: var(--blue);
-    }
-    .form textarea { min-height: 120px; resize: vertical; }
-    .form button {
-      border: 0;
-      background: var(--blue);
-      color: var(--btn-ink);
-      border-radius: 10px;
-      padding: 12px 16px;
-      font-size: 15px;
-      font-weight: 500;
+    .dispatch-form input::placeholder, .dispatch-form textarea::placeholder { color: var(--ink-dim); }
+    .dispatch-form input:focus, .dispatch-form textarea:focus { border-color: var(--accent); }
+    .dispatch-form textarea { min-height: 82px; resize: vertical; }
+    .dispatch-form button {
+      background: var(--ink);
+      color: var(--bg);
+      border: 1px solid var(--ink);
+      padding: 10px;
+      font-weight: 700;
+      font-size: 11.5px;
       cursor: pointer;
+      letter-spacing: 0.06em;
     }
-    .form button:hover { filter: brightness(1.08); }
-    .form button:disabled { opacity: 0.6; cursor: default; }
-    .form-note {
-      font-size: 12px;
-      color: var(--dim);
-    }
-    .form-status {
-      font-size: 13px;
-      color: var(--blue-2);
-      min-height: 1.2em;
-    }
+    .dispatch-form button:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+    .form-status { font-size: 11px; color: var(--accent); min-height: 1.2em; }
     .hp { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; }
 
-    footer {
-      border-top: 1px solid var(--line);
-      padding: 28px 0 48px;
-      color: var(--dim);
-      font-size: 13px;
-      text-align: center;
+    /* Architectural Title Block (Bottom Right) */
+    .title-block {
+      border-top: 1.5px solid var(--line-heavy);
+      background: var(--bg-deep);
+      font-size: 10.5px;
     }
-    .footer-sites {
-      position: relative;
+    .tb-top {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line-heavy);
       display: flex;
-      justify-content: center;
-      margin-bottom: 14px;
-    }
-    .footer-brand {
-      border: 1px solid var(--line);
-      background: var(--card);
-      color: var(--ink);
-      font-weight: 600;
-      letter-spacing: -0.04em;
-      font-size: 20px;
-      cursor: pointer;
-      display: inline-flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      padding: 8px 12px 8px 16px;
-      border-radius: 999px;
     }
-    .footer-brand:hover { border-color: var(--blue); }
-    .footer-brand .caret-pill {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 4px 8px;
+    .tb-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
     }
+    .tb-cell {
+      padding: 7px 12px;
+      border-right: 1px solid var(--line-heavy);
+      border-bottom: 1px solid var(--line-heavy);
+    }
+    .tb-cell:nth-child(2n) { border-right: none; }
+    .tb-cell:nth-child(n+3) { border-bottom: none; }
+    .tb-cell small { display: block; font-size: 9px; color: var(--ink-dim); }
+    .tb-cell b { font-size: 11px; color: var(--ink); }
+
+    .footer-sites { position: relative; }
+    .footer-brand {
+      background: transparent;
+      border: 1px solid var(--line-heavy);
+      color: var(--ink);
+      padding: 3px 8px;
+      font-size: 10.5px;
+      cursor: pointer;
+    }
+    .footer-brand:hover { background: var(--ink); color: var(--bg); }
     .site-menu {
       position: absolute;
-      bottom: calc(100% + 8px);
-      left: 50%;
-      transform: translateX(-50%);
-      min-width: 240px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 6px;
+      bottom: calc(100% + 6px);
+      right: 0;
+      min-width: 200px;
+      background: var(--bg-deep);
+      border: 1.5px solid var(--line-heavy);
       display: none;
-      z-index: 50;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.35);
-      text-align: left;
+      z-index: 80;
     }
     .site-menu.open { display: block; }
-    .site-menu a {
-      display: block;
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-weight: 600;
-      letter-spacing: -0.04em;
-      font-size: 15px;
-      color: var(--ink);
-    }
-    .site-menu a:hover { background: rgba(255,255,255,0.04); }
-    .site-menu .btc { color: #f7931a; }
+    .site-menu a { display: block; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+    .site-menu a:last-child { border-bottom: none; }
+    .site-menu a:hover { background: var(--ink); color: var(--bg); }
+    .site-menu .btc { color: var(--accent); font-weight: 700; }
 
-    .hint {
-      color: #6d7582;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      margin-top: 34px;
-      cursor: pointer;
-      user-select: none;
-      width: fit-content;
+    /* Bottom Zone Bar */
+    .zone-bar.bottom {
+      border-bottom: none;
     }
-    .hint:hover { color: #8b93a0; }
 
+    /* Easter Eggs */
     .click-counter {
       position: fixed;
-      bottom: 14px;
-      right: 14px;
-      font-family: "IBM Plex Mono", monospace;
+      bottom: 12px;
+      right: 12px;
       font-size: 11px;
-      color: #6d7582;
-      z-index: 40;
+      background: var(--bg-deep);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 3px 8px;
       opacity: 0;
-      transition: opacity .3s ease;
+      transition: opacity 0.3s;
+      z-index: 95;
     }
     .click-counter.show { opacity: 1; }
-
-    .ripple {
-      position: absolute;
-      border-radius: 50%;
-      transform: scale(0);
-      animation: ripple-animation 2s ease-out;
-      pointer-events: none;
-      z-index: 1;
-    }
-    @keyframes ripple-animation {
-      to { transform: scale(4); opacity: 0; }
-    }
     .rage-msg, .screenshot-trap, .counter-intro {
       position: fixed;
       top: 50%;
@@ -460,678 +634,652 @@
       transform: translate(-50%, -50%);
       z-index: 200;
       pointer-events: none;
-      font-family: Outfit, sans-serif;
-      letter-spacing: -0.03em;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-weight: 700;
+      padding: 8px 16px;
     }
-    .rage-msg { font-size: 28px; animation: fadeInOut 2s ease; }
-    @keyframes fadeInOut {
-      0%, 100% { opacity: 0; }
-      20%, 80% { opacity: 1; }
-    }
-    .screenshot-trap { font-size: 18px; opacity: 0; }
-    .screenshot-trap.flash { animation: screenshotFlash 0.3s ease; }
-    @keyframes screenshotFlash {
-      0%, 100% { opacity: 0; }
-      50% { opacity: 1; }
-    }
-    .counter-intro {
-      font-size: 24px;
-      animation: counterShrink 1.5s ease forwards;
-    }
+    .rage-msg { font-size: 18px; animation: fadeInOut 2s ease; }
+    @keyframes fadeInOut { 0%, 100% { opacity: 0; } 20%, 80% { opacity: 1; } }
+    .screenshot-trap { font-size: 14px; opacity: 0; }
+    .screenshot-trap.flash { animation: screenshotFlash 0.4s ease; }
+    @keyframes screenshotFlash { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+    .counter-intro { font-size: 18px; animation: counterShrink 1.5s ease forwards; }
     @keyframes counterShrink {
       0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
       70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
       100% { opacity: 0; transform: translate(calc(50vw - 60px), calc(50vh - 20px)) scale(0.5); }
     }
-    .letter { display: inline-block; transition: transform 1s ease, opacity 1s ease; }
-    .fly-away {
-      transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
-      opacity: 0;
-    }
     .word { display: inline-block; cursor: pointer; }
-    .word:hover { color: var(--blue-2); }
+    .word:hover { color: var(--accent); }
+    .letter { display: inline-block; transition: transform 1s ease, opacity 1s ease; }
+    .fly-away { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); opacity: 0; }
     .dance { animation: danceSpin 0.5s infinite linear; }
-    @keyframes danceSpin {
-      0% { transform: rotate(0deg) scale(1); }
-      25% { transform: rotate(90deg) scale(1.2); }
-      50% { transform: rotate(180deg) scale(1); }
-      75% { transform: rotate(270deg) scale(1.2); }
-      100% { transform: rotate(360deg) scale(1); }
-    }
-    .exploding-letter { position: fixed; z-index: 50; }
+    @keyframes danceSpin { 0% { transform: rotate(0deg); } 50% { transform: rotate(180deg) scale(1.2); } 100% { transform: rotate(360deg); } }
+    .exploding-letter { position: fixed; z-index: 150; color: var(--accent); font-weight: 700; pointer-events: none; }
 
-    @media (max-width: 800px) {
-      .nav-links { display: none; }
-      .grid, .stats, .contact-row { grid-template-columns: 1fr; }
-      .hero { padding-top: 56px; }
-      .stat-box b { font-size: 22px; }
+    @media (max-width: 1040px) {
+      .hero-grid, .matrix-grid { grid-template-columns: 1fr; }
+      .hero-elevation, .col { border-right: none; border-bottom: 1.5px solid var(--line-heavy); }
+      .col:last-child { border-bottom: none; }
+      .cad-cross-x, .cad-cross-y, .telemetry-strip { display: none; }
     }
   </style>
 </head>
 <body>
-  <div class="noise"></div>
-  <div class="glow"></div>
 
-  <header>
-    <div class="wrap nav">
-      <div class="brand-wrap">
-        <a class="brand" href="#top" id="brand" aria-label="fransoo.com">fransoo.com</a>
-        <div class="theme-bubble" id="themeBubble">theme changed</div>
-      </div>
-      <nav class="nav-links">
-        <a href="#about">About</a>
-        <a href="#work">Work</a>
-        <a href="#now">Now</a>
-      </nav>
-      <a class="nav-cta" href="#contact">Get in touch</a>
+  <!-- Live CAD Crosshair Guides -->
+  <div class="cad-cross-x" id="crossX"></div>
+  <div class="cad-cross-y" id="crossY"></div>
+
+  <!-- Live Market & Output Ticker Tape -->
+  <div class="tape-wrap">
+    <div class="tape-badge">DWG // $W23</div>
+    <div class="tape-track">
+      <span class="tape-item">BTC/USD <span class="hi" id="tapeBtc">FETCHING...</span></span>
+      <span class="tape-item">GAME_DL <span class="up">50,000+ ▲</span></span>
+      <span class="tape-item">MKT_VIEWS <span class="up">25,000,000+ ▲</span></span>
+      <span class="tape-item">ECOM_REV <span class="up">$30,000+ ▲</span></span>
+      <span class="tape-item">WAVE23_INC <span class="hi">2026 LAUNCH ●</span></span>
+      <span class="tape-item">ORIGIN <span class="up">YYC / CALGARY, AB</span></span>
+      <!-- Duplicate for continuous loop -->
+      <span class="tape-item">BTC/USD <span class="hi" id="tapeBtc2">FETCHING...</span></span>
+      <span class="tape-item">GAME_DL <span class="up">50,000+ ▲</span></span>
+      <span class="tape-item">MKT_VIEWS <span class="up">25,000,000+ ▲</span></span>
+      <span class="tape-item">ECOM_REV <span class="up">$30,000+ ▲</span></span>
+      <span class="tape-item">WAVE23_INC <span class="hi">2026 LAUNCH ●</span></span>
+      <span class="tape-item">ORIGIN <span class="up">YYC / CALGARY, AB</span></span>
     </div>
-  </header>
+  </div>
 
-  <main class="wrap" id="top">
-    <section class="hero">
-      <h1>
-        <span class="name-part" data-name="henry">Henry</span>
-        <br />
-        <span class="name-part" data-name="fransoo">Fransoo</span>
-      </h1>
-      <p class="lede" id="boredText">I make stuff, design & ship products, and trade international markets.</p>
-      <p class="lede">Usually always building something.</p>
-    </section>
+  <div class="sheet-wrap" id="top">
+    <div class="blueprint-sheet">
+      <div class="inner-frame">
 
-    <section id="about">
-      <p class="section-label">01 — About</p>
-      <h2>Not a résumé. A running log.</h2>
-      <div class="prose">
-        <p>I’m Henry, an entrepreneur from the Calgary area. I started shipping products and games back in high school, before I could even legally sign most contracts, then spent the years after that mastering the unglamorous parts: inventory, ads, logistics, and what happens after something actually launches.</p>
-        <p>Now I split time between building & operating businesses under <strong>Woeller23 Ventures</strong>, and studying business & artificial intelligence at the <strong>Southern Alberta Institue of Technology</strong></p>
-      </div>
-      <div class="stats">
-        <div class="stat-box">
-          <b data-count="50000" data-prefix="" data-suffix="+" data-decimals="0">0+</b>
-          <span>game downloads</span>
+        <div class="zone-bar">
+          <span>ZONE A1</span>
+          <span>ZONE B1</span>
+          <span>ZONE C1</span>
+          <span>ZONE D1</span>
         </div>
-        <div class="stat-box">
-          <b data-count="25000000" data-prefix="" data-suffix="+" data-decimals="0">0+</b>
-          <span>marketing views</span>
-        </div>
-        <div class="stat-box">
-          <b data-count="30000" data-prefix="$" data-suffix="+" data-decimals="0">$0+</b>
-          <span>ecommerce revenue</span>
-        </div>
-      </div>
-    </section>
 
-    <section id="work">
-      <p class="section-label">02 — Work</p>
-      <h2>Things I’ve actually run.</h2>
-      <div class="grid">
-        <article class="card">
-          <p class="role">current</p>
-          <h3>Woeller23 Ventures</h3>
-          <p>The company I run everything else through. New projects, operating businesses, and anything that needs a home before it becomes its own brand.</p>
-          <p class="stat">holding company · new work</p>
-        </article>
-        <article class="card">
-          <p class="role">Just Launched (2026)</p>
-          <h3>Wave23 Inc.</h3>
-          <p>Wave23 Inc. is a B2B NFC (Near Field Communications) technology company helping local businesses grow their Google reviews and online visibility. We provide programmable NFC cards and tap-to-review tools that make leaving a review quick and easy. Wave23 helps businesses collect more reviews, improve local search rankings, and convert more traffic.</p>
-          <p class="stat">technology · client marketing strategies</p>
-        </article>
-        <article class="card">
-          <p class="role">2023 — 2025</p>
-          <h3>SHIP23 Industries</h3>
-          <p>Started an ecommerce operation participating in the practice of retail arbitrage; buying everyday products for cheap, and reselling higher on the worlds largest online marketplace. Took advantage of Amazons shipment network, expanding inventory across Canada to: Calgary, Vancouver, Edmonton, Toronto, Ottawa, and Hamilton.</p>
-          <p class="stat">amazon marketplace · e-commerce</p>
-        </article>
-        <article class="card">
-          <p class="role">2019 — 2024</p>
-          <h3>Woeller Media</h3>
-          <p>Designed and developed marketing videos and digital advertisements for different businesses across various social media platforms. Tailoring my strategies to their specific niches.</p>
-          <p class="stat">marketing · social media · advertising</p>
-        </article>
-        <article class="card">
-          <p class="role">2019 — 2023</p>
-          <h3>Codelyon Apps</h3>
-          <p>Designed and shipped mobile games from comments, DMs, and user feedback. Used social media as both distribution and a product research lab — then converted that attention into ad revenue & 50,000+ downloads worldwide.</p>
-          <p class="stat">games · distribution · feedback loops</p>
-        </article>
-        <article class="card">
-          <p class="role">side project</p>
-          <h3>bitcoin.fransoo.com</h3>
-          <p>A live crypto price board I made because I wanted something faster than opening twelve tabs. Updates every few seconds. Still useful. Still a little unnecessary.</p>
-          <p class="stat"><a href="https://bitcoin.fransoo.com" target="_blank" rel="noopener">open the board →</a></p>
-        </article>
-      </div>
-    </section>
-
-    <section id="now">
-      <p class="section-label">03 — Now</p>
-      <h2>What I’m paying attention to.</h2>
-      <div class="prose">
-        <p>Analyzing markets and staying in the loop on whats happening with decentralized finance. Learning more about ecommerce operations; how small teams move physical product without drowning in the process. And of course, focusing on building the next useful thing under Woeller23.</p>
-        <p>Outside of screens: golf, skiing, hiking. Pretty much the usual Alberta starter pack.</p>
-      </div>
-    </section>
-
-    <section id="contact">
-      <p class="section-label">04 — Contact</p>
-      <div class="contact-row">
-        <div>
-          <h2>If you have something real, drop a note & say hi.</h2>
-          <p class="prose">Projects, questions, or a reason I should write back. I actually read these.</p>
-          <form class="form" id="contactForm" action="https://formsubmit.co/ajax/henry@fransoo.com" method="POST">
-          <input type="hidden" name="_subject" value="New message from fransoo.com" />
-          <input type="hidden" name="_template" value="table" />
-          <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" />
-          <label>
-            Email
-            <input type="email" name="email" required placeholder="you@email.com" />
-          </label>
-          <label>
-            Message
-            <textarea name="message" required placeholder="What’s this about?"></textarea>
-          </label>
-          <button type="submit" id="formBtn">Send message</button>
-          <p class="form-status" id="formStatus"></p>
-        </form>
-        </div>
-          <div class="contact-links">
-            <a href="https://instagram.com/woeller23" target="_blank" rel="noopener">@woeller23 <small>instagram</small></a>
-            <a href="https://tiktok.com/@woeller23" target="_blank" rel="noopener">@woeller23 <small>tiktok</small></a>
-            <a href="https://x.com/hfransoo" target="_blank" rel="noopener">@hfransoo <small>x</small></a>
-            <a href="https://ca.linkedin.com/in/hfransoo" target="_blank" rel="noopener">@hfransoo <small>linkedin</small></a>
+        <!-- Drafting & Telemetry Header -->
+        <header class="draft-header">
+          <div class="brand-box">
+            <a class="brand" href="#top" id="brand">DWG // FRANSOO.COM</a>
+            <div class="theme-bubble" id="themeBubble">sheet changed</div>
+            <span style="font-size:11px; color:var(--ink-soft);">SHEET 01 OF 01</span>
           </div>
-      </div>
-    </section>
 
-    <footer>
-      <div class="footer-sites">
-        <button class="footer-brand" id="siteCaret" type="button" aria-expanded="false" aria-label="Open sites">
-          fransoo.com <span class="caret-pill">▾ sites</span>
-        </button>
-        <div class="site-menu" id="siteMenu">
-          <a href="https://fransoo.com">fransoo.com</a>
-          <a href="https://bitcoin.fransoo.com"><span class="btc">bitcoin.</span>fransoo.com</a>
+          <div class="telemetry-strip">
+            <span id="coordDisplay">X: 0000mm · Y: 0000mm</span>
+            <span id="yycClock">YYC: --:--:--</span>
+          </div>
+
+          <div class="hotkey-hint">PRESS <b>[1–6]</b> TO INSPECT SCHEMATICS</div>
+        </header>
+
+        <!-- Hero Elevation + Live Ledger -->
+        <div class="hero-grid">
+          <div class="hero-elevation">
+            <div class="dim-line">|◄──── ELEVATION: CALGARY, AB // WOELLER23 VENTURES ────►|</div>
+            <h1>
+              <span class="name-part" data-name="henry">Henry</span><br />
+              <span class="name-part" data-name="fransoo">Fransoo</span>
+            </h1>
+            <p class="hero-lede" id="boredText">I make stuff, design &amp; ship products, and trade international markets.</p>
+            <span class="hand-note">↳ Spec note: Usually always building something.</span>
+          </div>
+
+          <div class="hero-ledger">
+            <div class="ledger-head">
+              <span>VERIFIED OUTPUT LEDGER</span>
+              <span>TOL ±0.01</span>
+            </div>
+            <div class="ledger-row">
+              <div class="ledger-meta">
+                <span>|◄── METRIC 01 ──►|</span>
+                <strong>Game downloads</strong>
+              </div>
+              <div class="ledger-val" data-count="50000" data-prefix="" data-suffix="+">0+</div>
+            </div>
+            <div class="ledger-row">
+              <div class="ledger-meta">
+                <span>|◄── METRIC 02 ──►|</span>
+                <strong>Marketing views</strong>
+              </div>
+              <div class="ledger-val" data-count="25000000" data-prefix="" data-suffix="+">0+</div>
+            </div>
+            <div class="ledger-row">
+              <div class="ledger-meta">
+                <span>|◄── METRIC 03 ──►|</span>
+                <strong>Ecommerce revenue</strong>
+              </div>
+              <div class="ledger-val" data-count="30000" data-prefix="$" data-suffix="+">$0+</div>
+            </div>
+          </div>
         </div>
+
+        <!-- 3-Column Blueprint Matrix -->
+        <div class="matrix-grid">
+
+          <!-- COLUMN 1: FIELD LOG & RADAR -->
+          <section class="col">
+            <div class="col-head">
+              <span>SEC.01 // FIELD LOG</span>
+              <span class="dim">HISTORY</span>
+            </div>
+            <div class="log-body">
+              <div class="log-block">
+                <h2>Not a résumé. A running log.</h2>
+                <p>I’m Henry, an entrepreneur from the Calgary area. I started shipping products and games back in high school, before I could even legally sign most contracts, then spent the years after that mastering the unglamorous parts: inventory, ads, logistics, and what happens after something actually launches.</p>
+                <p>Now I split time between building &amp; operating businesses under <strong>Woeller23 Ventures</strong>, and studying business &amp; artificial intelligence at the <strong>Southern Alberta Institute of Technology</strong>.</p>
+              </div>
+
+              <div class="log-block radar-divider">
+                <h2>SEC.03 // ACTIVE RADAR</h2>
+                <p>Analyzing markets and staying in the loop on what’s happening with decentralized finance. Learning more about ecommerce operations; how small teams move physical product without drowning in the process. Focusing on building the next useful thing under Woeller23.</p>
+                <p style="margin-top:8px;"><strong>Outside of screens:</strong> Pretty much the usual Alberta starter pack.</p>
+                <div class="ab-tags">
+                  <span>GOLF</span>
+                  <span>SKIING</span>
+                  <span>HIKING</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- COLUMN 2: VENTURE ORDER BOOK + SCHEMATIC INSPECTOR -->
+          <section class="col">
+            <div class="col-head">
+              <span>SEC.02 // ORDER BOOK &amp; SCHEMATICS</span>
+              <span class="dim">SELECT [1–6]</span>
+            </div>
+
+            <table class="order-table">
+              <thead>
+                <tr>
+                  <th>KEY</th>
+                  <th>TICKER</th>
+                  <th>ENTITY</th>
+                  <th>PERIOD</th>
+                  <th>STATUS</th>
+                </tr>
+              </thead>
+              <tbody id="orderRows">
+                <tr class="order-row active" data-idx="0">
+                  <td>[1]</td>
+                  <td class="sym">W23.V</td>
+                  <td>Woeller23 Ventures</td>
+                  <td>CURRENT</td>
+                  <td><span class="badge-state live">ACTIVE</span></td>
+                </tr>
+                <tr class="order-row" data-idx="1">
+                  <td>[2]</td>
+                  <td class="sym">WAVE</td>
+                  <td>Wave23 Inc.</td>
+                  <td>2026</td>
+                  <td><span class="badge-state live">LAUNCHED</span></td>
+                </tr>
+                <tr class="order-row" data-idx="2">
+                  <td>[3]</td>
+                  <td class="sym">SHIP</td>
+                  <td>SHIP23 Industries</td>
+                  <td>2023—2025</td>
+                  <td><span class="badge-state">ARCHIVED</span></td>
+                </tr>
+                <tr class="order-row" data-idx="3">
+                  <td>[4]</td>
+                  <td class="sym">WMED</td>
+                  <td>Woeller Media</td>
+                  <td>2019—2024</td>
+                  <td><span class="badge-state">ARCHIVED</span></td>
+                </tr>
+                <tr class="order-row" data-idx="4">
+                  <td>[5]</td>
+                  <td class="sym">CLYN</td>
+                  <td>Codelyon Apps</td>
+                  <td>2019—2023</td>
+                  <td><span class="badge-state">ARCHIVED</span></td>
+                </tr>
+                <tr class="order-row" data-idx="5">
+                  <td>[6]</td>
+                  <td class="sym">BTC.F</td>
+                  <td>bitcoin.fransoo.com</td>
+                  <td>SIDE PROJ</td>
+                  <td><span class="badge-state live">ONLINE</span></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Dynamic Blueprint Schematic + Thesis Inspector -->
+            <div class="schematic-inspector" id="inspectorBox"></div>
+          </section>
+
+          <!-- COLUMN 3: DIRECT DISPATCH + TITLE BLOCK -->
+          <section class="col comms-col">
+            <div>
+              <div class="col-head">
+                <span>SEC.04 // DISPATCH</span>
+                <span class="dim">DIRECT</span>
+              </div>
+
+              <div class="social-matrix">
+                <a href="https://instagram.com/woeller23" target="_blank" rel="noopener"><span>@woeller23</span><span>IG ↗</span></a>
+                <a href="https://tiktok.com/@woeller23" target="_blank" rel="noopener"><span>@woeller23</span><span>TT ↗</span></a>
+                <a href="https://x.com/hfransoo" target="_blank" rel="noopener"><span>@hfransoo</span><span>X ↗</span></a>
+                <a href="https://ca.linkedin.com/in/hfransoo" target="_blank" rel="noopener"><span>@hfransoo</span><span>IN ↗</span></a>
+              </div>
+
+              <form class="dispatch-form" id="contactForm" action="https://formsubmit.co/ajax/henry@fransoo.com" method="POST">
+                <p class="intro">If you have something real, drop a note &amp; say hi. Projects, questions, or a reason I should write back. I actually read these.</p>
+                <input type="hidden" name="_subject" value="New message from fransoo.com" />
+                <input type="hidden" name="_template" value="table" />
+                <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" />
+                <label>
+                  RETURN_EMAIL
+                  <input type="email" name="email" required placeholder="you@email.com" />
+                </label>
+                <label>
+                  SPECIFICATION / NOTE
+                  <textarea name="message" required placeholder="What’s this about?"></textarea>
+                </label>
+                <button type="submit" id="formBtn">TRANSMIT DISPATCH →</button>
+                <p class="form-status" id="formStatus"></p>
+              </form>
+            </div>
+
+            <!-- Engineering Title Block -->
+            <div class="title-block">
+              <div class="tb-top">
+                <div>
+                  <small style="display:block; font-size:9px; color:var(--ink-dim);">HOLDING ENTITY</small>
+                  <strong style="font-size:13px;">WOELLER23 VENTURES</strong>
+                </div>
+                <div class="footer-sites">
+                  <button class="footer-brand" id="siteCaret" type="button" aria-expanded="false">fransoo.com ▴ sites</button>
+                  <div class="site-menu" id="siteMenu">
+                    <a href="https://fransoo.com">fransoo.com</a>
+                    <a href="https://bitcoin.fransoo.com"><span class="btc">bitcoin.</span>fransoo.com</a>
+                  </div>
+                </div>
+              </div>
+              <div class="tb-grid">
+                <div class="tb-cell"><small>ARCHITECT</small><b>HENRY FRANSOO</b></div>
+                <div class="tb-cell"><small>ORIGIN</small><b>CALGARY, AB, CA</b></div>
+                <div class="tb-cell"><small>DWG NO.</small><b>W23-HF-2026</b></div>
+                <div class="tb-cell"><small>COPYRIGHT</small><b>© H. FRANSOO</b></div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <div class="zone-bar bottom">
+          <span>ZONE A4</span>
+          <span>ZONE B4</span>
+          <span>ZONE C4</span>
+          <span>ZONE D4</span>
+        </div>
+
       </div>
-      <span>© Henry Fransoo • fransoo.com • Woeller23 Ventures</span>
-    </footer>
-  </main>
+    </div>
+  </div>
 
   <div class="click-counter" id="clickCounter">clicks: 0</div>
   <div class="screenshot-trap" id="screenshotTrap">i saw that screenshot</div>
 
   <script>
-    const themes = [
+    const ventures = [
       {
-        name: "midnight blue",
-        bg: "#0b0d10", ink: "#f4f6f8", muted: "#9aa3b2", dim: "#6b7380",
-        line: "rgba(255,255,255,0.08)", blue: "#2f7fff", blue2: "#5b9bff",
-        soft: "rgba(47,127,255,0.14)", card: "#14181f", card2: "#12161c",
-        header: "rgba(11,13,16,0.72)", input: "#0f1318",
-        glow: "rgba(47,127,255,0.16)", btnInk: "#ffffff"
+        dwg: "DWG 2.1 // HOLDING ARCHITECTURE",
+        name: "Woeller23 Ventures",
+        role: "CURRENT",
+        desc: "The company I run everything else through. New projects, operating businesses, and anything that needs a home before it becomes its own brand.",
+        tags: "holding company · new work",
+        link: null,
+        svg: `<svg width="240" height="46" viewBox="0 0 240 46" fill="none">
+          <rect x="90" y="2" width="60" height="14" stroke="currentColor" stroke-width="1.3"/>
+          <text x="108" y="12" fill="currentColor" font-size="8" font-family="IBM Plex Mono">W23.V</text>
+          <line x1="120" y1="16" x2="120" y2="26" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="30" y1="26" x2="210" y2="26" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="30" y1="26" x2="30" y2="34" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="120" y1="26" x2="120" y2="34" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="210" y1="26" x2="210" y2="34" stroke="currentColor" stroke-width="1.2"/>
+          <rect x="10" y="34" width="40" height="10" stroke="#fde047" stroke-width="1.2"/>
+          <rect x="100" y="34" width="40" height="10" stroke="#fde047" stroke-width="1.2"/>
+          <rect x="190" y="34" width="40" height="10" stroke="#fde047" stroke-width="1.2"/>
+        </svg>`
       },
       {
-        name: "ember",
-        bg: "#140b09", ink: "#fff3ec", muted: "#c9a89a", dim: "#8d6f64",
-        line: "rgba(255,180,140,0.12)", blue: "#ff6b35", blue2: "#ff9a6b",
-        soft: "rgba(255,107,53,0.16)", card: "#1d1210", card2: "#18100e",
-        header: "rgba(20,11,9,0.78)", input: "#120c0a",
-        glow: "rgba(255,107,53,0.18)", btnInk: "#1a0b07"
+        dwg: "DWG 2.2 // 13.56 MHz NFC SPEC",
+        name: "Wave23 Inc.",
+        role: "JUST LAUNCHED (2026)",
+        desc: "Wave23 Inc. is a B2B NFC (Near Field Communications) technology company helping local businesses grow their Google reviews and online visibility. We provide programmable NFC cards and tap-to-review tools that make leaving a review quick and easy. Wave23 helps businesses collect more reviews, improve local search rankings, and convert more traffic.",
+        tags: "technology · client marketing strategies",
+        link: null,
+        svg: `<svg width="240" height="46" viewBox="0 0 240 46" fill="none">
+          <rect x="4" y="8" width="54" height="30" rx="2" stroke="currentColor" stroke-width="1.3"/>
+          <text x="15" y="26" fill="currentColor" font-size="9" font-family="IBM Plex Mono">NFC</text>
+          <path d="M70 15 C78 20, 78 26, 70 31" stroke="#fde047" stroke-width="1.4"/>
+          <path d="M78 10 C90 18, 90 28, 78 36" stroke="#fde047" stroke-width="1.4"/>
+          <path d="M86 5 C102 16, 102 30, 86 41" stroke="#fde047" stroke-width="1.4"/>
+          <rect x="116" y="10" width="114" height="26" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <text x="124" y="26" fill="#fde047" font-size="9" font-family="IBM Plex Mono">★★★★★ TAP-TO-REVIEW</text>
+        </svg>`
       },
       {
-        name: "moss",
-        bg: "#0b120e", ink: "#eef8f0", muted: "#9fb3a4", dim: "#6d7f73",
-        line: "rgba(140,200,150,0.12)", blue: "#3dba6e", blue2: "#7fe0a3",
-        soft: "rgba(61,186,110,0.16)", card: "#121a15", card2: "#0f1612",
-        header: "rgba(11,18,14,0.78)", input: "#0c130f",
-        glow: "rgba(61,186,110,0.16)", btnInk: "#06140b"
+        dwg: "DWG 2.3 // CANADIAN FREIGHT ROUTE",
+        name: "SHIP23 Industries",
+        role: "2023 — 2025",
+        desc: "Started an ecommerce operation participating in the practice of retail arbitrage; buying everyday products for cheap, and reselling higher on the world's largest online marketplace. Took advantage of Amazon's shipment network, expanding inventory across Canada to: Calgary, Vancouver, Edmonton, Toronto, Ottawa, and Hamilton.",
+        tags: "amazon marketplace · e-commerce",
+        link: null,
+        svg: `<svg width="250" height="46" viewBox="0 0 250 46" fill="none">
+          <line x1="14" y1="22" x2="234" y2="22" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <circle cx="14" cy="22" r="3.5" fill="#fde047"/><text x="6" y="12" fill="currentColor" font-size="8">YVR</text>
+          <circle cx="58" cy="22" r="4.5" fill="currentColor"/><text x="50" y="38" fill="#fde047" font-size="8">YYC</text>
+          <circle cx="102" cy="22" r="3.5" fill="#fde047"/><text x="94" y="12" fill="currentColor" font-size="8">YEG</text>
+          <circle cx="146" cy="22" r="3.5" fill="#fde047"/><text x="138" y="38" fill="currentColor" font-size="8">YYZ</text>
+          <circle cx="190" cy="22" r="3.5" fill="#fde047"/><text x="182" y="12" fill="currentColor" font-size="8">YOW</text>
+          <circle cx="234" cy="22" r="3.5" fill="#fde047"/><text x="224" y="38" fill="currentColor" font-size="8">YHM</text>
+        </svg>`
       },
       {
-        name: "violet",
-        bg: "#100b16", ink: "#f6f0ff", muted: "#b5a8c9", dim: "#7d738c",
-        line: "rgba(180,150,255,0.14)", blue: "#8b5cf6", blue2: "#c4b5fd",
-        soft: "rgba(139,92,246,0.16)", card: "#181222", card2: "#14101c",
-        header: "rgba(16,11,22,0.78)", input: "#120d18",
-        glow: "rgba(139,92,246,0.18)", btnInk: "#ffffff"
+        dwg: "DWG 2.4 // DISTRIBUTION ENGINE",
+        name: "Woeller Media",
+        role: "2019 — 2024",
+        desc: "Designed and developed marketing videos and digital advertisements for different businesses across various social media platforms. Tailoring my strategies to their specific niches.",
+        tags: "marketing · social media · advertising",
+        link: null,
+        svg: `<svg width="240" height="46" viewBox="0 0 240 46" fill="none">
+          <rect x="6" y="8" width="60" height="28" stroke="currentColor" stroke-width="1.2"/>
+          <polygon points="30,15 30,29 44,22" stroke="#fde047" stroke-width="1.3"/>
+          <line x1="66" y1="22" x2="105" y2="22" stroke="currentColor" stroke-width="1.2"/>
+          <polyline points="105,36 135,26 165,29 195,14 230,5" stroke="#fde047" stroke-width="1.6"/>
+        </svg>`
       },
       {
-        name: "gold",
-        bg: "#12100a", ink: "#fff8e8", muted: "#c4b48a", dim: "#8a7d58",
-        line: "rgba(230,190,80,0.14)", blue: "#e0b12a", blue2: "#f0d078",
-        soft: "rgba(224,177,42,0.16)", card: "#1b1810", card2: "#16140d",
-        header: "rgba(18,16,10,0.78)", input: "#13110b",
-        glow: "rgba(224,177,42,0.16)", btnInk: "#1a1506"
+        dwg: "DWG 2.5 // PLAYER FEEDBACK LOOP",
+        name: "Codelyon Apps",
+        role: "2019 — 2023",
+        desc: "Designed and shipped mobile games from comments, DMs, and user feedback. Used social media as both distribution and a product research lab — then converted that attention into ad revenue & 50,000+ downloads worldwide.",
+        tags: "games · distribution · feedback loops",
+        link: null,
+        svg: `<svg width="240" height="46" viewBox="0 0 240 46" fill="none">
+          <rect x="6" y="10" width="48" height="24" stroke="currentColor" stroke-width="1.2"/>
+          <text x="14" y="25" fill="currentColor" font-size="8">DMs</text>
+          <line x1="54" y1="22" x2="94" y2="22" stroke="#fde047" stroke-width="1.2"/>
+          <rect x="94" y="10" width="54" height="24" stroke="#fde047" stroke-width="1.2"/>
+          <text x="104" y="25" fill="#fde047" font-size="8">BUILD</text>
+          <line x1="148" y1="22" x2="184" y2="22" stroke="currentColor" stroke-width="1.2"/>
+          <text x="188" y="25" fill="currentColor" font-size="9">50K+ DL</text>
+        </svg>`
       },
       {
-        name: "rose",
-        bg: "#160b10", ink: "#fff0f4", muted: "#c9a3af", dim: "#8d6d78",
-        line: "rgba(255,140,170,0.14)", blue: "#f43f7a", blue2: "#fb8eac",
-        soft: "rgba(244,63,122,0.16)", card: "#1e1217", card2: "#180e13",
-        header: "rgba(22,11,16,0.78)", input: "#140c10",
-        glow: "rgba(244,63,122,0.18)", btnInk: "#ffffff"
-      },
-      {
-        name: "teal",
-        bg: "#071214", ink: "#eaf8f8", muted: "#93b6b6", dim: "#678080",
-        line: "rgba(80,200,200,0.12)", blue: "#14b8a6", blue2: "#5eead4",
-        soft: "rgba(20,184,166,0.16)", card: "#0e1a1c", card2: "#0b1618",
-        header: "rgba(7,18,20,0.78)", input: "#081314",
-        glow: "rgba(20,184,166,0.16)", btnInk: "#04211e"
-      },
-      {
-        name: "ice",
-        bg: "#eef2f6", ink: "#141820", muted: "#5b6573", dim: "#7a8492",
-        line: "rgba(20,24,32,0.10)", blue: "#2563eb", blue2: "#1d4ed8",
-        soft: "rgba(37,99,235,0.12)", card: "#ffffff", card2: "#f6f8fb",
-        header: "rgba(238,242,246,0.82)", input: "#ffffff",
-        glow: "rgba(37,99,235,0.12)", btnInk: "#ffffff"
-      },
-      {
-        name: "cherry",
-        bg: "#160808", ink: "#ffecec", muted: "#c99a9a", dim: "#8d6a6a",
-        line: "rgba(255,90,90,0.14)", blue: "#ef4444", blue2: "#fb7185",
-        soft: "rgba(239,68,68,0.16)", card: "#1e1010", card2: "#180c0c",
-        header: "rgba(22,8,8,0.78)", input: "#140909",
-        glow: "rgba(239,68,68,0.16)", btnInk: "#ffffff"
-      },
-      {
-        name: "lime",
-        bg: "#0c1208", ink: "#f3ffe8", muted: "#a8b894", dim: "#748066",
-        line: "rgba(170,220,70,0.12)", blue: "#84cc16", blue2: "#bef264",
-        soft: "rgba(132,204,22,0.16)", card: "#141a10", card2: "#10160c",
-        header: "rgba(12,18,8,0.78)", input: "#0d1309",
-        glow: "rgba(132,204,22,0.16)", btnInk: "#142004"
-      },
-      {
-        name: "paper",
-        bg: "#f6f1e8", ink: "#1c1812", muted: "#6b6358", dim: "#8a8276",
-        line: "rgba(28,24,18,0.10)", blue: "#c2410c", blue2: "#9a3412",
-        soft: "rgba(194,65,12,0.12)", card: "#fffaf3", card2: "#efe8dc",
-        header: "rgba(246,241,232,0.84)", input: "#fffaf3",
-        glow: "rgba(194,65,12,0.10)", btnInk: "#ffffff"
-      },
-      {
-        name: "cobalt",
-        bg: "#070b18", ink: "#eef3ff", muted: "#9aa8c8", dim: "#6b7694",
-        line: "rgba(120,160,255,0.14)", blue: "#3b82f6", blue2: "#93c5fd",
-        soft: "rgba(59,130,246,0.16)", card: "#101628", card2: "#0c1220",
-        header: "rgba(7,11,24,0.78)", input: "#0a1020",
-        glow: "rgba(59,130,246,0.20)", btnInk: "#ffffff"
+        dwg: "DWG 2.6 // LIVE MARKET TELEMETRY",
+        name: "bitcoin.fransoo.com",
+        role: "SIDE PROJECT",
+        desc: "A live crypto price board I made because I wanted something faster than opening twelve tabs. Updates every few seconds. Still useful. Still a little unnecessary.",
+        tags: "crypto · real-time feed",
+        link: "https://bitcoin.fransoo.com",
+        svg: `<svg width="240" height="46" viewBox="0 0 240 46" fill="none">
+          <polyline points="6,34 38,28 66,35 98,16 128,22 162,9 194,14 230,4" stroke="#fde047" stroke-width="1.6"/>
+          <circle cx="230" cy="4" r="3.5" fill="#fde047"/>
+        </svg>`
       }
     ];
-    let currentTheme = "midnight blue";
-    let remainingThemes = themes.filter(t => t.name !== currentTheme).map(t => t.name);
-    let bubbleTimer;
-    function showBubble(text, ms) {
-      const bubble = document.getElementById("themeBubble");
-      bubble.textContent = text;
-      bubble.classList.add("show");
-      clearTimeout(bubbleTimer);
-      bubbleTimer = setTimeout(() => bubble.classList.remove("show"), ms);
+
+    function renderVenture(idx) {
+      const v = ventures[idx];
+      if (!v) return;
+      document.querySelectorAll('.order-row').forEach(r => r.classList.toggle('active', Number(r.dataset.idx) === idx));
+      document.getElementById('inspectorBox').innerHTML = `
+        <div>
+          <div class="insp-top">
+            <h3>${v.name}</h3>
+            <span>${v.role}</span>
+          </div>
+          <div class="svg-stage">
+            ${v.svg}
+            <span style="font-size:10px; color:var(--cyan);">${v.dwg}</span>
+          </div>
+          <p class="insp-desc">${v.desc}</p>
+        </div>
+        <div class="insp-foot">
+          <span>TAGS: ${v.tags}</span>
+          ${v.link ? `<a class="dwg-btn" href="${v.link}" target="_blank" rel="noopener">OPEN THE BOARD →</a>` : `<span>UNIT [0${idx + 1}/06]</span>`}
+        </div>
+      `;
     }
+    renderVenture(0);
 
-    function applyTheme(theme) {
-      const root = document.documentElement;
-      root.style.setProperty("--bg", theme.bg);
-      root.style.setProperty("--ink", theme.ink);
-      root.style.setProperty("--muted", theme.muted);
-      root.style.setProperty("--dim", theme.dim);
-      root.style.setProperty("--line", theme.line);
-      root.style.setProperty("--blue", theme.blue);
-      root.style.setProperty("--blue-2", theme.blue2);
-      root.style.setProperty("--blue-soft", theme.soft);
-      root.style.setProperty("--card", theme.card);
-      root.style.setProperty("--card-2", theme.card2);
-      root.style.setProperty("--header", theme.header);
-      root.style.setProperty("--input", theme.input);
-      root.style.setProperty("--glow", theme.glow);
-      root.style.setProperty("--btn-ink", theme.btnInk);
-      document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.bg);
-      currentTheme = theme.name;
-      showBubble("theme changed to " + theme.name, 1000);
-    }
-
-    const siteCaret = document.getElementById("siteCaret");
-    const siteMenu = document.getElementById("siteMenu");
-    siteCaret.addEventListener("click", function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      const open = siteMenu.classList.toggle("open");
-      siteCaret.setAttribute("aria-expanded", open ? "true" : "false");
+    document.querySelectorAll('.order-row').forEach(row => {
+      row.addEventListener('click', () => renderVenture(Number(row.dataset.idx)));
     });
-    document.addEventListener("click", function() {
-      siteMenu.classList.remove("open");
-      siteCaret.setAttribute("aria-expanded", "false");
-    });
-    siteMenu.addEventListener("click", function(e) { e.stopPropagation(); });
 
-    document.getElementById("brand").addEventListener("click", function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!remainingThemes.length) {
-        remainingThemes = themes.filter(t => t.name !== currentTheme).map(t => t.name);
+    document.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+      if (e.key >= '1' && e.key <= '6') renderVenture(Number(e.key) - 1);
+    });
+
+    // Live BTC Spot for Ticker Tape
+    async function loadBtc() {
+      try {
+        const res = await fetch('https://api.coinbase.com/v2/prices/BTC-USD/spot');
+        const json = await res.json();
+        const val = '$' + Math.round(Number(json.data.amount)).toLocaleString('en-US') + ' ▲';
+        document.getElementById('tapeBtc').textContent = val;
+        document.getElementById('tapeBtc2').textContent = val;
+      } catch (e) {
+        document.getElementById('tapeBtc').textContent = 'ONLINE';
+        document.getElementById('tapeBtc2').textContent = 'ONLINE';
       }
-      const nextName = remainingThemes.splice(Math.floor(Math.random() * remainingThemes.length), 1)[0];
-      applyTheme(themes.find(t => t.name === nextName));
-    });
-
-    if (!sessionStorage.getItem("fransooHintShown")) {
-      setTimeout(() => {
-        sessionStorage.setItem("fransooHintShown", "1");
-        showBubble("click me ↑", 7000);
-      }, 30000);
     }
+    loadBtc();
 
-    if (window.matchMedia("(pointer: fine)").matches) {
-      document.addEventListener("mousemove", function(e) {
-        const dot = document.createElement("span");
-        dot.className = "cursor-dot";
-        dot.style.left = e.clientX + "px";
-        dot.style.top = e.clientY + "px";
-        document.body.appendChild(dot);
-        let opacity = 0.7;
-        function fade() {
-          opacity -= 0.045;
-          dot.style.opacity = opacity;
-          dot.style.transform = "translate(-50%, -50%) scale(" + Math.max(opacity, 0.2) + ")";
-          if (opacity > 0) requestAnimationFrame(fade);
-          else dot.remove();
-        }
-        requestAnimationFrame(fade);
+    // Live CAD Crosshairs + YYC Clock
+    const crossX = document.getElementById('crossX'), crossY = document.getElementById('crossY');
+    if (window.matchMedia('(pointer: fine)').matches) {
+      document.addEventListener('mousemove', (e) => {
+        crossX.style.top = e.clientY + 'px';
+        crossY.style.left = e.clientX + 'px';
+        const x = String(Math.round(e.clientX)).padStart(4, '0');
+        const y = String(Math.round(e.clientY + window.scrollY)).padStart(4, '0');
+        document.getElementById('coordDisplay').textContent = `X: ${x}mm · Y: ${y}mm`;
       });
     }
 
-    const rippleColors = [
-      'rgba(47, 127, 255, 0.35)',
-      'rgba(255, 220, 0, 0.28)',
-      'rgba(255, 50, 50, 0.28)',
-      'rgba(50, 220, 50, 0.28)',
-      'rgba(255, 140, 0, 0.28)'
+    function updateClock() {
+      try {
+        const t = new Date().toLocaleTimeString('en-CA', { timeZone: 'America/Edmonton', hour12: false });
+        document.getElementById('yycClock').textContent = `YYC: ${t}`;
+      } catch (e) {}
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Hybrid Sheet Switcher (Click DWG // FRANSOO.COM)
+    const sheets = [
+      { name: "prussian cyanotype", bg: "#0a3685", deep: "#072866", panel: "rgba(7,40,102,0.58)", ink: "#f4f8ff", soft: "rgba(244,248,255,0.78)", dim: "rgba(244,248,255,0.52)", line: "rgba(244,248,255,0.28)", heavy: "#f4f8ff", accent: "#fde047", accentInk: "#072866", cyan: "#7dd3fc" },
+      { name: "bloomberg amber cad", bg: "#0c0905", deep: "#161109", panel: "rgba(22,17,9,0.75)", ink: "#fff6e5", soft: "rgba(255,246,229,0.78)", dim: "rgba(255,246,229,0.5)", line: "rgba(255,176,0,0.28)", heavy: "#ffb000", accent: "#ffb000", accentInk: "#0c0905", cyan: "#fcd34d" },
+      { name: "architect whiteprint", bg: "#f2f6fb", deep: "#e3ecf7", panel: "rgba(227,236,247,0.72)", ink: "#0a3685", soft: "rgba(10,54,133,0.82)", dim: "rgba(10,54,133,0.55)", line: "rgba(10,54,133,0.25)", heavy: "#0a3685", accent: "#d9381e", accentInk: "#ffffff", cyan: "#1d4ed8" },
+      { name: "midnight terminal", bg: "#06080c", deep: "#0c1018", panel: "rgba(12,16,24,0.78)", ink: "#e6edf7", soft: "rgba(230,237,247,0.78)", dim: "rgba(230,237,247,0.5)", line: "rgba(56,189,248,0.26)", heavy: "#38bdf8", accent: "#00ff66", accentInk: "#06080c", cyan: "#38bdf8" }
     ];
+    let sIdx = 0, bubbleTimer;
+    document.getElementById('brand').addEventListener('click', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      sIdx = (sIdx + 1) % sheets.length;
+      const t = sheets[sIdx];
+      const r = document.documentElement.style;
+      r.setProperty('--bg', t.bg);
+      r.setProperty('--bg-deep', t.deep);
+      r.setProperty('--panel', t.panel);
+      r.setProperty('--ink', t.ink);
+      r.setProperty('--ink-soft', t.soft);
+      r.setProperty('--ink-dim', t.dim);
+      r.setProperty('--line', t.line);
+      r.setProperty('--line-heavy', t.heavy);
+      r.setProperty('--accent', t.accent);
+      r.setProperty('--accent-ink', t.accentInk);
+      r.setProperty('--cyan', t.cyan);
+      const b = document.getElementById('themeBubble');
+      b.textContent = 'sheet: ' + t.name;
+      b.classList.add('show');
+      clearTimeout(bubbleTimer);
+      bubbleTimer = setTimeout(() => b.classList.remove('show'), 1200);
+    });
 
-    let clickCount = 0;
-    let totalClicks = 0;
-    let lastClickTime = 0;
-    let danceModeActive = false;
-    let hasShownCounterIntro = false;
-    const rageMessages = [
-      "wow you must be bored",
-      "still here?",
-      "why?",
-      "still clicking huh",
-      "ok now you're committed",
-      "touch grass maybe"
-    ];
-    let rageIndex = 0;
-
-    const clickCounter = document.getElementById('clickCounter');
-    const screenshotTrap = document.getElementById('screenshotTrap');
-
-    let lastNameClick = null;
-    let lastNameTime = 0;
-    let idleTimer;
-    let isFlying = false;
-
-    function formatNumber(n) {
-      return Math.round(n).toLocaleString('en-US');
+    // Counters
+    const els = document.querySelectorAll('[data-count]');
+    const start = performance.now();
+    function tick(now) {
+      const t = Math.min(1, (now - start) / 1400);
+      const eased = 1 - Math.pow(1 - t, 3);
+      els.forEach(el => {
+        el.textContent = (el.dataset.prefix || '') + Math.round(Number(el.dataset.count) * eased).toLocaleString('en-US') + (el.dataset.suffix || '');
+      });
+      if (t < 1) requestAnimationFrame(tick);
     }
+    requestAnimationFrame(tick);
 
-    function animateCounters() {
-      const els = document.querySelectorAll('[data-count]');
-      const start = performance.now();
-      const duration = 1600;
-      function tick(now) {
-        const t = Math.min(1, (now - start) / duration);
-        const eased = 1 - Math.pow(1 - t, 3);
-        els.forEach(el => {
-          const target = Number(el.dataset.count);
-          const prefix = el.dataset.prefix || '';
-          const suffix = el.dataset.suffix || '';
-          const value = target * eased;
-          el.textContent = prefix + formatNumber(value) + suffix;
-        });
-        if (t < 1) requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    }
-
-    const stats = document.querySelector('.stats');
-    if (stats) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            animateCounters();
-            io.disconnect();
-          }
-        });
-      }, { threshold: 0.35 });
-      io.observe(stats);
-    }
-
+    // Contact Form
     document.getElementById('contactForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const btn = document.getElementById('formBtn');
-      const status = document.getElementById('formStatus');
-      const form = e.currentTarget;
-      btn.disabled = true;
-      status.textContent = 'Sending…';
+      const btn = document.getElementById('formBtn'), status = document.getElementById('formStatus');
+      btn.disabled = true; status.textContent = 'Transmitting…';
       try {
-        const data = new FormData(form);
-        const res = await fetch(form.action, {
-          method: 'POST',
-          body: data,
-          headers: { 'Accept': 'application/json' }
-        });
+        const res = await fetch(this.action, { method: 'POST', body: new FormData(this), headers: { 'Accept': 'application/json' } });
         const json = await res.json().catch(() => ({}));
-        if (res.ok && json.success !== false) {
-          status.textContent = 'Sent. I might reply.';
-          form.reset();
-        } else {
-          status.textContent = 'Didn’t go through. Email me directly at henry@fransoo.com.';
-        }
+        if (res.ok && json.success !== false) { status.textContent = 'Sent. I might reply.'; this.reset(); }
+        else status.textContent = 'Didn’t go through. Email henry@fransoo.com.';
       } catch (err) {
-        status.textContent = 'Didn’t go through. Email me directly at henry@fransoo.com.';
-      } finally {
-        btn.disabled = false;
-      }
+        status.textContent = 'Didn’t go through. Email henry@fransoo.com.';
+      } finally { btn.disabled = false; }
     });
 
-    function wrapBoredText() {
-      const boredText = document.getElementById('boredText');
-      const words = boredText.textContent.split(' ');
-      boredText.innerHTML = words.map(word => `<span class="word">${word}</span>`).join(' ');
-      document.querySelectorAll('.word').forEach(wordEl => {
-        wordEl.addEventListener('click', function(e) {
-          e.stopPropagation();
-          explodeWord(this);
-        });
-      });
-    }
-    wrapBoredText();
+    // Footer Sites Menu
+    const siteCaret = document.getElementById('siteCaret'), siteMenu = document.getElementById('siteMenu');
+    siteCaret.addEventListener('click', (e) => { e.stopPropagation(); siteMenu.classList.toggle('open'); });
+    document.addEventListener('click', () => siteMenu.classList.remove('open'));
 
-    function wrapLetters() {
-      document.querySelectorAll('.section-label, footer span').forEach(el => {
-        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
-        const textNodes = [];
-        while (walker.nextNode()) textNodes.push(walker.currentNode);
-        textNodes.forEach(node => {
-          if (node.textContent.trim() || node.textContent.includes(' ')) {
-            const frag = document.createDocumentFragment();
-            node.textContent.split('').forEach(char => {
-              const span = document.createElement('span');
-              span.className = 'letter';
-              span.innerHTML = char === ' ' ? '&nbsp;' : char;
-              frag.appendChild(span);
-            });
-            node.replaceWith(frag);
-          }
-        });
-      });
-    }
-    wrapLetters();
-
-    document.body.addEventListener('click', function(e) {
-      totalClicks++;
-      lastClickTime = Date.now();
-      updateClickCounter();
-      updateDanceMode();
-
-      if (e.target === document.body || e.target.classList.contains('noise') || e.target.classList.contains('glow')) {
-        clickCount++;
-        if (clickCount % 10 === 0) {
-          const msg = document.createElement('div');
-          msg.className = 'rage-msg';
-          msg.textContent = rageMessages[rageIndex];
-          document.body.appendChild(msg);
-          rageIndex = (rageIndex + 1) % rageMessages.length;
-          setTimeout(() => msg.remove(), 2000);
+    // Easter Eggs
+    const boredText = document.getElementById('boredText');
+    boredText.innerHTML = boredText.textContent.split(' ').map(w => `<span class="word">${w}</span>`).join(' ');
+    document.querySelectorAll('.word').forEach(w => w.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const rect = this.getBoundingClientRect();
+      this.style.opacity = '0';
+      this.textContent.split('').forEach((c, i) => {
+        const l = document.createElement('span');
+        l.className = 'exploding-letter';
+        l.textContent = c;
+        let x = rect.left + i * 9, y = rect.top, a = Math.random() * Math.PI * 2, s = 8 + Math.random() * 10;
+        let vx = Math.cos(a) * s, vy = Math.sin(a) * s;
+        l.style.left = x + 'px'; l.style.top = y + 'px';
+        document.body.appendChild(l);
+        function anim() {
+          x += vx; y += vy; vy += 0.35;
+          if (x < 0 || x > innerWidth - 16) vx *= -0.8;
+          if (y < 0 || y > innerHeight - 16) { vy *= -0.8; vx *= 0.9; }
+          l.style.left = x + 'px'; l.style.top = y + 'px';
+          if (Math.abs(vx) > 0.5 || Math.abs(vy) > 0.5) requestAnimationFrame(anim);
+          else setTimeout(() => l.remove(), 800);
         }
-        const ripple = document.createElement('span');
-        ripple.classList.add('ripple');
-        ripple.style.background = rippleColors[Math.floor(Math.random() * rippleColors.length)];
-        const size = Math.max(window.innerWidth, window.innerHeight);
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = e.clientX - size / 2 + 'px';
-        ripple.style.top = e.clientY - size / 2 + 'px';
-        document.body.appendChild(ripple);
-        setTimeout(() => ripple.remove(), 2000);
-      }
+        requestAnimationFrame(anim);
+      });
+      setTimeout(() => { this.style.opacity = '1'; }, 3000);
+    }));
+
+    document.querySelectorAll('.zone-bar span, .col-head span.dim').forEach(el => {
+      el.innerHTML = el.textContent.split('').map(c => `<span class="letter">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
     });
 
-    function explodeWord(wordEl) {
-      const word = wordEl.textContent;
-      const rect = wordEl.getBoundingClientRect();
-      wordEl.style.opacity = '0';
-      word.split('').forEach((char, i) => {
-        if (char === ' ') return;
-        const letter = document.createElement('span');
-        letter.className = 'exploding-letter';
-        letter.textContent = char;
-        letter.style.left = (rect.left + i * 10) + 'px';
-        letter.style.top = rect.top + 'px';
-        letter.style.color = '#9aa3b2';
-        document.body.appendChild(letter);
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 8 + Math.random() * 12;
-        let vx = Math.cos(angle) * speed;
-        let vy = Math.sin(angle) * speed;
-        let x = rect.left + i * 10;
-        let y = rect.top;
-        function animateLetter() {
-          x += vx; y += vy; vy += 0.3;
-          if (x < 0 || x > window.innerWidth - 20) { vx *= -0.8; x = x < 0 ? 0 : window.innerWidth - 20; }
-          if (y < 0 || y > window.innerHeight - 20) { vy *= -0.8; y = y < 0 ? 0 : window.innerHeight - 20; vx *= 0.9; }
-          letter.style.left = x + 'px';
-          letter.style.top = y + 'px';
-          if (Math.abs(vx) > 0.5 || Math.abs(vy) > 0.5) requestAnimationFrame(animateLetter);
-          else setTimeout(() => letter.remove(), 1000);
-        }
-        requestAnimationFrame(animateLetter);
-      });
-      setTimeout(() => { wordEl.style.opacity = '1'; }, 3000);
-    }
-
-    let wasHidden = false;
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) wasHidden = true;
-      else if (wasHidden) {
-        wasHidden = false;
-        screenshotTrap.classList.add('flash');
-        setTimeout(() => screenshotTrap.classList.remove('flash'), 300);
-      }
-    });
-
-    function resetIdle() {
-      clearTimeout(idleTimer);
-      if (isFlying) return;
-      idleTimer = setTimeout(startFlyaway, 14000);
-    }
-    ['mousemove', 'keydown', 'click', 'scroll'].forEach(evt => document.addEventListener(evt, resetIdle));
-    resetIdle();
-
-    function startFlyaway() {
-      if (isFlying) return;
-      isFlying = true;
-      const letters = document.querySelectorAll('.letter');
-      const lettersArray = Array.from(letters);
-      lettersArray.forEach((letter, i) => {
-        setTimeout(() => {
-          letter.style.setProperty('--tx', ((Math.random() - 0.5) * 800) + 'px');
-          letter.style.setProperty('--ty', (-Math.random() * 600 - 200) + 'px');
-          letter.style.setProperty('--rot', ((Math.random() - 0.5) * 720) + 'deg');
-          letter.classList.add('fly-away');
-        }, i * 40);
-      });
-      setTimeout(() => {
-        letters.forEach(letter => letter.classList.remove('fly-away'));
-        setTimeout(() => { isFlying = false; resetIdle(); }, 1000);
-      }, lettersArray.length * 40 + 2000);
-    }
-
-    function updateDanceMode() {
-      const letters = document.querySelectorAll('.letter');
-      const now = Date.now();
-      if (totalClicks >= 25 && now - lastClickTime < 1500) {
-        if (!danceModeActive) {
-          danceModeActive = true;
-          letters.forEach(letter => letter.classList.add('dance'));
-        }
-      } else if (danceModeActive) {
-        danceModeActive = false;
-        letters.forEach(letter => letter.classList.remove('dance'));
-      }
-    }
-
-    function updateClickCounter() {
+    let totalClicks = 0, bgClicks = 0, lastClickTime = 0, danceActive = false, counterShown = false, rageIdx = 0;
+    const rages = ["wow you must be bored", "still here?", "why?", "still clicking huh", "ok now you're committed", "touch grass maybe"];
+    document.body.addEventListener('click', (e) => {
+      totalClicks++; lastClickTime = Date.now();
       if (totalClicks >= 25) {
-        if (!hasShownCounterIntro) {
-          hasShownCounterIntro = true;
+        if (!counterShown) {
+          counterShown = true;
           const intro = document.createElement('div');
           intro.className = 'counter-intro';
           intro.textContent = `clicks: ${totalClicks}`;
           document.body.appendChild(intro);
           setTimeout(() => intro.remove(), 1500);
         }
-        clickCounter.textContent = `clicks: ${totalClicks}`;
-        clickCounter.classList.add('show');
+        const cc = document.getElementById('clickCounter');
+        cc.textContent = `clicks: ${totalClicks}`;
+        cc.classList.add('show');
+        if (!danceActive) { danceActive = true; document.querySelectorAll('.letter').forEach(l => l.classList.add('dance')); }
       }
-    }
-
+      if (e.target.tagName === 'BODY' || e.target.classList.contains('sheet-wrap')) {
+        bgClicks++;
+        if (bgClicks % 10 === 0) {
+          const m = document.createElement('div');
+          m.className = 'rage-msg';
+          m.textContent = rages[rageIdx++ % rages.length];
+          document.body.appendChild(m);
+          setTimeout(() => m.remove(), 2000);
+        }
+      }
+    });
     setInterval(() => {
-      if (danceModeActive && Date.now() - lastClickTime > 1500) updateDanceMode();
+      if (danceActive && Date.now() - lastClickTime > 1500) {
+        danceActive = false;
+        document.querySelectorAll('.letter').forEach(l => l.classList.remove('dance'));
+      }
     }, 200);
 
-    const nameParts = document.querySelectorAll('.name-part');
-    let isFlipping = false;
-    nameParts.forEach(part => {
-      part.addEventListener('click', function(e) {
-        e.stopPropagation();
-        totalClicks++;
-        lastClickTime = Date.now();
-        updateClickCounter();
-        updateDanceMode();
-        const now = Date.now();
-        const name = this.dataset.name;
-        if (lastNameClick && lastNameClick !== name && now - lastNameTime < 1000) {
-          document.querySelector('[data-name="henry"]').classList.add('fight-bounce-left');
-          document.querySelector('[data-name="fransoo"]').classList.add('fight-bounce-right');
-          setTimeout(() => {
-            document.querySelector('[data-name="henry"]').classList.remove('fight-bounce-left');
-            document.querySelector('[data-name="fransoo"]').classList.remove('fight-bounce-right');
-          }, 600);
-          lastNameClick = null;
-          return;
-        }
-        lastNameClick = name;
-        lastNameTime = now;
-        if (isFlipping) return;
-        isFlipping = true;
-        const flipClass = Math.random() > 0.5 ? 'flip-vertical' : 'flip-horizontal';
-        this.classList.add(flipClass);
-        setTimeout(() => { this.classList.remove(flipClass); isFlipping = false; }, 5000);
-      });
+    let wasHidden = false;
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) wasHidden = true;
+      else if (wasHidden) {
+        wasHidden = false;
+        const trap = document.getElementById('screenshotTrap');
+        trap.classList.add('flash');
+        setTimeout(() => trap.classList.remove('flash'), 400);
+      }
     });
+
+    let idleTimer, isFlying = false;
+    function resetIdle() {
+      clearTimeout(idleTimer);
+      if (!isFlying) idleTimer = setTimeout(() => {
+        isFlying = true;
+        const ls = document.querySelectorAll('.letter');
+        ls.forEach((l, i) => setTimeout(() => {
+          l.style.setProperty('--tx', ((Math.random() - 0.5) * 800) + 'px');
+          l.style.setProperty('--ty', (-Math.random() * 600 - 200) + 'px');
+          l.style.setProperty('--rot', ((Math.random() - 0.5) * 720) + 'deg');
+          l.classList.add('fly-away');
+        }, i * 35));
+        setTimeout(() => { ls.forEach(l => l.classList.remove('fly-away')); isFlying = false; resetIdle(); }, ls.length * 35 + 2000);
+      }, 14000);
+    }
+    ['mousemove', 'keydown', 'click', 'scroll'].forEach(ev => document.addEventListener(ev, resetIdle));
+    resetIdle();
+
+    let lastName = null, lastTime = 0, flipping = false;
+    document.querySelectorAll('.name-part').forEach(p => p.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const now = Date.now(), n = this.dataset.name;
+      if (lastName && lastName !== n && now - lastTime < 1000) {
+        document.querySelector('[data-name="henry"]').classList.add('fight-bounce-left');
+        document.querySelector('[data-name="fransoo"]').classList.add('fight-bounce-right');
+        setTimeout(() => {
+          document.querySelector('[data-name="henry"]').classList.remove('fight-bounce-left');
+          document.querySelector('[data-name="fransoo"]').classList.remove('fight-bounce-right');
+        }, 600);
+        lastName = null; return;
+      }
+      lastName = n; lastTime = now;
+      if (flipping) return;
+      flipping = true;
+      const cls = Math.random() > 0.5 ? 'flip-vertical' : 'flip-horizontal';
+      this.classList.add(cls);
+      setTimeout(() => { this.classList.remove(cls); flipping = false; }, 5000);
+    }));
   </script>
 </body>
 </html>
