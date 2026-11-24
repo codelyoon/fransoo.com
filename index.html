@@ -3,29 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DWG // $W23 — Henry Fransoo</title>
+  <title>Fransoo.com</title>
   <meta name="description" content="Henry Fransoo — Canadian entrepreneur working across e-commerce, product, and markets." />
-  <meta name="theme-color" content="#0A3685" />
+  <meta name="theme-color" content="#06080c" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0a3685;
-      --bg-deep: #072866;
-      --panel: rgba(7, 40, 102, 0.58);
-      --panel-solid: #082d72;
-      --ink: #f4f8ff;
-      --ink-soft: rgba(244, 248, 255, 0.78);
-      --ink-dim: rgba(244, 248, 255, 0.52);
-      --line: rgba(244, 248, 255, 0.28);
-      --line-heavy: #f4f8ff;
-      --grid-minor: rgba(244, 248, 255, 0.06);
-      --grid-major: rgba(244, 248, 255, 0.15);
-      --accent: #fde047;
-      --accent-ink: #072866;
-      --cyan: #7dd3fc;
-      --pos: #4ade80;
+      --bg: #06080c;
+      --bg-deep: #0c1018;
+      --panel: rgba(12, 16, 24, 0.84);
+      --ink: #e6edf7;
+      --ink-soft: rgba(230, 237, 247, 0.78);
+      --ink-dim: rgba(230, 237, 247, 0.5);
+      --line: rgba(56, 189, 248, 0.28);
+      --line-heavy: #38bdf8;
+      --grid-minor: rgba(56, 189, 248, 0.05);
+      --grid-major: rgba(56, 189, 248, 0.13);
+      --accent: #00ff66;
+      --accent-ink: #06080c;
+      --cyan: #38bdf8;
+      --pos: #00ff66;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -57,8 +56,8 @@
     .cad-cross-x, .cad-cross-y {
       pointer-events: none;
       position: fixed;
-      background: rgba(244, 248, 255, 0.14);
-      z-index: 90;
+      background: rgba(56, 189, 248, 0.14);
+      z-index: 40;
     }
     .cad-cross-x { height: 1px; left: 0; right: 0; top: -10px; }
     .cad-cross-y { width: 1px; top: 0; bottom: 0; left: -10px; }
@@ -67,7 +66,7 @@
     .tape-wrap {
       border-bottom: 1.5px solid var(--line-heavy);
       background: var(--bg-deep);
-      height: 32px;
+      height: 34px;
       display: flex;
       align-items: center;
       overflow: hidden;
@@ -88,6 +87,19 @@
       letter-spacing: 0.08em;
       flex-shrink: 0;
       border-right: 1.5px solid var(--line-heavy);
+      position: relative;
+      z-index: 3;
+    }
+
+    /* Viewport clips scrolling text cleanly underneath the badge */
+    .tape-viewport {
+      flex: 1;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      position: relative;
+      z-index: 1;
     }
 
     .tape-track {
@@ -97,6 +109,7 @@
       gap: 36px;
       padding-left: 24px;
       font-size: 11.5px;
+      will-change: transform;
     }
     .tape-track:hover { animation-play-state: paused; }
     .tape-item span.up { color: var(--pos); font-weight: 600; }
@@ -112,31 +125,19 @@
       max-width: 1320px;
       margin: 18px auto 28px;
       padding: 0 16px;
+      position: relative;
+      z-index: 10;
     }
 
     .blueprint-sheet {
       border: 2px solid var(--line-heavy);
       padding: 5px;
-      background: rgba(7, 40, 102, 0.25);
+      background: rgba(6, 8, 12, 0.45);
     }
 
     .inner-frame {
       border: 1px solid var(--line-heavy);
     }
-
-    /* Zone Coordinates */
-    .zone-bar {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      border-bottom: 1px solid var(--line-heavy);
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-align: center;
-      color: var(--ink-dim);
-      background: var(--bg-deep);
-    }
-    .zone-bar span { padding: 3px 0; border-right: 1px solid var(--line); }
-    .zone-bar span:last-child { border-right: none; }
 
     /* Command & Drafting Header */
     .draft-header {
@@ -147,7 +148,7 @@
       border-bottom: 1.5px solid var(--line-heavy);
       background: var(--panel);
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
     }
 
     .brand-box {
@@ -165,8 +166,9 @@
       border: 1.5px solid var(--line-heavy);
       padding: 4px 10px;
       background: var(--bg-deep);
+      color: var(--ink);
     }
-    .brand:hover { background: var(--ink); color: var(--bg); }
+    .brand:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 
     .theme-bubble {
       position: absolute;
@@ -198,6 +200,16 @@
     }
     .hotkey-hint b { color: var(--accent); }
 
+    /* Handwritten Spec Notes */
+    .hand-note {
+      font-family: "Architects Daughter", cursive;
+      color: var(--accent);
+      font-size: 14.5px;
+      line-height: 1.4;
+      display: inline-block;
+      transform: rotate(-1deg);
+    }
+
     /* Hero Elevation + Live Output Ledger */
     .hero-grid {
       display: grid;
@@ -228,7 +240,7 @@
     }
 
     h1 {
-      font-size: clamp(44px, 6.8vw, 82px);
+      font-size: clamp(38px, 6.8vw, 82px);
       line-height: 0.92;
       font-weight: 700;
       letter-spacing: -0.04em;
@@ -258,14 +270,6 @@
       margin-bottom: 12px;
     }
 
-    .hand-note {
-      font-family: "Architects Daughter", cursive;
-      color: var(--accent);
-      font-size: 15px;
-      display: inline-block;
-      transform: rotate(-1deg);
-    }
-
     /* Right Hero: Performance Ledger Table */
     .hero-ledger {
       display: flex;
@@ -285,13 +289,13 @@
     }
 
     .ledger-row {
-      padding: 16px 18px;
+      padding: 14px 18px;
       border-bottom: 1px dashed var(--line);
       display: flex;
       justify-content: space-between;
       align-items: baseline;
+      gap: 12px;
     }
-    .ledger-row:last-of-type { border-bottom: none; }
 
     .ledger-meta span {
       display: block;
@@ -305,18 +309,22 @@
     }
 
     .ledger-val {
-      font-size: 26px;
+      font-size: clamp(22px, 2.5vw, 26px);
       font-weight: 700;
       color: var(--ink);
       font-variant-numeric: tabular-nums;
       letter-spacing: -0.03em;
     }
 
+    .ledger-note-bar {
+      padding: 10px 18px;
+      background: rgba(6, 8, 12, 0.35);
+    }
+
     /* Main 3-Column Terminal + Blueprint Matrix */
     .matrix-grid {
       display: grid;
       grid-template-columns: 330px 1fr 330px;
-      border-bottom: 1.5px solid var(--line-heavy);
     }
 
     .col {
@@ -400,9 +408,9 @@
       border-bottom: 1px solid var(--line);
       transition: background 0.15s;
     }
-    .order-row:hover { background: rgba(244, 248, 255, 0.07); }
+    .order-row:hover { background: rgba(56, 189, 248, 0.08); }
     .order-row.active {
-      background: rgba(253, 224, 71, 0.14);
+      background: rgba(0, 255, 102, 0.1);
     }
     .order-row.active td.sym {
       color: var(--accent);
@@ -417,6 +425,7 @@
       font-size: 10px;
       padding: 1px 6px;
       border: 1px solid var(--line-heavy);
+      white-space: nowrap;
     }
     .badge-state.live {
       border-color: var(--pos);
@@ -450,7 +459,7 @@
 
     .svg-stage {
       border: 1px dashed var(--line);
-      background: rgba(7, 40, 102, 0.45);
+      background: rgba(6, 8, 12, 0.55);
       padding: 12px;
       margin-bottom: 14px;
       display: flex;
@@ -459,12 +468,16 @@
       gap: 12px;
       flex-wrap: wrap;
     }
+    .svg-stage svg {
+      max-width: 100%;
+      height: auto;
+    }
 
     .insp-desc {
       font-size: 13px;
       color: var(--ink-soft);
       line-height: 1.65;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .insp-foot {
@@ -479,7 +492,7 @@
       gap: 8px;
     }
 
-    .dwg-btn {
+    .spec-btn {
       border: 1px solid var(--accent);
       background: var(--accent);
       color: var(--accent-ink);
@@ -488,9 +501,9 @@
       font-size: 11px;
       cursor: pointer;
     }
-    .dwg-btn:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+    .spec-btn:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 
-    /* Column 3: Direct Dispatch + Engineering Title Block */
+    /* Column 3: Direct Dispatch + Title Block */
     .comms-col {
       justify-content: space-between;
     }
@@ -510,7 +523,7 @@
     }
     .social-matrix a:nth-child(2n) { border-right: none; }
     .social-matrix a:nth-child(n+3) { border-bottom: none; }
-    .social-matrix a:hover { background: var(--ink); color: var(--bg); }
+    .social-matrix a:hover { background: var(--accent); color: var(--accent-ink); }
 
     .dispatch-form {
       padding: 16px;
@@ -533,24 +546,25 @@
       background: var(--bg-deep);
       border: 1px solid var(--line-heavy);
       color: var(--ink);
-      padding: 8px 10px;
-      font-size: 12.5px;
+      padding: 9px 10px;
+      font-size: 13px;
       outline: none;
+      border-radius: 0;
     }
     .dispatch-form input::placeholder, .dispatch-form textarea::placeholder { color: var(--ink-dim); }
     .dispatch-form input:focus, .dispatch-form textarea:focus { border-color: var(--accent); }
     .dispatch-form textarea { min-height: 82px; resize: vertical; }
     .dispatch-form button {
-      background: var(--ink);
-      color: var(--bg);
-      border: 1px solid var(--ink);
+      background: var(--accent);
+      color: var(--accent-ink);
+      border: 1px solid var(--accent);
       padding: 10px;
       font-weight: 700;
       font-size: 11.5px;
       cursor: pointer;
       letter-spacing: 0.06em;
     }
-    .dispatch-form button:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+    .dispatch-form button:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
     .form-status { font-size: 11px; color: var(--accent); min-height: 1.2em; }
     .hp { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; }
 
@@ -566,6 +580,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 8px;
     }
     .tb-grid {
       display: grid;
@@ -586,11 +601,11 @@
       background: transparent;
       border: 1px solid var(--line-heavy);
       color: var(--ink);
-      padding: 3px 8px;
+      padding: 4px 8px;
       font-size: 10.5px;
       cursor: pointer;
     }
-    .footer-brand:hover { background: var(--ink); color: var(--bg); }
+    .footer-brand:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
     .site-menu {
       position: absolute;
       bottom: calc(100% + 6px);
@@ -604,13 +619,9 @@
     .site-menu.open { display: block; }
     .site-menu a { display: block; padding: 8px 10px; border-bottom: 1px solid var(--line); }
     .site-menu a:last-child { border-bottom: none; }
-    .site-menu a:hover { background: var(--ink); color: var(--bg); }
+    .site-menu a:hover { background: var(--accent); color: var(--accent-ink); }
     .site-menu .btc { color: var(--accent); font-weight: 700; }
-
-    /* Bottom Zone Bar */
-    .zone-bar.bottom {
-      border-bottom: none;
-    }
+    .site-menu a:hover .btc { color: var(--accent-ink); }
 
     /* Easter Eggs */
     .click-counter {
@@ -658,11 +669,30 @@
     @keyframes danceSpin { 0% { transform: rotate(0deg); } 50% { transform: rotate(180deg) scale(1.2); } 100% { transform: rotate(360deg); } }
     .exploding-letter { position: fixed; z-index: 150; color: var(--accent); font-weight: 700; pointer-events: none; }
 
+    /* Tablet & Mobile Responsive Optimization */
     @media (max-width: 1040px) {
       .hero-grid, .matrix-grid { grid-template-columns: 1fr; }
       .hero-elevation, .col { border-right: none; border-bottom: 1.5px solid var(--line-heavy); }
       .col:last-child { border-bottom: none; }
-      .cad-cross-x, .cad-cross-y, .telemetry-strip { display: none; }
+      .cad-cross-x, .cad-cross-y { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .sheet-wrap { padding: 0 8px; margin: 10px auto 20px; }
+      .blueprint-sheet { padding: 3px; }
+      .draft-header { padding: 10px 12px; }
+      .telemetry-strip, .hotkey-hint { display: none; }
+      .hero-elevation { padding: 22px 16px; }
+      .dim-line { font-size: 9.5px; }
+      .hero-lede { font-size: 14px; }
+      .ledger-row { padding: 12px 14px; }
+      .log-body { padding: 16px 14px; }
+      .order-table th, .order-row td { padding: 9px 8px; font-size: 11.5px; }
+      .order-table th:nth-child(4), .order-row td:nth-child(4) { display: none; }
+      .schematic-inspector { margin: 12px; padding: 14px; }
+      .insp-top h3 { font-size: 17px; }
+      .dispatch-form { padding: 14px; }
+      .dispatch-form input, .dispatch-form textarea { font-size: 16px; }
     }
   </style>
 </head>
@@ -674,21 +704,23 @@
 
   <!-- Live Market & Output Ticker Tape -->
   <div class="tape-wrap">
-    <div class="tape-badge">DWG // $W23</div>
-    <div class="tape-track">
-      <span class="tape-item">BTC/USD <span class="hi" id="tapeBtc">FETCHING...</span></span>
-      <span class="tape-item">GAME_DL <span class="up">50,000+ ▲</span></span>
-      <span class="tape-item">MKT_VIEWS <span class="up">25,000,000+ ▲</span></span>
-      <span class="tape-item">ECOM_REV <span class="up">$30,000+ ▲</span></span>
-      <span class="tape-item">WAVE23_INC <span class="hi">2026 LAUNCH ●</span></span>
-      <span class="tape-item">ORIGIN <span class="up">YYC / CALGARY, AB</span></span>
-      <!-- Duplicate for continuous loop -->
-      <span class="tape-item">BTC/USD <span class="hi" id="tapeBtc2">FETCHING...</span></span>
-      <span class="tape-item">GAME_DL <span class="up">50,000+ ▲</span></span>
-      <span class="tape-item">MKT_VIEWS <span class="up">25,000,000+ ▲</span></span>
-      <span class="tape-item">ECOM_REV <span class="up">$30,000+ ▲</span></span>
-      <span class="tape-item">WAVE23_INC <span class="hi">2026 LAUNCH ●</span></span>
-      <span class="tape-item">ORIGIN <span class="up">YYC / CALGARY, AB</span></span>
+    <div class="tape-badge">$W23 // FEED</div>
+    <div class="tape-viewport">
+      <div class="tape-track">
+        <span class="tape-item">BTC/USD <span class="hi" id="tapeBtc">FETCHING...</span></span>
+        <span class="tape-item">GAME_DL <span class="up">50,000+ ▲</span></span>
+        <span class="tape-item">MKT_VIEWS <span class="up">25,000,000+ ▲</span></span>
+        <span class="tape-item">ECOM_REV <span class="up">$30,000+ ▲</span></span>
+        <span class="tape-item">WAVE23_INC <span class="hi">2026 LAUNCH ●</span></span>
+        <span class="tape-item">ORIGIN <span class="up">YYC / CALGARY, AB</span></span>
+        <!-- Duplicate for continuous loop -->
+        <span class="tape-item">BTC/USD <span class="hi" id="tapeBtc2">FETCHING...</span></span>
+        <span class="tape-item">GAME_DL <span class="up">50,000+ ▲</span></span>
+        <span class="tape-item">MKT_VIEWS <span class="up">25,000,000+ ▲</span></span>
+        <span class="tape-item">ECOM_REV <span class="up">$30,000+ ▲</span></span>
+        <span class="tape-item">WAVE23_INC <span class="hi">2026 LAUNCH ●</span></span>
+        <span class="tape-item">ORIGIN <span class="up">YYC / CALGARY, AB</span></span>
+      </div>
     </div>
   </div>
 
@@ -696,17 +728,10 @@
     <div class="blueprint-sheet">
       <div class="inner-frame">
 
-        <div class="zone-bar">
-          <span>ZONE A1</span>
-          <span>ZONE B1</span>
-          <span>ZONE C1</span>
-          <span>ZONE D1</span>
-        </div>
-
         <!-- Drafting & Telemetry Header -->
         <header class="draft-header">
           <div class="brand-box">
-            <a class="brand" href="#top" id="brand">DWG // FRANSOO.COM</a>
+            <a class="brand" href="#top" id="brand">FRANSOO.COM</a>
             <div class="theme-bubble" id="themeBubble">sheet changed</div>
             <span style="font-size:11px; color:var(--ink-soft);">SHEET 01 OF 01</span>
           </div>
@@ -728,7 +753,7 @@
               <span class="name-part" data-name="fransoo">Fransoo</span>
             </h1>
             <p class="hero-lede" id="boredText">I make stuff, design &amp; ship products, and trade international markets.</p>
-            <span class="hand-note">↳ Spec note: Usually always building something.</span>
+            <span class="hand-note">↳ Usually always building something.</span>
           </div>
 
           <div class="hero-ledger">
@@ -757,6 +782,9 @@
               </div>
               <div class="ledger-val" data-count="30000" data-prefix="$" data-suffix="+">$0+</div>
             </div>
+            <div class="ledger-note-bar">
+              <span class="hand-note" style="font-size:13px;">↳ Tolerance check: Verified across live deployments.</span>
+            </div>
           </div>
         </div>
 
@@ -774,6 +802,9 @@
                 <h2>Not a résumé. A running log.</h2>
                 <p>I’m Henry, an entrepreneur from the Calgary area. I started shipping products and games back in high school, before I could even legally sign most contracts, then spent the years after that mastering the unglamorous parts: inventory, ads, logistics, and what happens after something actually launches.</p>
                 <p>Now I split time between building &amp; operating businesses under <strong>Woeller23 Ventures</strong>, and studying business &amp; artificial intelligence at the <strong>Southern Alberta Institute of Technology</strong>.</p>
+                <div style="margin-top:10px;">
+                  <span class="hand-note" style="font-size:13px;">↳ Shipped my first products in high school before I could legally sign contracts.</span>
+                </div>
               </div>
 
               <div class="log-block radar-divider">
@@ -885,6 +916,7 @@
                   <textarea name="message" required placeholder="What’s this about?"></textarea>
                 </label>
                 <button type="submit" id="formBtn">TRANSMIT DISPATCH →</button>
+                <span class="hand-note" style="font-size:13px;">↳ Direct line: Goes straight to my inbox—no bots.</span>
                 <p class="form-status" id="formStatus"></p>
               </form>
             </div>
@@ -907,19 +939,12 @@
               <div class="tb-grid">
                 <div class="tb-cell"><small>ARCHITECT</small><b>HENRY FRANSOO</b></div>
                 <div class="tb-cell"><small>ORIGIN</small><b>CALGARY, AB, CA</b></div>
-                <div class="tb-cell"><small>DWG NO.</small><b>W23-HF-2026</b></div>
-                <div class="tb-cell"><small>COPYRIGHT</small><b>© H. FRANSOO</b></div>
+                <div class="tb-cell"><small>SHEET NO.</small><b>W23-HF-2026</b></div>
+                <div class="tb-cell"><small>COPYRIGHT</small><b>© HENRY FRANSOO / FRANSOO.COM</b></div>
               </div>
             </div>
           </section>
 
-        </div>
-
-        <div class="zone-bar bottom">
-          <span>ZONE A4</span>
-          <span>ZONE B4</span>
-          <span>ZONE C4</span>
-          <span>ZONE D4</span>
         </div>
 
       </div>
@@ -932,100 +957,106 @@
   <script>
     const ventures = [
       {
-        dwg: "DWG 2.1 // HOLDING ARCHITECTURE",
+        spec: "FIG 2.1 // HOLDING ARCHITECTURE",
+        note: "↳ Umbrella entity housing active builds.",
         name: "Woeller23 Ventures",
         role: "CURRENT",
         desc: "The company I run everything else through. New projects, operating businesses, and anything that needs a home before it becomes its own brand.",
         tags: "holding company · new work",
         link: null,
-        svg: `<svg width="240" height="46" viewBox="0 0 240 46" fill="none">
-          <rect x="90" y="2" width="60" height="14" stroke="currentColor" stroke-width="1.3"/>
-          <text x="108" y="12" fill="currentColor" font-size="8" font-family="IBM Plex Mono">W23.V</text>
-          <line x1="120" y1="16" x2="120" y2="26" stroke="currentColor" stroke-width="1.2"/>
-          <line x1="30" y1="26" x2="210" y2="26" stroke="currentColor" stroke-width="1.2"/>
-          <line x1="30" y1="26" x2="30" y2="34" stroke="currentColor" stroke-width="1.2"/>
-          <line x1="120" y1="26" x2="120" y2="34" stroke="currentColor" stroke-width="1.2"/>
-          <line x1="210" y1="26" x2="210" y2="34" stroke="currentColor" stroke-width="1.2"/>
-          <rect x="10" y="34" width="40" height="10" stroke="#fde047" stroke-width="1.2"/>
-          <rect x="100" y="34" width="40" height="10" stroke="#fde047" stroke-width="1.2"/>
-          <rect x="190" y="34" width="40" height="10" stroke="#fde047" stroke-width="1.2"/>
+        svg: `<svg width="230" height="46" viewBox="0 0 230 46" fill="none">
+          <rect x="85" y="2" width="60" height="14" stroke="currentColor" stroke-width="1.3"/>
+          <text x="103" y="12" fill="currentColor" font-size="8" font-family="IBM Plex Mono">W23.V</text>
+          <line x1="115" y1="16" x2="115" y2="26" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="25" y1="26" x2="205" y2="26" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="25" y1="26" x2="25" y2="34" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="115" y1="26" x2="115" y2="34" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="205" y1="26" x2="205" y2="34" stroke="currentColor" stroke-width="1.2"/>
+          <rect x="5" y="34" width="40" height="10" stroke="var(--accent)" stroke-width="1.2"/>
+          <rect x="95" y="34" width="40" height="10" stroke="var(--accent)" stroke-width="1.2"/>
+          <rect x="185" y="34" width="40" height="10" stroke="var(--accent)" stroke-width="1.2"/>
         </svg>`
       },
       {
-        dwg: "DWG 2.2 // 13.56 MHz NFC SPEC",
+        spec: "FIG 2.2 // 13.56 MHz NFC SPEC",
+        note: "↳ Zero-friction tap-to-review hardware.",
         name: "Wave23 Inc.",
         role: "JUST LAUNCHED (2026)",
         desc: "Wave23 Inc. is a B2B NFC (Near Field Communications) technology company helping local businesses grow their Google reviews and online visibility. We provide programmable NFC cards and tap-to-review tools that make leaving a review quick and easy. Wave23 helps businesses collect more reviews, improve local search rankings, and convert more traffic.",
         tags: "technology · client marketing strategies",
         link: null,
-        svg: `<svg width="240" height="46" viewBox="0 0 240 46" fill="none">
-          <rect x="4" y="8" width="54" height="30" rx="2" stroke="currentColor" stroke-width="1.3"/>
-          <text x="15" y="26" fill="currentColor" font-size="9" font-family="IBM Plex Mono">NFC</text>
-          <path d="M70 15 C78 20, 78 26, 70 31" stroke="#fde047" stroke-width="1.4"/>
-          <path d="M78 10 C90 18, 90 28, 78 36" stroke="#fde047" stroke-width="1.4"/>
-          <path d="M86 5 C102 16, 102 30, 86 41" stroke="#fde047" stroke-width="1.4"/>
-          <rect x="116" y="10" width="114" height="26" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 2"/>
-          <text x="124" y="26" fill="#fde047" font-size="9" font-family="IBM Plex Mono">★★★★★ TAP-TO-REVIEW</text>
+        svg: `<svg width="235" height="46" viewBox="0 0 235 46" fill="none">
+          <rect x="4" y="8" width="52" height="30" rx="2" stroke="currentColor" stroke-width="1.3"/>
+          <text x="14" y="26" fill="currentColor" font-size="9" font-family="IBM Plex Mono">NFC</text>
+          <path d="M68 15 C76 20, 76 26, 68 31" stroke="var(--accent)" stroke-width="1.4"/>
+          <path d="M76 10 C88 18, 88 28, 76 36" stroke="var(--accent)" stroke-width="1.4"/>
+          <path d="M84 5 C100 16, 100 30, 84 41" stroke="var(--accent)" stroke-width="1.4"/>
+          <rect x="112" y="10" width="114" height="26" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <text x="120" y="26" fill="var(--accent)" font-size="9" font-family="IBM Plex Mono">★★★★★ TAP-TO-REVIEW</text>
         </svg>`
       },
       {
-        dwg: "DWG 2.3 // CANADIAN FREIGHT ROUTE",
+        spec: "FIG 2.3 // CANADIAN FREIGHT ROUTE",
+        note: "↳ Coast-to-coast fulfillment network.",
         name: "SHIP23 Industries",
         role: "2023 — 2025",
         desc: "Started an ecommerce operation participating in the practice of retail arbitrage; buying everyday products for cheap, and reselling higher on the world's largest online marketplace. Took advantage of Amazon's shipment network, expanding inventory across Canada to: Calgary, Vancouver, Edmonton, Toronto, Ottawa, and Hamilton.",
         tags: "amazon marketplace · e-commerce",
         link: null,
-        svg: `<svg width="250" height="46" viewBox="0 0 250 46" fill="none">
-          <line x1="14" y1="22" x2="234" y2="22" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3"/>
-          <circle cx="14" cy="22" r="3.5" fill="#fde047"/><text x="6" y="12" fill="currentColor" font-size="8">YVR</text>
-          <circle cx="58" cy="22" r="4.5" fill="currentColor"/><text x="50" y="38" fill="#fde047" font-size="8">YYC</text>
-          <circle cx="102" cy="22" r="3.5" fill="#fde047"/><text x="94" y="12" fill="currentColor" font-size="8">YEG</text>
-          <circle cx="146" cy="22" r="3.5" fill="#fde047"/><text x="138" y="38" fill="currentColor" font-size="8">YYZ</text>
-          <circle cx="190" cy="22" r="3.5" fill="#fde047"/><text x="182" y="12" fill="currentColor" font-size="8">YOW</text>
-          <circle cx="234" cy="22" r="3.5" fill="#fde047"/><text x="224" y="38" fill="currentColor" font-size="8">YHM</text>
+        svg: `<svg width="240" height="46" viewBox="0 0 240 46" fill="none">
+          <line x1="14" y1="22" x2="224" y2="22" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <circle cx="14" cy="22" r="3.5" fill="var(--accent)"/><text x="6" y="12" fill="currentColor" font-size="8">YVR</text>
+          <circle cx="56" cy="22" r="4.5" fill="currentColor"/><text x="48" y="38" fill="var(--accent)" font-size="8">YYC</text>
+          <circle cx="98" cy="22" r="3.5" fill="var(--accent)"/><text x="90" y="12" fill="currentColor" font-size="8">YEG</text>
+          <circle cx="140" cy="22" r="3.5" fill="var(--accent)"/><text x="132" y="38" fill="currentColor" font-size="8">YYZ</text>
+          <circle cx="182" cy="22" r="3.5" fill="var(--accent)"/><text x="174" y="12" fill="currentColor" font-size="8">YOW</text>
+          <circle cx="224" cy="22" r="3.5" fill="var(--accent)"/><text x="214" y="38" fill="currentColor" font-size="8">YHM</text>
         </svg>`
       },
       {
-        dwg: "DWG 2.4 // DISTRIBUTION ENGINE",
+        spec: "FIG 2.4 // DISTRIBUTION ENGINE",
+        note: "↳ Niche-tailored creative performance.",
         name: "Woeller Media",
         role: "2019 — 2024",
         desc: "Designed and developed marketing videos and digital advertisements for different businesses across various social media platforms. Tailoring my strategies to their specific niches.",
         tags: "marketing · social media · advertising",
         link: null,
-        svg: `<svg width="240" height="46" viewBox="0 0 240 46" fill="none">
-          <rect x="6" y="8" width="60" height="28" stroke="currentColor" stroke-width="1.2"/>
-          <polygon points="30,15 30,29 44,22" stroke="#fde047" stroke-width="1.3"/>
-          <line x1="66" y1="22" x2="105" y2="22" stroke="currentColor" stroke-width="1.2"/>
-          <polyline points="105,36 135,26 165,29 195,14 230,5" stroke="#fde047" stroke-width="1.6"/>
+        svg: `<svg width="230" height="46" viewBox="0 0 230 46" fill="none">
+          <rect x="6" y="8" width="58" height="28" stroke="currentColor" stroke-width="1.2"/>
+          <polygon points="28,15 28,29 42,22" stroke="var(--accent)" stroke-width="1.3"/>
+          <line x1="64" y1="22" x2="100" y2="22" stroke="currentColor" stroke-width="1.2"/>
+          <polyline points="100,36 130,26 160,29 190,14 222,5" stroke="var(--accent)" stroke-width="1.6"/>
         </svg>`
       },
       {
-        dwg: "DWG 2.5 // PLAYER FEEDBACK LOOP",
+        spec: "FIG 2.5 // PLAYER FEEDBACK LOOP",
+        note: "↳ Social comments turned into shipped code.",
         name: "Codelyon Apps",
         role: "2019 — 2023",
         desc: "Designed and shipped mobile games from comments, DMs, and user feedback. Used social media as both distribution and a product research lab — then converted that attention into ad revenue & 50,000+ downloads worldwide.",
         tags: "games · distribution · feedback loops",
         link: null,
-        svg: `<svg width="240" height="46" viewBox="0 0 240 46" fill="none">
-          <rect x="6" y="10" width="48" height="24" stroke="currentColor" stroke-width="1.2"/>
+        svg: `<svg width="235" height="46" viewBox="0 0 235 46" fill="none">
+          <rect x="6" y="10" width="46" height="24" stroke="currentColor" stroke-width="1.2"/>
           <text x="14" y="25" fill="currentColor" font-size="8">DMs</text>
-          <line x1="54" y1="22" x2="94" y2="22" stroke="#fde047" stroke-width="1.2"/>
-          <rect x="94" y="10" width="54" height="24" stroke="#fde047" stroke-width="1.2"/>
-          <text x="104" y="25" fill="#fde047" font-size="8">BUILD</text>
-          <line x1="148" y1="22" x2="184" y2="22" stroke="currentColor" stroke-width="1.2"/>
-          <text x="188" y="25" fill="currentColor" font-size="9">50K+ DL</text>
+          <line x1="52" y1="22" x2="90" y2="22" stroke="var(--accent)" stroke-width="1.2"/>
+          <rect x="90" y="10" width="52" height="24" stroke="var(--accent)" stroke-width="1.2"/>
+          <text x="100" y="25" fill="var(--accent)" font-size="8">BUILD</text>
+          <line x1="142" y1="22" x2="176" y2="22" stroke="currentColor" stroke-width="1.2"/>
+          <text x="180" y="25" fill="currentColor" font-size="9">50K+ DL</text>
         </svg>`
       },
       {
-        dwg: "DWG 2.6 // LIVE MARKET TELEMETRY",
+        spec: "FIG 2.6 // LIVE MARKET TELEMETRY",
+        note: "↳ Built to replace twelve open browser tabs.",
         name: "bitcoin.fransoo.com",
         role: "SIDE PROJECT",
         desc: "A live crypto price board I made because I wanted something faster than opening twelve tabs. Updates every few seconds. Still useful. Still a little unnecessary.",
         tags: "crypto · real-time feed",
         link: "https://bitcoin.fransoo.com",
-        svg: `<svg width="240" height="46" viewBox="0 0 240 46" fill="none">
-          <polyline points="6,34 38,28 66,35 98,16 128,22 162,9 194,14 230,4" stroke="#fde047" stroke-width="1.6"/>
-          <circle cx="230" cy="4" r="3.5" fill="#fde047"/>
+        svg: `<svg width="230" height="46" viewBox="0 0 230 46" fill="none">
+          <polyline points="6,34 36,28 64,35 94,16 124,22 156,9 188,14 220,4" stroke="var(--accent)" stroke-width="1.6"/>
+          <circle cx="220" cy="4" r="3.5" fill="var(--accent)"/>
         </svg>`
       }
     ];
@@ -1042,13 +1073,16 @@
           </div>
           <div class="svg-stage">
             ${v.svg}
-            <span style="font-size:10px; color:var(--cyan);">${v.dwg}</span>
+            <span style="font-size:10px; color:var(--cyan);">${v.spec}</span>
           </div>
           <p class="insp-desc">${v.desc}</p>
+          <div style="margin-bottom:14px;">
+            <span class="hand-note" style="font-size:13px;">${v.note}</span>
+          </div>
         </div>
         <div class="insp-foot">
           <span>TAGS: ${v.tags}</span>
-          ${v.link ? `<a class="dwg-btn" href="${v.link}" target="_blank" rel="noopener">OPEN THE BOARD →</a>` : `<span>UNIT [0${idx + 1}/06]</span>`}
+          ${v.link ? `<a class="spec-btn" href="${v.link}" target="_blank" rel="noopener">OPEN THE BOARD →</a>` : `<span>UNIT [0${idx + 1}/06]</span>`}
         </div>
       `;
     }
@@ -1099,12 +1133,12 @@
     updateClock();
     setInterval(updateClock, 1000);
 
-    // Hybrid Sheet Switcher (Click DWG // FRANSOO.COM)
+    // Hybrid Sheet Switcher (Midnight Terminal default at index 0)
     const sheets = [
-      { name: "prussian cyanotype", bg: "#0a3685", deep: "#072866", panel: "rgba(7,40,102,0.58)", ink: "#f4f8ff", soft: "rgba(244,248,255,0.78)", dim: "rgba(244,248,255,0.52)", line: "rgba(244,248,255,0.28)", heavy: "#f4f8ff", accent: "#fde047", accentInk: "#072866", cyan: "#7dd3fc" },
-      { name: "bloomberg amber cad", bg: "#0c0905", deep: "#161109", panel: "rgba(22,17,9,0.75)", ink: "#fff6e5", soft: "rgba(255,246,229,0.78)", dim: "rgba(255,246,229,0.5)", line: "rgba(255,176,0,0.28)", heavy: "#ffb000", accent: "#ffb000", accentInk: "#0c0905", cyan: "#fcd34d" },
-      { name: "architect whiteprint", bg: "#f2f6fb", deep: "#e3ecf7", panel: "rgba(227,236,247,0.72)", ink: "#0a3685", soft: "rgba(10,54,133,0.82)", dim: "rgba(10,54,133,0.55)", line: "rgba(10,54,133,0.25)", heavy: "#0a3685", accent: "#d9381e", accentInk: "#ffffff", cyan: "#1d4ed8" },
-      { name: "midnight terminal", bg: "#06080c", deep: "#0c1018", panel: "rgba(12,16,24,0.78)", ink: "#e6edf7", soft: "rgba(230,237,247,0.78)", dim: "rgba(230,237,247,0.5)", line: "rgba(56,189,248,0.26)", heavy: "#38bdf8", accent: "#00ff66", accentInk: "#06080c", cyan: "#38bdf8" }
+      { name: "midnight terminal", bg: "#06080c", deep: "#0c1018", panel: "rgba(12,16,24,0.84)", ink: "#e6edf7", soft: "rgba(230,237,247,0.78)", dim: "rgba(230,237,247,0.5)", line: "rgba(56,189,248,0.28)", heavy: "#38bdf8", gridMajor: "rgba(56,189,248,0.13)", gridMinor: "rgba(56,189,248,0.05)", accent: "#00ff66", accentInk: "#06080c", cyan: "#38bdf8", pos: "#00ff66" },
+      { name: "prussian cyanotype", bg: "#0a3685", deep: "#072866", panel: "rgba(7,40,102,0.58)", ink: "#f4f8ff", soft: "rgba(244,248,255,0.78)", dim: "rgba(244,248,255,0.52)", line: "rgba(244,248,255,0.28)", heavy: "#f4f8ff", gridMajor: "rgba(244,248,255,0.15)", gridMinor: "rgba(244,248,255,0.06)", accent: "#fde047", accentInk: "#072866", cyan: "#7dd3fc", pos: "#4ade80" },
+      { name: "bloomberg amber cad", bg: "#0c0905", deep: "#161109", panel: "rgba(22,17,9,0.75)", ink: "#fff6e5", soft: "rgba(255,246,229,0.78)", dim: "rgba(255,246,229,0.5)", line: "rgba(255,176,0,0.28)", heavy: "#ffb000", gridMajor: "rgba(255,176,0,0.13)", gridMinor: "rgba(255,176,0,0.05)", accent: "#ffb000", accentInk: "#0c0905", cyan: "#fcd34d", pos: "#4ade80" },
+      { name: "architect whiteprint", bg: "#f2f6fb", deep: "#e3ecf7", panel: "rgba(227,236,247,0.72)", ink: "#0a3685", soft: "rgba(10,54,133,0.82)", dim: "rgba(10,54,133,0.55)", line: "rgba(10,54,133,0.25)", heavy: "#0a3685", gridMajor: "rgba(10,54,133,0.12)", gridMinor: "rgba(10,54,133,0.05)", accent: "#d9381e", accentInk: "#ffffff", cyan: "#1d4ed8", pos: "#15803d" }
     ];
     let sIdx = 0, bubbleTimer;
     document.getElementById('brand').addEventListener('click', (e) => {
@@ -1120,9 +1154,12 @@
       r.setProperty('--ink-dim', t.dim);
       r.setProperty('--line', t.line);
       r.setProperty('--line-heavy', t.heavy);
+      r.setProperty('--grid-major', t.gridMajor);
+      r.setProperty('--grid-minor', t.gridMinor);
       r.setProperty('--accent', t.accent);
       r.setProperty('--accent-ink', t.accentInk);
       r.setProperty('--cyan', t.cyan);
+      r.setProperty('--pos', t.pos);
       const b = document.getElementById('themeBubble');
       b.textContent = 'sheet: ' + t.name;
       b.classList.add('show');
@@ -1191,7 +1228,7 @@
       setTimeout(() => { this.style.opacity = '1'; }, 3000);
     }));
 
-    document.querySelectorAll('.zone-bar span, .col-head span.dim').forEach(el => {
+    document.querySelectorAll('.col-head span.dim, .tb-cell small').forEach(el => {
       el.innerHTML = el.textContent.split('').map(c => `<span class="letter">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
     });
 
